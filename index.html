@@ -253,6 +253,23 @@
             display: block;
         }
         
+        /* New styles for images */
+        .month-image {
+            width: 100%;
+            max-width: 400px;
+            margin: 15px auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .image-caption {
+            text-align: center;
+            font-style: italic;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+        
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -284,6 +301,10 @@
             .month-tab.active {
                 border-left: 3px solid #3498db;
                 border-bottom: 1px solid #dee2e6;
+            }
+            
+            .month-image {
+                max-width: 100%;
             }
         }
     </style>
@@ -385,48 +406,21 @@
                             <div class="month-tab" onclick="switchMonth('target-november', this)">November</div>
                             <div class="month-tab" onclick="switchMonth('target-december', this)">December</div>
                         </div>
-                        <div id="target-october" class="month-content active">
-                            <ul>
-                                <h4> Target for 230 MT Boulder Loading/Hour</h4>
-                                <li>Working Days: 27 Days</li>
-                                <li>Boulder loading Hours : 16 Hrs - 18 Hrs </li>
-                                <li>per Hours : 230 MT</li>
-                                <li>Per day : 3680 Mt</li>
-                                <li>per Month consider 27 days : 99360 MT</li>
-                            </ul>
-
-                            <ul>
-                                <h4>Drilling</h4>
-                                <li>Compressor : 14 </li>
-                                <li>Holes : 840</li>
-                                <li>feets : 4620 MT</li>
-                                <li> A grade production @ 80% : 3696 MT</li>
-                            </ul>
-
-                            <ul>
-                                <h4>Explosives</h4>
-                                <li>Power Gel : 16.8</li>
-                                <li>Deronating Fuse : 6.72</li>
-                                <li>Electronic Detonator : 7 </li>
-                                <li>Line Wire : 6 </li>
-                                <li> NMR : 6 </li> 
-                            </ul>
+                        <div id="target-october" class="month-content active">                            
+                            <!-- October Image -->
+                            <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%201.58.47%20PM.jpeg" alt="October Production Plan" class="month-image">
+                            <p class="image-caption">October Production Plan Visualization</p>
                         </div>
-                        <div id="target-november" class="month-content">
-                            <ul>
-                                <li>Production target: 30,000 tons</li>
-                                <li>Scale up operations to meet increased demand</li>
-                                <li>Implement efficiency improvements identified in October</li>
-                                <li>Mid-month review of production metrics</li>
-                            </ul>
+                        <div id="target-november" class="month-content">                  
+                            <!-- November Image -->
+                            <img src="https://via.placeholder.com/600x400/3498db/ffffff?text=November+Production+Plan" alt="November Production Plan" class="month-image">
+                            <p class="image-caption">November Production Plan Visualization</p>
                         </div>
                         <div id="target-december" class="month-content">
-                            <ul>
-                                <li>Production target: 35,000 tons</li>
-                                <li>Final push to achieve quarterly target</li>
-                                <li>Year-end equipment maintenance planning</li>
-                                <li>Performance review and planning for next quarter</li>
-                            </ul>
+                            
+                            <!-- December Image -->
+                            <img src="https://via.placeholder.com/600x400/e74c3c/ffffff?text=December+Production+Plan" alt="December Production Plan" class="month-image">
+                            <p class="image-caption">December Production Plan Visualization</p>
                         </div>
                     </div>
                     
