@@ -62,7 +62,7 @@
             border-left: 5px solid #3498db;
             display: flex;
             flex-direction: column;
-            height: 200px; /* Fixed height for square appearance */
+            height: 200px;
             justify-content: space-between;
         }
         
@@ -185,6 +185,74 @@
             font-size: 0.9rem;
         }
         
+        /* New styles for the enhanced mine operations modal */
+        .point-button {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .point-button:hover {
+            background-color: #e9ecef;
+            border-color: #3498db;
+        }
+        
+        .point-button.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .monthly-breakdown {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .monthly-breakdown.active {
+            display: block;
+        }
+        
+        .month-tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .month-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .month-tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+            font-weight: 600;
+        }
+        
+        .month-content {
+            display: none;
+        }
+        
+        .month-content.active {
+            display: block;
+        }
+        
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -202,6 +270,20 @@
                 width: 95%;
                 margin: 10% auto;
                 padding: 20px;
+            }
+            
+            .month-tabs {
+                flex-direction: column;
+            }
+            
+            .month-tab {
+                padding: 10px;
+                border-bottom: 1px solid #dee2e6;
+            }
+            
+            .month-tab.active {
+                border-left: 3px solid #3498db;
+                border-bottom: 1px solid #dee2e6;
             }
         }
     </style>
@@ -294,35 +376,186 @@
                     <div class="head">Head: K Sib Prasad</div>
                 </div>
                 <div class="modal-body">
-                    <h4>1. Target for 90,000 Production</h4>
-                    <ul>
-                        <li>-------------------------------</li>
-                    </ul>
+                    <button class="point-button" onclick="toggleBreakdown('target-breakdown')">
+                        1. Target for 90,000 Production
+                    </button>
+                    <div id="target-breakdown" class="monthly-breakdown">
+                        <div class="month-tabs">
+                            <div class="month-tab active" onclick="switchMonth('target-october', this)">October</div>
+                            <div class="month-tab" onclick="switchMonth('target-november', this)">November</div>
+                            <div class="month-tab" onclick="switchMonth('target-december', this)">December</div>
+                        </div>
+                        <div id="target-october" class="month-content active">
+                            <ul>
+                                <li>Production target: 25,000 tons</li>
+                                <li>Focus on optimizing extraction processes</li>
+                                <li>Implement new safety protocols</li>
+                                <li>Begin training for new equipment operators</li>
+                            </ul>
+                        </div>
+                        <div id="target-november" class="month-content">
+                            <ul>
+                                <li>Production target: 30,000 tons</li>
+                                <li>Scale up operations to meet increased demand</li>
+                                <li>Implement efficiency improvements identified in October</li>
+                                <li>Mid-month review of production metrics</li>
+                            </ul>
+                        </div>
+                        <div id="target-december" class="month-content">
+                            <ul>
+                                <li>Production target: 35,000 tons</li>
+                                <li>Final push to achieve quarterly target</li>
+                                <li>Year-end equipment maintenance planning</li>
+                                <li>Performance review and planning for next quarter</li>
+                            </ul>
+                        </div>
+                    </div>
                     
-                    <h4>2. Bench Development</h4>
-                    <ul>
-                        <li>-------------------------------</li>
-                    </ul>
+                    <button class="point-button" onclick="toggleBreakdown('bench-breakdown')">
+                        2. Bench Development
+                    </button>
+                    <div id="bench-breakdown" class="monthly-breakdown">
+                        <div class="month-tabs">
+                            <div class="month-tab active" onclick="switchMonth('bench-october', this)">October</div>
+                            <div class="month-tab" onclick="switchMonth('bench-november', this)">November</div>
+                            <div class="month-tab" onclick="switchMonth('bench-december', this)">December</div>
+                        </div>
+                        <div id="bench-october" class="month-content active">
+                            <ul>
+                                <li>Complete geological survey of new bench areas</li>
+                                <li>Begin excavation for Bench 5 and 6</li>
+                                <li>Install safety barriers and signage</li>
+                                <li>Establish access roads to new benches</li>
+                            </ul>
+                        </div>
+                        <div id="bench-november" class="month-content">
+                            <ul>
+                                <li>Complete 60% of Bench 5 development</li>
+                                <li>Begin development of Bench 7</li>
+                                <li>Implement drainage systems for new benches</li>
+                                <li>Review and adjust bench designs based on initial results</li>
+                            </ul>
+                        </div>
+                        <div id="bench-december" class="month-content">
+                            <ul>
+                                <li>Complete Bench 5 and 6 development</li>
+                                <li>Finish 80% of Bench 7 development</li>
+                                <li>Finalize safety protocols for all new benches</li>
+                                <li>Prepare development plan for next quarter</li>
+                            </ul>
+                        </div>
+                    </div>
                     
-                    <h4>3. Requirements of Machines</h4>
-                    <ul>
-                        <li>-------------------------------</li>
-                    </ul>
+                    <button class="point-button" onclick="toggleBreakdown('machines-breakdown')">
+                        3. Requirements of Machines
+                    </button>
+                    <div id="machines-breakdown" class="monthly-breakdown">
+                        <div class="month-tabs">
+                            <div class="month-tab active" onclick="switchMonth('machines-october', this)">October</div>
+                            <div class="month-tab" onclick="switchMonth('machines-november', this)">November</div>
+                            <div class="month-tab" onclick="switchMonth('machines-december', this)">December</div>
+                        </div>
+                        <div id="machines-october" class="month-content active">
+                            <ul>
+                                <li>Assess current machinery fleet and identify gaps</li>
+                                <li>Procure 2 additional excavators</li>
+                                <li>Schedule maintenance for all heavy equipment</li>
+                                <li>Train operators on new machinery</li>
+                            </ul>
+                        </div>
+                        <div id="machines-november" class="month-content">
+                            <ul>
+                                <li>Deploy new excavators to high-priority areas</li>
+                                <li>Evaluate performance of new equipment</li>
+                                <li>Plan for additional loader requirements</li>
+                                <li>Implement preventive maintenance schedule</li>
+                            </ul>
+                        </div>
+                        <div id="machines-december" class="month-content">
+                            <ul>
+                                <li>Finalize machinery requirements for next quarter</li>
+                                <li>Complete year-end maintenance on all equipment</li>
+                                <li>Evaluate machinery utilization rates</li>
+                                <li>Plan for equipment upgrades in Q1</li>
+                            </ul>
+                        </div>
+                    </div>
                     
-                    <h4>4. Blasting Pattern</h4>
-                    <ul>
-                        <li>-------------------------------</li>
-                    </ul>
+                    <button class="point-button" onclick="toggleBreakdown('blasting-breakdown')">
+                        4. Blasting Pattern
+                    </button>
+                    <div id="blasting-breakdown" class="monthly-breakdown">
+                        <div class="month-tabs">
+                            <div class="month-tab active" onclick="switchMonth('blasting-october', this)">October</div>
+                            <div class="month-tab" onclick="switchMonth('blasting-november', this)">November</div>
+                            <div class="month-tab" onclick="switchMonth('blasting-december', this)">December</div>
+                        </div>
+                        <div id="blasting-october" class="month-content active">
+                            <ul>
+                                <li>Review and optimize current blasting patterns</li>
+                                <li>Implement new pattern for Bench 5</li>
+                                <li>Train blasting team on new safety protocols</li>
+                                <li>Monitor fragmentation results for pattern adjustments</li>
+                            </ul>
+                        </div>
+                        <div id="blasting-november" class="month-content">
+                            <ul>
+                                <li>Refine blasting patterns based on October results</li>
+                                <li>Implement electronic detonation system</li>
+                                <li>Reduce vibration impact on surrounding areas</li>
+                                <li>Improve fragmentation efficiency by 15%</li>
+                            </ul>
+                        </div>
+                        <div id="blasting-december" class="month-content">
+                            <ul>
+                                <li>Finalize optimal blasting patterns for each bench</li>
+                                <li>Document best practices for future reference</li>
+                                <li>Evaluate cost savings from optimized patterns</li>
+                                <li>Plan for advanced blasting techniques in next quarter</li>
+                            </ul>
+                        </div>
+                    </div>
                     
-                    <h4>5. Cost Control Objectives</h4>
-                    <ul>
-                        <li>-------------------------------</li>
-                    </ul>
+                    <button class="point-button" onclick="toggleBreakdown('cost-breakdown')">
+                        5. Cost Control Objectives
+                    </button>
+                    <div id="cost-breakdown" class="monthly-breakdown">
+                        <div class="month-tabs">
+                            <div class="month-tab active" onclick="switchMonth('cost-october', this)">October</div>
+                            <div class="month-tab" onclick="switchMonth('cost-november', this)">November</div>
+                            <div class="month-tab" onclick="switchMonth('cost-december', this)">December</div>
+                        </div>
+                        <div id="cost-october" class="month-content active">
+                            <ul>
+                                <li>Establish baseline cost metrics for all operations</li>
+                                <li>Identify 3 key areas for cost reduction</li>
+                                <li>Implement fuel efficiency measures</li>
+                                <li>Reduce equipment idle time by 20%</li>
+                            </ul>
+                        </div>
+                        <div id="cost-november" class="month-content">
+                            <ul>
+                                <li>Monitor cost savings from October initiatives</li>
+                                <li>Implement maintenance optimization to reduce downtime</li>
+                                <li>Negotiate better rates with suppliers</li>
+                                <li>Achieve 5% reduction in operational costs</li>
+                            </ul>
+                        </div>
+                        <div id="cost-december" class="month-content">
+                            <ul>
+                                <li>Finalize cost control measures for the quarter</li>
+                                <li>Evaluate overall cost savings (target: 12%)</li>
+                                <li>Document successful cost reduction strategies</li>
+                                <li>Plan cost objectives for next quarter</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Modal for Boulder Weighbridge -->
+        <!-- Other modals remain the same -->
+        <!-- Boulder Weighbridge Modal -->
         <div id="weighbridgeModal" class="modal">
             <div class="modal-content">
                 <span class="close-btn" onclick="closeModal('weighbridgeModal')">&times;</span>
@@ -509,6 +742,37 @@
                 }
             }
         });
+        
+        // New functions for the enhanced mine operations modal
+        function toggleBreakdown(breakdownId) {
+            const breakdown = document.getElementById(breakdownId);
+            const button = event.target;
+            
+            // Toggle active class on button
+            button.classList.toggle('active');
+            
+            // Toggle display of breakdown
+            if (breakdown.classList.contains('active')) {
+                breakdown.classList.remove('active');
+            } else {
+                breakdown.classList.add('active');
+            }
+        }
+        
+        function switchMonth(monthId, tabElement) {
+            // Get all tabs and contents in the same breakdown
+            const breakdown = tabElement.closest('.monthly-breakdown');
+            const tabs = breakdown.querySelectorAll('.month-tab');
+            const contents = breakdown.querySelectorAll('.month-content');
+            
+            // Remove active class from all tabs and contents
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding content
+            tabElement.classList.add('active');
+            document.getElementById(monthId).classList.add('active');
+        }
     </script>
 </body>
 </html>
