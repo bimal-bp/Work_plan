@@ -312,7 +312,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>90 Days Planning To Achive 230 TPH Production </h1>
+            <h1>90 Days Planning To Achieve 230 TPH Production</h1>
             <div class="company-name">SGX Minerals Pvt Ltd</div>
         </header>
         
@@ -365,7 +365,7 @@
             <!-- Revenue & Billing Box -->
             <div class="box" onclick="openModal('revenueModal')">
                 <div>
-                    <h3>Revenue </h3>
+                    <h3>Revenue</h3>
                 </div>
                 <div class="read-more"> →</div>
             </div>
@@ -373,7 +373,7 @@
             <!-- Payables & ERP Box -->
             <div class="box" onclick="openModal('payablesModal')">
                 <div>
-                    <h3>Billing , Payables & ERP Entries</h3>
+                    <h3>Billing, Payables & ERP Entries</h3>
                 </div>
                 <div class="read-more"> →</div>
             </div>
@@ -387,7 +387,6 @@
             </div>
         </div>
 
-        
         <!-- Modal for Mine Operations -->
         <div id="mineModal" class="modal">
             <div class="modal-content">
@@ -397,7 +396,7 @@
                     <div class="head">Head: K Sib Prasad</div>
                 </div>
                 <div class="modal-body">
-                    <button class="point-button" onclick="toggleBreakdown('target-breakdown')">
+                    <button class="point-button" onclick="toggleBreakdown(event, 'target-breakdown')">
                         1. Target for 90,000 Production
                     </button>
                     <div id="target-breakdown" class="monthly-breakdown">
@@ -409,31 +408,34 @@
                         <div id="target-october" class="month-content active">                            
                             <!-- October Image -->
                             <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%203.39.15%20PM.jpeg" alt="October Production Plan" class="month-image">
+                            <p class="image-caption">October Production Plan</p>
                         </div>
                         <div id="target-november" class="month-content">                  
                             <!-- November Image -->
-                            <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%203.39.15%20PM.jpeg" alt="October Production Plan" class="month-image">
-
+                            <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%203.39.15%20PM.jpeg" alt="November Production Plan" class="month-image">
+                            <p class="image-caption">November Production Plan</p>
                         </div>
                         <div id="target-december" class="month-content">
-                            
                             <!-- December Image -->
-                            <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%203.39.15%20PM.jpeg" alt="October Production Plan" class="month-image">
+                            <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%203.39.15%20PM.jpeg" alt="December Production Plan" class="month-image">
+                            <p class="image-caption">December Production Plan</p>
                         </div>
                     </div>
                     
-                    <button class="point-button" onclick="toggleBreakdown('bench-breakdown')">
+                    <button class="point-button" onclick="toggleBreakdown(event, 'bench-breakdown')">
                         2. Bench Development
                     </button>
                     <div id="bench-breakdown" class="monthly-breakdown">
                         <h4>Bench Development Plan</h4>
                         <ul>
-                            <li>-----------------------</li>
-                            
+                            <li>Establish new benches to increase production capacity</li>
+                            <li>Optimize bench height and width for efficient operations</li>
+                            <li>Implement safety measures for bench stability</li>
+                            <li>Regular monitoring of bench conditions</li>
                         </ul>
                     </div>
                     
-                    <button class="point-button" onclick="toggleBreakdown('machines-breakdown')">
+                    <button class="point-button" onclick="toggleBreakdown(event, 'machines-breakdown')">
                         3. Requirements of Machines
                     </button>
                     <div id="machines-breakdown" class="monthly-breakdown">
@@ -442,31 +444,26 @@
                             <li>Excavator For loading: 2</li>
                             <li>Excavators for Breaking: 2</li>
                             <li>Development & Sheet Cleaning: Ongoing</li>
-                            <li>Dozer : 1</li>
-                            <li>Tippers boulders Loading : 10</li>
-                            <li>Tippers for Develoment : 2 </li>
+                            <li>Dozer: 1</li>
+                            <li>Tippers boulders Loading: 10</li>
+                            <li>Tippers for Development: 2</li>
                         </ul>
                     </div>
                     
-                    <button class="point-button" onclick="toggleBreakdown('blasting-breakdown')">
-<!-- Blasting Pattern Section -->
-<button class="point-button" onclick="toggleBreakdown('blasting-breakdown')">
-    4. Blasting Patterns
-</button>
-<div id="blasting-breakdown" class="monthly-breakdown">
-    <h4>Blasting Pattern Optimization</h4>
-
-    <!-- Pattern 1 -->
-    <h5>Pattern 1</h5>
-    <img src="https://github.com/your-username/your-repo/raw/main/pattern1.jpg" 
-         alt="Blasting Pattern 1" width="400">
-    <!-- Pattern 2 -->
-    <h5>Pattern 2</h5>
-    <img src="https://github.com/your-username/your-repo/raw/main/pattern2.jpg" 
-         alt="Blasting Pattern 2" width="400">
-
-</div>
-
+                    <button class="point-button" onclick="toggleBreakdown(event, 'blasting-breakdown')">
+                        4. Blasting Patterns
+                    </button>
+                    <div id="blasting-breakdown" class="monthly-breakdown">
+                        <h4>Blasting Pattern Optimization</h4>
+                        <ul>
+                            <li>Optimize hole spacing for maximum fragmentation</li>
+                            <li>Reduce powder factor while maintaining fragmentation quality</li>
+                            <li>Implement electronic detonation for precise timing</li>
+                            <li>Regular review of blast design based on rock characteristics</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="point-button" onclick="toggleBreakdown(event, 'cost-breakdown')">
                         5. Cost Control Objectives
                     </button>
                     <div id="cost-breakdown" class="monthly-breakdown">
@@ -474,9 +471,10 @@
                         <ul>
                             <li>Hole to Hole Spacing is Increased</li>
                             <li>Power Gel Utilisation is reduced in Holes</li>
-                            <li>Reducing Boulder Breaking </li>
-                            <li><Blaster payment reduced</li>
-
+                            <li>Reducing Boulder Breaking</li>
+                            <li>Blaster payment reduced</li>
+                            <li>Optimize fuel consumption across all equipment</li>
+                            <li>Reduce maintenance costs through preventive measures</li>
                         </ul>
                     </div>
                 </div>
@@ -734,7 +732,7 @@
         });
         
         // New functions for the enhanced mine operations modal
-        function toggleBreakdown(breakdownId) {
+        function toggleBreakdown(event, breakdownId) {
             const breakdown = document.getElementById(breakdownId);
             const button = event.target;
             
