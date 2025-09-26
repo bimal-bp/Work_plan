@@ -307,6 +307,96 @@
             color: #555;
         }
         
+        /* Machine requirements table */
+        .machine-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .machine-table th, .machine-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .machine-table th {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .machine-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .machine-table tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        /* Plant operations buttons */
+        .plant-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .plant-button {
+            flex: 1;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .plant-button:hover {
+            background-color: #e9ecef;
+            border-color: #3498db;
+        }
+        
+        .plant-button.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        /* Dispatch month buttons */
+        .dispatch-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .dispatch-button {
+            flex: 1;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dispatch-button:hover {
+            background-color: #e9ecef;
+            border-color: #3498db;
+        }
+        
+        .dispatch-button.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
         @media (max-width: 1024px) {
             .dashboard {
                 grid-template-columns: repeat(2, 1fr);
@@ -361,6 +451,18 @@
                 left: 0;
                 margin-bottom: 15px;
                 text-align: center;
+            }
+            
+            .plant-buttons, .dispatch-buttons {
+                flex-direction: column;
+            }
+            
+            .machine-table {
+                font-size: 0.8rem;
+            }
+            
+            .machine-table th, .machine-table td {
+                padding: 5px;
             }
         }
     </style>
@@ -481,7 +583,6 @@
                         <h4>Bench Development Plan</h4>
                         <ul>
                             <li>---------------------------------</li>
-
                         </ul>
                     </div>
                     
@@ -507,15 +608,48 @@
                         4. Requirements of Machines
                     </button>
                     <div id="machines-breakdown" class="monthly-breakdown">
-                        <h4>Machinery Requirement:</h4>
-                        <ul>
-                            <li>Excavator For loading: 2</li>
-                            <li>Excavators for Breaking: 2</li>
-                            <li>Development & Sheet Cleaning: Ongoing</li>
-                            <li>Dozer: 1</li>
-                            <li>Tippers boulders Loading: 10</li>
-                            <li>Tippers for Development: 2</li>
-                        </ul>
+                        <h4>Machine Requirements vs Actual Availability</h4>
+                        <table class="machine-table">
+                            <thead>
+                                <tr>
+                                    <th>Machine Name</th>
+                                    <th>Requirement</th>
+                                    <th>Actual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Excavator for Loading</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>Excavator for Breaking</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>Dozer</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>Tippers for Boulder Loading</td>
+                                    <td>10</td>
+                                    <td>10</td>
+                                </tr>
+                                <tr>
+                                    <td>Tippers for Development</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>Loaders</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     
                     <button class="point-button" onclick="toggleBreakdown(event, 'cost-breakdown')">
@@ -605,13 +739,22 @@
                         <li>Maintenance - 8 AM - 11 AM</li>
                     </ul>
                     
-                    <h4>Plant Run Plan</h4>
-                    <ul>
-                        <li>Zone 1 - 11 AM - 1 PM</li>
-                        <li>Zone 2 - 3 PM - 8 PM</li>
-                        <li>Zone 3 - 10 PM - 2 AM</li>
-                        <li>Zone 4 - 3 AM - 8 AM</li>
-                    </ul>
+                    <div class="plant-buttons">
+                        <div class="plant-button active" onclick="switchPlantContent('plant-planning', this)">Plant Planning</div>
+                        <div class="plant-button" onclick="switchPlantContent('plant-running', this)">Plant Running Time</div>
+                    </div>
+                    
+                    <div id="plant-planning" class="month-content active">
+                        <h4>Plant Planning</h4>
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%204.40.43%20PM.jpeg" alt="Plant Planning" class="month-image">
+                        <p class="image-caption">Plant Planning Diagram</p>
+                    </div>
+                    
+                    <div id="plant-running" class="month-content">
+                        <h4>Plant Running Time</h4>
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%204.40.12%20PM%20(1).jpeg" alt="Plant Running Time" class="month-image">
+                        <p class="image-caption">Plant Running Time Schedule</p>
+                    </div>
                     
                     <h4>Cost Saving</h4>
                     <ul>
@@ -683,9 +826,33 @@
                     <h2>Dispatch Operations</h2>
                     <div class="head">Head: Weighbridge Team</div>
                 </div>
-  
-                
-                
+                <div class="modal-body">
+                    <h4>Dispatch Planning</h4>
+                    
+                    <div class="dispatch-buttons">
+                        <div class="dispatch-button active" onclick="switchDispatchMonth('dispatch-october', this)">October Planning</div>
+                        <div class="dispatch-button" onclick="switchDispatchMonth('dispatch-november', this)">November Planning</div>
+                        <div class="dispatch-button" onclick="switchDispatchMonth('dispatch-december', this)">December Planning</div>
+                    </div>
+                    
+                    <div id="dispatch-october" class="month-content active">
+                        <h4>October Dispatch Plan</h4>
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/Screenshot%202025-09-26%20123042.png" alt="October Dispatch Plan" class="month-image">
+                        <p class="image-caption">October Dispatch Planning</p>
+                    </div>
+                    
+                    <div id="dispatch-november" class="month-content">
+                        <h4>November Dispatch Plan</h4>
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%204.40.43%20PM.jpeg" alt="November Dispatch Plan" class="month-image">
+                        <p class="image-caption">November Dispatch Planning</p>
+                    </div>
+                    
+                    <div id="dispatch-december" class="month-content">
+                        <h4>December Dispatch Plan</h4>
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%204.40.12%20PM%20(1).jpeg" alt="December Dispatch Plan" class="month-image">
+                        <p class="image-caption">December Dispatch Planning</p>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -801,6 +968,36 @@
             // Add active class to clicked tab and corresponding content
             tabElement.classList.add('active');
             document.getElementById(monthId).classList.add('active');
+        }
+        
+        // Plant operations content switching
+        function switchPlantContent(contentId, buttonElement) {
+            // Get all buttons and contents in the plant modal
+            const buttons = document.querySelectorAll('#plantModal .plant-button');
+            const contents = document.querySelectorAll('#plantModal .month-content');
+            
+            // Remove active class from all buttons and contents
+            buttons.forEach(button => button.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding content
+            buttonElement.classList.add('active');
+            document.getElementById(contentId).classList.add('active');
+        }
+        
+        // Dispatch month content switching
+        function switchDispatchMonth(contentId, buttonElement) {
+            // Get all buttons and contents in the dispatch modal
+            const buttons = document.querySelectorAll('#dispatchModal .dispatch-button');
+            const contents = document.querySelectorAll('#dispatchModal .month-content');
+            
+            // Remove active class from all buttons and contents
+            buttons.forEach(button => button.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding content
+            buttonElement.classList.add('active');
+            document.getElementById(contentId).classList.add('active');
         }
     </script>
 </body>
