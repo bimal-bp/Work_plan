@@ -397,6 +397,38 @@
             border-color: #3498db;
         }
         
+        /* Revenue month buttons */
+        .revenue-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .revenue-button {
+            flex: 1;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .revenue-button:hover {
+            background-color: #e9ecef;
+            border-color: #3498db;
+        }
+        
+        .revenue-button.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
         @media (max-width: 1024px) {
             .dashboard {
                 grid-template-columns: repeat(2, 1fr);
@@ -453,7 +485,7 @@
                 text-align: center;
             }
             
-            .plant-buttons, .dispatch-buttons {
+            .plant-buttons, .dispatch-buttons, .revenue-buttons {
                 flex-direction: column;
             }
             
@@ -562,7 +594,6 @@
                         <div id="target-october" class="month-content active">                            
                             <!-- October Image -->
                             <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/Screenshot%202025-09-26%20123042.png" alt="October Production Plan" class="month-image">
-
                             <p class="image-caption">October Production Plan</p>
                         </div>
                         <div id="target-november" class="month-content">                  
@@ -747,13 +778,13 @@
                     
                     <div id="plant-planning" class="month-content active">
                         <h4>Plant Planning</h4>
-                        <img src="https://github.com/WillpackPrasanta/90_Day_Work_plan/blob/main/WhatsApp%20Image%202025-09-26%20at%202.12.08%20PM.jpeg" alt="Plant Planning" class="month-image">
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-26%20at%202.12.08%20PM.jpeg" alt="Plant Planning" class="month-image">
                         <p class="image-caption">Plant Planning Diagram</p>
                     </div>
                     
                     <div id="plant-running" class="month-content">
                         <h4>Plant Running Time</h4>
-                        <img src="https://github.com/WillpackPrasanta/90_Day_Work_plan/blob/main/WhatsApp%20Image%202025-09-26%20at%202.12.52%20PM.jpeg" alt="Plant Running Time" class="month-image">
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-26%20at%202.12.52%20PM.jpeg" alt="Plant Running Time" class="month-image">
                         <p class="image-caption">Plant Running Time Schedule</p>
                     </div>
                     
@@ -838,19 +869,19 @@
                     
                     <div id="dispatch-october" class="month-content active">
                         <h4>October Dispatch Plan</h4>
-                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/Screenshot%202025-09-26%20123042.png" alt="October Dispatch Plan" class="month-image">
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-26%20at%202.14.42%20PM.jpeg" alt="October Dispatch Plan" class="month-image">
                         <p class="image-caption">October Dispatch Planning</p>
                     </div>
                     
                     <div id="dispatch-november" class="month-content">
                         <h4>November Dispatch Plan</h4>
-                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%204.40.43%20PM.jpeg" alt="November Dispatch Plan" class="month-image">
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-26%20at%202.15.27%20PM.jpeg" alt="November Dispatch Plan" class="month-image">
                         <p class="image-caption">November Dispatch Planning</p>
                     </div>
                     
                     <div id="dispatch-december" class="month-content">
                         <h4>December Dispatch Plan</h4>
-                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%204.40.12%20PM%20(1).jpeg" alt="December Dispatch Plan" class="month-image">
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-26%20at%202.15.59%20PM.jpeg" alt="December Dispatch Plan" class="month-image">
                         <p class="image-caption">December Dispatch Planning</p>
                     </div>
                 </div>
@@ -865,7 +896,31 @@
                     <h2>Revenue & Billing</h2>
                 </div>
                 <div class="modal-body">
-
+                    <h4>Revenue Planning</h4>
+                    
+                    <div class="revenue-buttons">
+                        <div class="revenue-button active" onclick="switchRevenueMonth('revenue-october', this)">October Revenue</div>
+                        <div class="revenue-button" onclick="switchRevenueMonth('revenue-november', this)">November Revenue</div>
+                        <div class="revenue-button" onclick="switchRevenueMonth('revenue-december', this)">December Revenue</div>
+                    </div>
+                    
+                    <div id="revenue-october" class="month-content active">
+                        <h4>October Revenue Plan</h4>
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-26%20at%202.08.04%20PM.jpeg" alt="October Revenue Plan" class="month-image">
+                        <p class="image-caption">October Revenue Planning - Part 1</p>
+                        <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-26%20at%203.23.19%20PM.jpeg" alt="October Revenue Plan" class="month-image">
+                        <p class="image-caption">October Revenue Planning - Part 2</p>
+                    </div>
+                    
+                    <div id="revenue-november" class="month-content">
+                        <h4>November Revenue Plan</h4>
+                        <p>November revenue planning details will be added soon.</p>
+                    </div>
+                    
+                    <div id="revenue-december" class="month-content">
+                        <h4>December Revenue Plan</h4>
+                        <p>December revenue planning details will be added soon.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -878,7 +933,8 @@
                     <h2>Payables & ERP Entries</h2>
                 </div>
                 <div class="modal-body">
-
+                    <h4>Billing, Payables & ERP Entries</h4>
+                    <p>Details for billing, payables and ERP entries will be added soon.</p>
                 </div>
             </div>
         </div>
@@ -891,7 +947,8 @@
                     <h2>Business Expansion</h2>
                 </div>
                 <div class="modal-body">
-
+                    <h4>Business Expansion Plans</h4>
+                    <p>Details for business expansion will be added soon.</p>
                 </div>
             </div>
         </div>
@@ -991,6 +1048,21 @@
             // Get all buttons and contents in the dispatch modal
             const buttons = document.querySelectorAll('#dispatchModal .dispatch-button');
             const contents = document.querySelectorAll('#dispatchModal .month-content');
+            
+            // Remove active class from all buttons and contents
+            buttons.forEach(button => button.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding content
+            buttonElement.classList.add('active');
+            document.getElementById(contentId).classList.add('active');
+        }
+        
+        // Revenue month content switching
+        function switchRevenueMonth(contentId, buttonElement) {
+            // Get all buttons and contents in the revenue modal
+            const buttons = document.querySelectorAll('#revenueModal .revenue-button');
+            const contents = document.querySelectorAll('#revenueModal .month-content');
             
             // Remove active class from all buttons and contents
             buttons.forEach(button => button.classList.remove('active'));
