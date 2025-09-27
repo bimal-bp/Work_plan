@@ -62,7 +62,7 @@
         
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -326,7 +326,7 @@
         .machine-table th, .machine-table td {
             border: 1px solid #ddd;
             padding: 10px;
-            text-align: left;
+            text-align: center;
         }
         
         .machine-table th {
@@ -479,7 +479,7 @@
         .manpower-table th, .manpower-table td {
             border: 1px solid #ddd;
             padding: 10px;
-            text-align: left;
+            text-align: center;
         }
         
         .manpower-table th {
@@ -615,6 +615,7 @@
                 <div class="read-more"> →</div>
             </div>
             
+            <!-- Row 2 -->
             <div class="box" onclick="openModal('dispatchModal')">
                 <div>
                     <h3>Dispatch</h3>
@@ -623,7 +624,6 @@
                 <div class="read-more"> →</div>
             </div>
             
-            <!-- Row 2 -->
             <div class="box" onclick="openModal('revenueModal')">
                 <div>
                     <h3>Revenue</h3>
@@ -645,6 +645,7 @@
                 <div class="read-more"> →</div>
             </div>
             
+            <!-- Row 3 -->
             <div class="box" onclick="openModal('safetyModal')">
                 <div>
                     <h3>Stock Management</h3>
@@ -655,6 +656,20 @@
             <div class="box" onclick="openModal('qualityModal')">
                 <div>
                     <h3>Straregy & Development</h3>
+                </div>
+                <div class="read-more"> →</div>
+            </div>
+            
+            <div class="box" onclick="openModal('hrModal')">
+                <div>
+                    <h3>HR & Administration</h3>
+                </div>
+                <div class="read-more"> →</div>
+            </div>
+            
+            <div class="box" onclick="openModal('maintenanceModal')">
+                <div>
+                    <h3>Maintenance</h3>
                 </div>
                 <div class="read-more"> →</div>
             </div>
@@ -1094,6 +1109,34 @@
                 <h2>Strategy & Development</h2>
                 </div>
  
+                </div>
+            </div>
+        </div>
+        
+        <!-- HR & Administration Modal -->
+        <div id="hrModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('hrModal')">&times;</span>
+                <div class="modal-header">
+                    <h2>HR & Administration</h2>
+                </div>
+                <div class="modal-body">
+                    <h4>HR & Administration Planning</h4>
+                    <p>Details for HR and administration will be added soon.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Maintenance Modal -->
+        <div id="maintenanceModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('maintenanceModal')">&times;</span>
+                <div class="modal-header">
+                    <h2>Maintenance</h2>
+                </div>
+                <div class="modal-body">
+                    <h4>Maintenance Planning</h4>
+                    <p>Details for maintenance planning will be added soon.</p>
                 </div>
             </div>
         </div>
