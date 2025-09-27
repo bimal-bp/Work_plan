@@ -62,7 +62,7 @@
         
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -74,7 +74,7 @@
             box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: all 0.3s ease;
-            border-left: 5px solid #3498db;
+            border-left: 5px solid #2c3e50;
             display: flex;
             flex-direction: column;
             height: 150px;
@@ -84,6 +84,7 @@
         .box:hover {
             transform: translateY(-3px);
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+            border-left-color: #4a6491;
         }
         
         .box h3 {
@@ -110,24 +111,10 @@
         
         .read-more {
             align-self: flex-end;
-            color: #3498db;
+            color: #4a6491;
             font-weight: 600;
             font-size: 0.8rem;
         }
-        
-        /* Different colors for each box */
-        .box:nth-child(1) { border-left-color: #e74c3c; } /* Mine Operations - Red */
-        .box:nth-child(2) { border-left-color: #2ecc71; } /* Boulder Weighbridge - Green */
-        .box:nth-child(3) { border-left-color: #3498db; } /* Plant Operations - Blue */
-        .box:nth-child(4) { border-left-color: #f39c12; } /* Equipment - Orange */
-        .box:nth-child(5) { border-left-color: #9b59b6; } /* Dispatch - Purple */
-        .box:nth-child(6) { border-left-color: #1abc9c; } /* Revenue - Teal */
-        .box:nth-child(7) { border-left-color: #d35400; } /* Payables - Dark Orange */
-        .box:nth-child(8) { border-left-color: #27ae60; } /* Business Expansion - Dark Green */
-        .box:nth-child(9) { border-left-color: #8e44ad; } /* Stock Management - Dark Purple */
-        .box:nth-child(10) { border-left-color: #c0392b; } /* Safety & Compliance - Dark Red */
-        .box:nth-child(11) { border-left-color: #16a085; } /* Maintenance Schedule - Dark Teal */
-        .box:nth-child(12) { border-left-color: #2980b9; } /* Quality Control - Dark Blue */
         
         .modal {
             display: none;
@@ -192,7 +179,7 @@
         
         .modal-body h4 {
             margin: 20px 0 10px;
-            color: #3498db;
+            color: #4a6491;
             font-size: 1.2rem;
         }
         
@@ -214,7 +201,6 @@
             font-size: 0.9rem;
         }
         
-        /* New styles for the enhanced mine operations modal */
         .point-button {
             display: block;
             width: 100%;
@@ -233,13 +219,13 @@
         
         .point-button:hover {
             background-color: #e9ecef;
-            border-color: #3498db;
+            border-color: #4a6491;
         }
         
         .point-button.active {
-            background-color: #3498db;
+            background-color: #4a6491;
             color: white;
-            border-color: #3498db;
+            border-color: #4a6491;
         }
         
         .monthly-breakdown {
@@ -248,7 +234,7 @@
             padding: 15px;
             background-color: #f8f9fa;
             border-radius: 5px;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #4a6491;
         }
         
         .monthly-breakdown.active {
@@ -269,8 +255,8 @@
         }
         
         .month-tab.active {
-            border-bottom-color: #3498db;
-            color: #3498db;
+            border-bottom-color: #4a6491;
+            color: #4a6491;
             font-weight: 600;
         }
         
@@ -282,7 +268,6 @@
             display: block;
         }
         
-        /* New styles for images */
         .month-image {
             width: 100%;
             max-width: 400px;
@@ -305,7 +290,6 @@
             margin-bottom: 15px;
         }
         
-        /* Blasting pattern images */
         .pattern-image-container {
             display: flex;
             flex-wrap: wrap;
@@ -333,7 +317,6 @@
             color: #555;
         }
         
-        /* Machine requirements table */
         .machine-table {
             width: 100%;
             border-collapse: collapse;
@@ -347,7 +330,7 @@
         }
         
         .machine-table th {
-            background-color: #3498db;
+            background-color: #4a6491;
             color: white;
         }
         
@@ -359,7 +342,6 @@
             background-color: #e9ecef;
         }
         
-        /* Plant operations buttons */
         .plant-buttons {
             display: flex;
             gap: 15px;
@@ -382,16 +364,15 @@
         
         .plant-button:hover {
             background-color: #e9ecef;
-            border-color: #3498db;
+            border-color: #4a6491;
         }
         
         .plant-button.active {
-            background-color: #3498db;
+            background-color: #4a6491;
             color: white;
-            border-color: #3498db;
+            border-color: #4a6491;
         }
         
-        /* Dispatch month buttons */
         .dispatch-buttons {
             display: flex;
             gap: 10px;
@@ -414,16 +395,15 @@
         
         .dispatch-button:hover {
             background-color: #e9ecef;
-            border-color: #3498db;
+            border-color: #4a6491;
         }
         
         .dispatch-button.active {
-            background-color: #3498db;
+            background-color: #4a6491;
             color: white;
-            border-color: #3498db;
+            border-color: #4a6491;
         }
         
-        /* Revenue month buttons */
         .revenue-buttons {
             display: flex;
             gap: 10px;
@@ -446,16 +426,15 @@
         
         .revenue-button:hover {
             background-color: #e9ecef;
-            border-color: #3498db;
+            border-color: #4a6491;
         }
         
         .revenue-button.active {
-            background-color: #3498db;
+            background-color: #4a6491;
             color: white;
-            border-color: #3498db;
+            border-color: #4a6491;
         }
         
-        /* Image zoom modal */
         .image-zoom-modal {
             display: none;
             position: fixed;
@@ -491,15 +470,6 @@
             color: #e74c3c;
         }
         
-        /* New styles for additional tabs */
-        .dashboard-row-3 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        /* Manpower table */
         .manpower-table {
             width: 100%;
             border-collapse: collapse;
@@ -526,14 +496,14 @@
         }
         
         @media (max-width: 1024px) {
-            .dashboard, .dashboard-row-3 {
-                grid-template-columns: repeat(2, 1fr);
+            .dashboard {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
         
         @media (max-width: 768px) {
-            .dashboard, .dashboard-row-3 {
-                grid-template-columns: 1fr;
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
             }
             
             h1 {
@@ -560,7 +530,7 @@
             }
             
             .month-tab.active {
-                border-left: 3px solid #3498db;
+                border-left: 3px solid #4a6491;
                 border-bottom: 1px solid #dee2e6;
             }
             
@@ -592,6 +562,12 @@
             .machine-table th, .machine-table td,
             .manpower-table th, .manpower-table td {
                 padding: 5px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dashboard {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -639,7 +615,6 @@
                 <div class="read-more"> →</div>
             </div>
             
-            <!-- Row 2 -->
             <div class="box" onclick="openModal('dispatchModal')">
                 <div>
                     <h3>Dispatch</h3>
@@ -648,6 +623,7 @@
                 <div class="read-more"> →</div>
             </div>
             
+            <!-- Row 2 -->
             <div class="box" onclick="openModal('revenueModal')">
                 <div>
                     <h3>Revenue</h3>
@@ -668,30 +644,11 @@
                 </div>
                 <div class="read-more"> →</div>
             </div>
-        </div>
-        
-        <!-- Row 3 - New Tabs -->
-        <div class="dashboard-row-3">
-            <div class="box" onclick="openModal('stockModal')">
-                <div>
-                    <h3>Stock Management</h3>
-                    <div class="head">Head: Stock Team</div>
-                </div>
-                <div class="read-more"> →</div>
-            </div>
             
             <div class="box" onclick="openModal('safetyModal')">
                 <div>
                     <h3>Safety & Compliance</h3>
                     <div class="head">Head: Safety Officer</div>
-                </div>
-                <div class="read-more"> →</div>
-            </div>
-            
-            <div class="box" onclick="openModal('maintenanceModal')">
-                <div>
-                    <h3>Maintenance Schedule</h3>
-                    <div class="head">Head: Maintenance Team</div>
                 </div>
                 <div class="read-more"> →</div>
             </div>
@@ -763,12 +720,12 @@
                         <div class="pattern-image-container">
                             <div>
                                 <h4>Staggered Pattern</h4>
-                                <img src="https://via.placeholder.com/300x200/3498db/ffffff?text=Staggered+Pattern" alt="Staggered Blasting Pattern" class="pattern-image" onclick="zoomImage(this.src)">
+                                <img src="https://via.placeholder.com/300x200/2c3e50/ffffff?text=Staggered+Pattern" alt="Staggered Blasting Pattern" class="pattern-image" onclick="zoomImage(this.src)">
                                 <p class="pattern-description">Optimized for better fragmentation and reduced vibration</p>
                             </div>
                             <div>
                                 <h4>Rectangular / In-line Pattern</h4>
-                                <img src="https://via.placeholder.com/300x200/2ecc71/ffffff?text=Rectangular+Pattern" alt="Rectangular Blasting Pattern" class="pattern-image" onclick="zoomImage(this.src)">
+                                <img src="https://via.placeholder.com/300x200/4a6491/ffffff?text=Rectangular+Pattern" alt="Rectangular Blasting Pattern" class="pattern-image" onclick="zoomImage(this.src)">
                                 <p class="pattern-description">Standard pattern for consistent results in uniform rock formations</p>
                             </div>
                         </div>
@@ -990,33 +947,29 @@
                             <tr>
                                 <td>Tipper Drivers</td>
                                 <td>26</td>
-                                <td>26</td>
+                                <td>24</td>
                             </tr>
                             <tr>
                                 <td>Helpers</td>
                                 <td>10</td>
-                                <td>10</td>
+                                <td>8</td>
                             </tr>
                             <tr>
                                 <td>Machine Operators</td>
                                 <td>5</td>
-                                <td>5</td>
+                                <td>3</td>
                             </tr>
                             <tr>
                                 <td>Loader Operators</td>
                                 <td>4</td>
-                                <td>4</td>
+                                <td>2</td>
                             </tr>
                             <tr>
                                 <td>Maintenance Staff</td>
                                 <td>8</td>
                                 <td>6</td>
                             </tr>
-                            <tr>
-                                <td>Supervisors</td>
-                                <td>3</td>
-                                <td>3</td>
-                            </tr>
+                       
                         </tbody>
                     </table>
                 </div>
@@ -1126,49 +1079,30 @@
             </div>
         </div>
         
-        <!-- New Modals for Additional Tabs -->
-        
-        <!-- Stock Management Modal -->
-        <div id="stockModal" class="modal">
+        <!-- Stock Management -->
+        <div id="Stock Management" class="modal">
             <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('stockModal')">&times;</span>
+                <span class="close-btn" onclick="closeModal('Stock Management')">&times;</span>
                 <div class="modal-header">
                     <h2>Stock Management</h2>
-                    <div class="head">Head: Stock Team</div>
+                    <div class="head">Head: Stock Management</div>
                 </div>
-                
-                </div>
-            </div>
-        </div>
-        
-        <!-- Safety & Compliance Modal -->
-        <div id="safetyModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('safetyModal')">&times;</span>
-
-                    </table>
+                <div class="modal-body">
+                    <h4>Stock Management</h4>
+             
                 </div>
             </div>
         </div>
         
-        <!-- Maintenance Schedule Modal -->
-        <div id="maintenanceModal" class="modal">
+        <!-- Strategy & Development -->
+        <div id=" Strategy & Development" class="modal">
             <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('maintenanceModal')">&times;</span>
-               
-                </div>
-            </div>
-        </div>
-        
-        <!-- Quality Control Modal -->
-        <div id="qualityModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('qualityModal')">&times;</span>
+                <span class="close-btn" onclick="closeModal('Strategy & Development')">&times;</span>
                 <div class="modal-header">
-                    <h2>Quality Control</h2>
-                    <div class="head">Head: QC Team</div>
+                <h2>Strategy & Development</h2>
                 </div>
-               
+ 
+                </div>
             </div>
         </div>
         
