@@ -5,396 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGX Minerals - Login</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        /* (All previous CSS unchanged – only map-related rules removed) */
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+        body { background:linear-gradient(135deg,#0c0c0c 0%,#1a1a2e 100%); color:#f0f0f0; min-height:100vh; display:flex; justify-content:center; align-items:center; overflow-x:hidden; }
+        .container { display:flex; width:900px; height:550px; background:rgba(20,20,30,.8); border-radius:20px; overflow:hidden; box-shadow:0 15px 35px rgba(0,0,0,.5); position:relative; }
+        .camera-section { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; background:linear-gradient(45deg,#0f0f1a 0%,#1a1a2e 100%); padding:20px; }
+        .camera-container { width:300px; height:300px; border-radius:10px; overflow:hidden; position:relative; box-shadow:0 0 20px rgba(0,0,0,.5); }
+        #cameraPreview { width:100%; height:100%; object-fit:cover; background:#2a2a4a; }
+        .capture-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.7); display:flex; justify-content:center; align-items:center; opacity:0; pointer-events:none; transition:opacity .3s ease; }
+        .capture-overlay.active { opacity:1; pointer-events:auto; }
+        .capture-animation { width:100px; height:100px; border:5px solid #64ff96; border-radius:50%; animation:pulse 1.5s infinite; }
+        @keyframes pulse { 0%{transform:scale(.8);opacity:1} 100%{transform:scale(1.5);opacity:0} }
+        .login-section { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:40px; position:relative; }
+        .company-title { font-size:32px; font-weight:700; margin-bottom:10px; background:linear-gradient(135deg,#64ff96 0%,#2ecc71 100%); -webkit-background-clip:text; background-clip:text; color:transparent; text-align:center; }
+        .company-subtitle { font-size:16px; color:#b0b0d0; margin-bottom:40px; text-align:center; }
+        .login-form { width:100%; max-width:320px; padding:30px; background:rgba(30,30,46,.7); border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,.3); transition:box-shadow .5s ease; position:relative; z-index:2; }
+        .login-form.glow { box-shadow:0 0 20px rgba(100,255,150,.5); }
+        h2 { text-align:center; margin-bottom:30px; font-weight:600; color:#a0f0c0; font-size:28px; }
+        .input-group { margin-bottom:20px; position:relative; }
+        label { display:block; margin-bottom:8px; font-size:14px; color:#b0b0d0; }
+        input { width:100%; padding:12px 15px; background:rgba(40,40,60,.8); border:1px solid #4a4a7a; border-radius:8px; color:#f0f0f0; font-size:16px; transition:all .3s ease; }
+        input:focus { outline:none; border-color:#64ff96; box-shadow:0 0 10px rgba(100,255,150,.3); }
+        .login-btn { width:100%; padding:12px; background:linear-gradient(135deg,#64ff96 0%,#2ecc71 100%); border:none; border-radius:8px; color:#1a1a2e; font-size:16px; font-weight:600; cursor:pointer; transition:all .3s ease; margin-top:10px; }
+        .login-btn:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(100,255,150,.4); }
+        .forgot-password { text-align:center; margin-top:20px; }
+        .forgot-password a { color:#64ff96; text-decoration:none; font-size:14px; transition:color .3s ease; }
+        .forgot-password a:hover { color:#a0f0c0; text-decoration:underline; }
+        .decoration { position:absolute; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle,rgba(100,255,150,.1) 0%,rgba(100,255,150,0) 70%); z-index:1; }
+        .decoration:nth-child(1){top:-50px;right:-50px;width:150px;height:150px;}
+        .decoration:nth-child(2){bottom:-80px;left:-80px;width:200px;height:200px;}
+        .camera-info { margin-top:15px; text-align:center; font-size:14px; color:#b0b0d0; }
+        .location-status { margin-top:10px; text-align:center; font-size:14px; color:#64ff96; }
 
-        body {
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
-            color: #f0f0f0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-        }
+        /* Dashboard */
+        .dashboard { display:none; width:100%; height:100vh; background:linear-gradient(135deg,#0c0c0c 0%,#1a1a2e 100%); color:#f0f0f0; padding:20px; }
+        .dashboard-header { display:flex; justify-content:space-between; align-items:center; padding:20px; background:rgba(20,20,30,.8); border-radius:15px; margin-bottom:30px; box-shadow:0 10px 25px rgba(0,0,0,.3); }
+        .welcome-message { font-size:24px; font-weight:600; background:linear-gradient(135deg,#64ff96 0%,#2ecc71 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+        .dashboard-logout { padding:10px 20px; background:linear-gradient(135deg,#64ff96 0%,#2ecc71 100%); border:none; border-radius:8px; color:#1a1a2e; font-size:16px; font-weight:600; cursor:pointer; transition:all .3s ease; }
+        .dashboard-logout:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(100,255,150,.4); }
+        .dashboard-content { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; padding:20px; }
+        .dashboard-card { background:rgba(20,20,30,.8); border-radius:15px; padding:20px; box-shadow:0 10px 25px rgba(0,0,0,.3); transition:transform .3s ease; }
+        .dashboard-card:hover { transform:translateY(-5px); }
+        .dashboard-card h3 { font-size:18px; margin-bottom:15px; color:#a0f0c0; }
+        .dashboard-card p { color:#b0b0d0; line-height:1.6; }
+        .captured-photo-container { margin-top:20px; text-align:center; padding:20px; background:rgba(20,20,30,.8); border-radius:15px; margin-bottom:20px; }
+        .captured-photo { max-width:100%; border-radius:8px; margin-top:10px; max-height:300px; }
+        .login-record { margin-top:15px; padding:15px; background:rgba(30,30,46,.7); border-radius:10px; text-align:left; }
+        .login-record h4 { color:#64ff96; margin-bottom:10px; }
+        .login-record p { margin-bottom:5px; color:#b0b0d0; }
 
-        .container {
-            display: flex;
-            width: 900px;
-            height: 550px;
-            background: rgba(20, 20, 30, 0.8);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            position: relative;
-        }
-
-        .camera-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(45deg, #0f0f1a 0%, #1a1a2e 100%);
-            position: relative;
-            overflow: hidden;
-            padding: 20px;
-        }
-
-        .camera-container {
-            width: 300px;
-            height: 300px;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-
-        #cameraPreview {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            background: #2a2a4a;
-        }
-
-        .capture-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .capture-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .capture-animation {
-            width: 100px;
-            height: 100px;
-            border: 5px solid #64ff96;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(0.8);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1.5);
-                opacity: 0;
-            }
-        }
-
-        .login-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            position: relative;
-        }
-
-        .company-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-align: center;
-        }
-
-        .company-subtitle {
-            font-size: 16px;
-            color: #b0b0d0;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
-        .login-form {
-            width: 100%;
-            max-width: 320px;
-            padding: 30px;
-            background: rgba(30, 30, 46, 0.7);
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            transition: box-shadow 0.5s ease;
-            position: relative;
-            z-index: 2;
-        }
-
-        .login-form.glow {
-            box-shadow: 0 0 20px rgba(100, 255, 150, 0.5);
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: 600;
-            color: #a0f0c0;
-            font-size: 28px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #b0b0d0;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(40, 40, 60, 0.8);
-            border: 1px solid #4a4a7a;
-            border-radius: 8px;
-            color: #f0f0f0;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #64ff96;
-            box-shadow: 0 0 10px rgba(100, 255, 150, 0.3);
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
-            border: none;
-            border-radius: 8px;
-            color: #1a1a2e;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(100, 255, 150, 0.4);
-        }
-
-        .forgot-password {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .forgot-password a {
-            color: #64ff96;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .forgot-password a:hover {
-            color: #a0f0c0;
-            text-decoration: underline;
-        }
-
-        .decoration {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(100, 255, 150, 0.1) 0%, rgba(100, 255, 150, 0) 70%);
-            z-index: 1;
-        }
-
-        .decoration:nth-child(1) {
-            top: -50px;
-            right: -50px;
-            width: 150px;
-            height: 150px;
-        }
-
-        .decoration:nth-child(2) {
-            bottom: -80px;
-            left: -80px;
-            width: 200px;
-            height: 200px;
-        }
-
-        .camera-info {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 14px;
-            color: #b0b0d0;
-        }
-
-        .location-status {
-            margin-top: 10px;
-            text-align: center;
-            font-size: 14px;
-            color: #64ff96;
-        }
-
-        /* Dashboard Styles */
-        .dashboard {
-            display: none;
-            width: 100%;
-            height: 100vh;
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
-            color: #f0f0f0;
-            padding: 20px;
-        }
-
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: rgba(20, 20, 30, 0.8);
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .welcome-message {
-            font-size: 24px;
-            font-weight: 600;
-            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .dashboard-logout {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
-            border: none;
-            border-radius: 8px;
-            color: #1a1a2e;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .dashboard-logout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(100, 255, 150, 0.4);
-        }
-
-        .dashboard-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .dashboard-card {
-            background: rgba(20, 20, 30, 0.8);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .dashboard-card h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: #a0f0c0;
-        }
-
-        .dashboard-card p {
-            color: #b0b0d0;
-            line-height: 1.6;
-        }
-
-        .captured-photo-container {
-            margin-top: 20px;
-            text-align: center;
-            padding: 20px;
-            background: rgba(20, 20, 30, 0.8);
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .captured-photo {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 10px;
-            max-height: 300px;
-        }
-
-        .login-record {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(30, 30, 46, 0.7);
-            border-radius: 10px;
-            text-align: left;
-        }
-
-        .login-record h4 {
-            color: #64ff96;
-            margin-bottom: 10px;
-        }
-
-        .login-record p {
-            margin-bottom: 5px;
-            color: #b0b0d0;
-        }
-
-        .map-container {
-            margin-top: 15px;
-            height: 200px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        #locationMap {
-            width: 100%;
-            height: 100%;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                width: 90%;
-                height: auto;
-            }
-            
-            .camera-section {
-                padding: 40px 0;
-            }
-            
-            .login-section {
-                padding: 20px;
-            }
+        @media (max-width:768px){
+            .container{flex-direction:column;width:90%;height:auto;}
+            .camera-section{padding:40px 0;}
+            .login-section{padding:20px;}
         }
     </style>
-    <!-- Leaflet CSS for maps -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
     <!-- Login Page -->
@@ -414,7 +79,7 @@
             <div class="decoration"></div>
             <h1 class="company-title">SGX MINERALS</h1>
             <p class="company-subtitle">Resource Management System</p>
-            
+
             <form class="login-form" id="loginForm">
                 <h2>Welcome Back</h2>
                 <div class="input-group">
@@ -441,46 +106,23 @@
         </div>
         <div class="captured-photo-container">
             <h3>Login Security Record</h3>
-            <div id="capturedPhotoInfo"></div>
             <img id="capturedPhoto" class="captured-photo" src="" alt="Captured login photo">
             <div class="login-record" id="loginRecord">
                 <h4>Login Details:</h4>
                 <div id="loginDetails"></div>
-                <div class="map-container">
-                    <div id="locationMap"></div>
-                </div>
+                <p id="locationName" style="margin-top:10px; font-weight:600; color:#64ff96;"></p>
             </div>
         </div>
         <div class="dashboard-content">
-            <div class="dashboard-card">
-                <h3>Resource Overview</h3>
-                <p>View and manage all mineral resources, inventory levels, and extraction schedules.</p>
-            </div>
-            <div class="dashboard-card">
-                <h3>Production Analytics</h3>
-                <p>Monitor production metrics, efficiency rates, and operational performance.</p>
-            </div>
-            <div class="dashboard-card">
-                <h3>Employee Management</h3>
-                <p>Manage staff schedules, assignments, and performance tracking.</p>
-            </div>
-            <div class="dashboard-card">
-                <h3>Equipment Status</h3>
-                <p>Track equipment maintenance schedules and operational status.</p>
-            </div>
-            <div class="dashboard-card">
-                <h3>Environmental Compliance</h3>
-                <p>Monitor environmental impact and ensure regulatory compliance.</p>
-            </div>
-            <div class="dashboard-card">
-                <h3>Reports & Documentation</h3>
-                <p>Generate reports, export data, and manage documentation.</p>
-            </div>
+            <div class="dashboard-card"><h3>Resource Overview</h3><p>View and manage all mineral resources, inventory levels, and extraction schedules.</p></div>
+            <div class="dashboard-card"><h3>Production Analytics</h3><p>Monitor production metrics, efficiency rates, and operational performance.</p></div>
+            <div class="dashboard-card"><h3>Employee Management</h3><p>Manage staff schedules, assignments, and performance tracking.</p></div>
+            <div class="dashboard-card"><h3>Equipment Status</h3><p>Track equipment maintenance schedules and operational status.</p></div>
+            <div class="dashboard-card"><h3>Environmental Compliance</h3><p>Monitor environmental impact and ensure regulatory compliance.</p></div>
+            <div class="dashboard-card"><h3>Reports & Documentation</h3><p>Generate reports, export data, and manage documentation.</p></div>
         </div>
     </div>
 
-    <!-- Leaflet JS for maps -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // DOM Elements
@@ -496,264 +138,148 @@
             const capturedPhoto = document.getElementById('capturedPhoto');
             const loginDetails = document.getElementById('loginDetails');
             const locationStatus = document.getElementById('locationStatus');
-            const locationMap = document.getElementById('locationMap');
-            
+            const locationNameEl = document.getElementById('locationName');
+
             // Variables
             let currentStream = null;
             let isCameraActive = false;
             let userLocation = null;
-            let map = null;
-            let marker = null;
-            
-            // Employee database (in a real app, this would be on the server)
+
+            // Employee DB
             const employees = {
-                'sgxminerals': {
-                    password: 'admin123',
-                    name: 'Alex Johnson',
-                    role: 'Operations Manager'
-                },
-                'jdoe': {
-                    password: 'mineral2023',
-                    name: 'Jane Doe',
-                    role: 'Geologist'
-                },
-                'rsmith': {
-                    password: 'extraction22',
-                    name: 'Robert Smith',
-                    role: 'Field Supervisor'
-                }
+                'sgxminerals': { password: 'admin123', name: 'Alex Johnson', role: 'Operations Manager' },
+                'jdoe': { password: 'mineral2023', name: 'Jane Doe', role: 'Geologist' },
+                'rsmith': { password: 'extraction22', name: 'Robert Smith', role: 'Field Supervisor' }
             };
-            
-            // Initialize the login form with demo credentials
+
+            // Pre-fill demo
             usernameInput.value = 'sgxminerals';
             passwordInput.value = 'admin123';
-            
-            // Function to start the camera
+
+            // ---------- CAMERA ----------
             function startCamera() {
-                if (currentStream) {
-                    stopCamera();
-                }
-                
-                const constraints = {
-                    video: { 
-                        width: { ideal: 640 },
-                        height: { ideal: 480 }
-                    },
-                    audio: false
-                };
-                
-                navigator.mediaDevices.getUserMedia(constraints)
-                    .then(function(stream) {
-                        currentStream = stream;
-                        cameraPreview.srcObject = stream;
-                        isCameraActive = true;
-                    })
-                    .catch(function(err) {
-                        console.error("Error accessing camera: ", err);
-                        alert("Could not access camera. Please check permissions and try again.");
-                    });
+                if (currentStream) stopCamera();
+                navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 640 }, height: { ideal: 480 } }, audio: false })
+                    .then(stream => { currentStream = stream; cameraPreview.srcObject = stream; isCameraActive = true; })
+                    .catch(err => { console.error(err); alert("Camera access denied."); });
             }
-            
-            // Function to stop the camera
             function stopCamera() {
-                if (currentStream) {
-                    currentStream.getTracks().forEach(track => {
-                        track.stop();
-                    });
-                    currentStream = null;
-                    isCameraActive = false;
-                }
+                if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); currentStream = null; isCameraActive = false; }
             }
-            
-            // Function to get user's location
+
+            // ---------- LOCATION ----------
             function getLocation() {
-                if (navigator.geolocation) {
-                    locationStatus.textContent = "Getting your location...";
-                    
-                    navigator.geolocation.getCurrentPosition(
-                        function(position) {
-                            userLocation = {
-                                latitude: position.coords.latitude,
-                                longitude: position.coords.longitude,
-                                accuracy: position.coords.accuracy
-                            };
-                            locationStatus.textContent = "Location captured successfully";
-                            locationStatus.style.color = "#64ff96";
-                        },
-                        function(error) {
-                            console.error("Error getting location: ", error);
-                            locationStatus.textContent = "Could not get location. Using default.";
-                            locationStatus.style.color = "#ff6464";
-                            
-                            // Set a default location (SGX Minerals HQ)
-                            userLocation = {
-                                latitude: 1.280094,
-                                longitude: 103.850949,
-                                accuracy: 10000
-                            };
-                        },
-                        {
-                            enableHighAccuracy: true,
-                            timeout: 10000,
-                            maximumAge: 0
-                        }
-                    );
-                } else {
-                    locationStatus.textContent = "Geolocation is not supported by this browser.";
-                    locationStatus.style.color = "#ff6464";
-                    
-                    // Set a default location
-                    userLocation = {
-                        latitude: 1.280094,
-                        longitude: 103.850949,
-                        accuracy: 10000
-                    };
+                locationStatus.textContent = "Getting your location...";
+                if (!navigator.geolocation) {
+                    setDefaultLocation();
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(
+                    pos => {
+                        userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude, acc: pos.coords.accuracy };
+                        locationStatus.textContent = "Location captured";
+                        locationStatus.style.color = "#64ff96";
+                        reverseGeocode(userLocation.lat, userLocation.lon);
+                    },
+                    err => {
+                        console.error(err);
+                        locationStatus.textContent = "Using default location";
+                        locationStatus.style.color = "#ff6464";
+                        setDefaultLocation();
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            }
+
+            function setDefaultLocation() {
+                userLocation = { lat: 1.280094, lon: 103.850949, acc: 10000 };
+                reverseGeocode(userLocation.lat, userLocation.lon);
+            }
+
+            // ---------- REVERSE GEOCODE ----------
+            async function reverseGeocode(lat, lon) {
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
+                    const data = await res.json();
+                    const address = data.display_name || `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+                    locationNameEl.textContent = `Location: ${address}`;
+                } catch (e) {
+                    console.error(e);
+                    locationNameEl.textContent = `Location: ${lat.toFixed(6)}, ${lon.toFixed(6)} (geocoding failed)`;
                 }
             }
-            
-            // Function to initialize map
-            function initMap(latitude, longitude) {
-                if (map) {
-                    map.remove();
-                }
-                
-                map = L.map('locationMap').setView([latitude, longitude], 13);
-                
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(map);
-                
-                marker = L.marker([latitude, longitude]).addTo(map)
-                    .bindPopup('Login location')
-                    .openPopup();
+
+            // ---------- CAPTURE ----------
+            async function captureImage() {
+                if (!isCameraActive) return null;
+                captureOverlay.classList.add('active');
+                await new Promise(r => setTimeout(r, 1000));
+
+                const canvas = document.createElement('canvas');
+                canvas.width = cameraPreview.videoWidth;
+                canvas.height = cameraPreview.videoHeight;
+                canvas.getContext('2d').drawImage(cameraPreview, 0, 0);
+                const dataUrl = canvas.toDataURL('image/jpeg');
+                captureOverlay.classList.remove('active');
+                return dataUrl;
             }
-            
-            // Function to capture image from camera
-            function captureImage() {
-                if (!isCameraActive) {
-                    alert("Camera is not active. Please try again.");
-                    return null;
-                }
-                
-                return new Promise((resolve) => {
-                    // Show capture animation
-                    captureOverlay.classList.add('active');
-                    
-                    // Wait for animation to show
-                    setTimeout(() => {
-                        // Create a canvas to capture the image
-                        const canvas = document.createElement('canvas');
-                        canvas.width = cameraPreview.videoWidth;
-                        canvas.height = cameraPreview.videoHeight;
-                        const ctx = canvas.getContext('2d');
-                        
-                        // Draw the current video frame to the canvas
-                        ctx.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
-                        
-                        // Get the image data as a data URL
-                        const imageData = canvas.toDataURL('image/jpeg');
-                        
-                        // Hide capture animation
-                        captureOverlay.classList.remove('active');
-                        
-                        resolve(imageData);
-                    }, 1000);
-                });
-            }
-            
-            // Function to handle successful login
-            async function loginSuccess(employeeName) {
-                // Capture photo before proceeding
-                const photoData = await captureImage();
-                
-                // Hide login page and show dashboard
+
+            // ---------- LOGIN ----------
+            async function loginSuccess(name) {
+                const photo = await captureImage();
                 loginPage.style.display = 'none';
                 dashboardPage.style.display = 'block';
-                
-                // Update welcome message
-                welcomeMessage.textContent = `Welcome, ${employeeName}!`;
-                
-                // Display captured photo and login details
-                if (photoData) {
-                    capturedPhoto.src = photoData;
-                    
-                    const now = new Date();
-                    const locationText = userLocation ? 
-                        `Latitude: ${userLocation.latitude.toFixed(6)}, Longitude: ${userLocation.longitude.toFixed(6)}` : 
-                        "Location not available";
-                    
-                    loginDetails.innerHTML = `
-                        <p><strong>User:</strong> ${employeeName}</p>
-                        <p><strong>Login Time:</strong> ${now.toLocaleString()}</p>
-                        <p><strong>Location:</strong> ${locationText}</p>
-                        <p><strong>Accuracy:</strong> ${userLocation ? `${userLocation.accuracy} meters` : 'N/A'}</p>
-                    `;
-                    
-                    // Initialize map if location is available
-                    if (userLocation) {
-                        initMap(userLocation.latitude, userLocation.longitude);
-                    }
-                }
-                
-                // Stop camera
-                stopCamera();
+                welcomeMessage.textContent = `Welcome, ${name}!`;
+
+                if (photo) capturedPhoto.src = photo;
+
+                const now = new Date();
+                const coordText = userLocation ? `${userLocation.lat.toFixed(6)}, ${userLocation.lon.toFixed(6)}` : "N/A";
+
+                loginDetails.innerHTML = `
+                    <p><strong>User:</strong> ${name}</p>
+                    <p><strong>Login Time:</strong> ${now.toLocaleString()}</p>
+                    <p><strong>Coordinates:</strong> ${coordText}</p>
+                    <p><strong>Accuracy:</strong> ${userLocation ? userLocation.acc + " m" : "N/A"}</p>
+                `;
             }
-            
-            // Function to handle logout
+
+            // ---------- LOGOUT ----------
             function logout() {
-                // Show login page and hide dashboard
                 loginPage.style.display = 'flex';
                 dashboardPage.style.display = 'none';
-                
-                // Reset form
                 loginForm.reset();
                 usernameInput.value = 'sgxminerals';
                 passwordInput.value = 'admin123';
-                
-                // Clear captured photo
                 capturedPhoto.src = '';
                 loginDetails.innerHTML = '';
-                
-                // Reset location status
+                locationNameEl.textContent = '';
                 locationStatus.textContent = "Getting your location...";
                 locationStatus.style.color = "#64ff96";
-                
-                // Restart camera and location tracking
                 startCamera();
                 getLocation();
             }
-            
-            // Form submission
-            loginForm.addEventListener('submit', async function(e) {
+
+            // ---------- EVENTS ----------
+            loginForm.addEventListener('submit', async e => {
                 e.preventDefault();
-                
-                const username = usernameInput.value;
-                const password = passwordInput.value;
-                
-                if (employees[username] && employees[username].password === password) {
-                    await loginSuccess(employees[username].name);
+                const u = usernameInput.value, p = passwordInput.value;
+                if (employees[u] && employees[u].password === p) {
+                    await loginSuccess(employees[u].name);
                 } else {
-                    alert('Invalid credentials. Please try again.\nHint: Username: sgxminerals, Password: admin123');
+                    alert('Invalid credentials.\nHint: sgxminerals / admin123');
                 }
             });
-            
-            // Logout button
+
             logoutBtn.addEventListener('click', logout);
-            
-            // Add glow effect to login form on input focus
-            [usernameInput, passwordInput].forEach(input => {
-                input.addEventListener('focus', function() {
-                    loginForm.classList.add('glow');
-                });
-                
-                input.addEventListener('blur', function() {
-                    if (!usernameInput.matches(':focus') && !passwordInput.matches(':focus')) {
-                        loginForm.classList.remove('glow');
-                    }
-                });
+
+            // Glow effect
+            [usernameInput, passwordInput].forEach(i => {
+                i.addEventListener('focus', () => loginForm.classList.add('glow'));
+                i.addEventListener('blur', () => { if (!usernameInput.matches(':focus') && !passwordInput.matches(':focus')) loginForm.classList.remove('glow'); });
             });
-            
-            // Initialize camera and location on page load
+
+            // Init
             startCamera();
             getLocation();
         });
