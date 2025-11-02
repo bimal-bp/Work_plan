@@ -8,14 +8,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SheetJS for Excel export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Heroicons (for icons, inlined as SVG where needed) -->
     <style>
         body { background-color: #f3f4f6; font-family: sans-serif; }
         .card-header { background-color: #FF7A00; color: white; }
         .editable { cursor: pointer; font-family: monospace; }
         .error { border-color: red; }
         th.sticky { position: sticky; top: 0; background: white; z-index: 10; }
-        /* Sparkline placeholder styles (optional, using simple div) */
         .sparkline { width: 100px; height: 20px; background: linear-gradient(to right, #ddd, #aaa); }
     </style>
 </head>
@@ -54,33 +52,33 @@
                     <tbody>
                         <tr>
                             <td class="border p-2">Mine Production</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Boulder Dispatch QTY</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Plant Production</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Dispatch QTY</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Basic Revenue</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Total Revenue</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -105,25 +103,52 @@
                     <tbody>
                         <tr>
                             <td class="border p-2">Royalty Balance in MDL (Tons)</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">7.5</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">12.4</span></td>
                             <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">1</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">167</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2 font-bold" id="royalty-total">187.9</td> <!-- Pre-calculated -->
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2 font-bold" id="royalty-total">0</td>
                         </tr>
                         <tr>
                             <td class="border p-2 font-bold" colspan="7">Grand Total</td>
-                            <td class="border p-2 font-bold" id="royalty-grand-total">187.9</td>
+                            <td class="border p-2 font-bold" id="royalty-grand-total">0</td>
                         </tr>
                     </tbody>
                 </table>
+                
+                <!-- Blasting Details -->
+                <div class="mt-4">
+                    <h3 class="font-semibold mb-2">Blasting Details</h3>
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="border p-2">No. of Holes</th>
+                                <th class="border p-2">Total Feetage</th>
+                                <th class="border p-2">Blasting (Yes/No)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                <td class="border p-2">
+                                    <select class="w-full p-1 border rounded" onchange="validateAndUpdate(this)">
+                                        <option value=""></option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             
-            <!-- Section 3: Today’s Dispatch Plan in Tons -->
-            <div class="bg-white p-4 rounded-lg shadow md:col-span-2"> <!-- Span 2 cols on desktop -->
-                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Dispatch plan by customer and material.">Today’s Dispatch Plan in Tons</h2>
+            <!-- Section 3: Today's Dispatch Plan in Tons -->
+            <div class="bg-white p-4 rounded-lg shadow md:col-span-2">
+                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Dispatch plan by customer and material.">Today's Dispatch Plan in Tons</h2>
                 <table class="w-full border-collapse" id="dispatch-table">
                     <thead>
                         <tr>
@@ -148,7 +173,6 @@
                             <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                             <td class="border p-2 font-bold">0</td>
                         </tr>
-                        <!-- Repeat for other customers -->
                         <tr>
                             <td class="border p-2">Chenderu & Co</td>
                             <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
@@ -230,23 +254,23 @@
                     <tbody>
                         <tr>
                             <td class="border p-2">10MM</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">20MM</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">RIVO</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">M-Sand</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Railway Ballast (40–65MM)</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2 font-bold">Total Stock</td>
@@ -254,19 +278,19 @@
                         </tr>
                         <tr>
                             <td class="border p-2">Boulder Stock at Quarry</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Boulder Stock at Plant</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Diesel Stock</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Tire Stock</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -287,54 +311,39 @@
                     <tbody>
                         <tr>
                             <td class="border p-2">Tippers</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true"> </span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Excavators Working</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true"> </span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
                         </tr>
                         <tr>
                             <td class="border p-2">Loaders Working</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true"> </span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Total Trips of Tippers</td>
+                            <td class="border p-2" colspan="3"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Total Tonnage Moved</td>
+                            <td class="border p-2" colspan="3"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Excavator Working Hours</td>
+                            <td class="border p-2" colspan="3"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             
-            <!-- Section 6: Operational Performance Summary -->
-            <div class="bg-white p-4 rounded-lg shadow md:col-span-2">
-                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Key performance indicators.">Operational Performance Summary</h2>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="bg-gray-100 p-4 rounded text-center">
-                        <h3 class="font-bold">Total Trips of Tippers</h3>
-                        <span class="text-2xl editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span>
-                        <div class="sparkline mx-auto mt-2"></div>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded text-center">
-                        <h3 class="font-bold">Total Tonnage Moved</h3>
-                        <span class="text-2xl editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span>
-                        <div class="sparkline mx-auto mt-2"></div>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded text-center">
-                        <h3 class="font-bold">Excavator Working Hours</h3>
-                        <span class="text-2xl editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span>
-                        <div class="sparkline mx-auto mt-2"></div>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded text-center">
-                        <h3 class="font-bold">Compressor Holes Drilled</h3>
-                        <span class="text-2xl editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span>
-                        <div class="sparkline mx-auto mt-2"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Section 7: Fund Requirement & Collection Plan -->
+            <!-- Section 6: Fund Requirement & Collection Plan -->
             <div class="bg-white p-4 rounded-lg shadow md:col-span-2">
                 <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Financial planning for funds and collections.">Fund Requirement & Collection Plan</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -348,12 +357,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Add rows dynamically or static; for example -->
                                 <tr>
                                     <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                                 </tr>
-                                <!-- Add more rows as needed, or use JS to add -->
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -375,9 +402,28 @@
                             <tbody>
                                 <tr>
                                     <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
                                 </tr>
-                                <!-- Add more -->
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                                </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -400,12 +446,12 @@
 
         // Validate and update totals
         function validateAndUpdate(element) {
-            const value = element.textContent.trim();
-            if (element.dataset.type === 'number' && isNaN(parseFloat(value))) {
+            const value = element.textContent ? element.textContent.trim() : element.value;
+            if (element.dataset && element.dataset.type === 'number' && isNaN(parseFloat(value))) {
                 element.classList.add('error');
                 return;
             }
-            element.classList.remove('error');
+            if (element.classList) element.classList.remove('error');
             updateTotals();
         }
 
@@ -515,6 +561,6 @@
                 e.target.blur();
             }
         });
-    </script>
+    </script>  
 </body>
 </html>
