@@ -3,522 +3,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGX Minerals - Login</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Daily Production & Dispatch Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Heroicons (for icons, inlined as SVG where needed) -->
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
-        body { background:linear-gradient(135deg,#0c0c0c 0%,#1a1a2e 100%); color:#f0f0f0; min-height:100vh; display:flex; justify-content:center; align-items:center; overflow-x:hidden; }
-        .container { display:flex; width:900px; height:550px; background:rgba(20,20,30,.9); border-radius:20px; overflow:hidden; box-shadow:0 15px 35px rgba(0,0,0,.5); position:relative; }
-        .camera-section { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; background:linear-gradient(45deg,#0f0f1a 0%,#1a1a2e 100%); padding:20px; }
-        .camera-container { width:300px; height:300px; border-radius:10px; overflow:hidden; position:relative; box-shadow:0 0 20px rgba(0,0,0,.5); }
-        #cameraPreview { width:100%; height:100%; object-fit:cover; background:#2a2a4a; }
-        .capture-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.7); display:flex; justify-content:center; align-items:center; opacity:0; pointer-events:none; transition:opacity .3s ease; }
-        .capture-overlay.active { opacity:1; pointer-events:auto; }
-        .capture-animation { width:100px; height:100px; border:5px solid #64ff96; border-radius:50%; animation:pulse 1.5s infinite; }
-        @keyframes pulse { 0%{transform:scale(.8);opacity:1} 100%{transform:scale(1.5);opacity:0} }
-        .login-section { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:40px; position:relative; }
-        .company-title { font-size:32px; font-weight:700; margin-bottom:10px; background:linear-gradient(135deg,#64ff96 0%,#2ecc71 100%); -webkit-background-clip:text; background-clip:text; color:transparent; text-align:center; }
-        .company-subtitle { font-size:16px; color:#b0b0d0; margin-bottom:40px; text-align:center; }
-        .login-form { width:100%; max-width:320px; padding:30px; background:rgba(30,30,46,.8); border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,.3); transition:box-shadow .5s ease; position:relative; z-index:2; }
-        .login-form.glow { box-shadow:0 0 20px rgba(100,255,150,.5); }
-        h2 { text-align:center; margin-bottom:30px; font-weight:600; color:#a0f0c0; font-size:28px; }
-        .input-group { margin-bottom:20px; position:relative; }
-        label { display:block; margin-bottom:8px; font-size:14px; color:#b0b0d0; }
-        input { width:100%; padding:12px 15px; background:rgba(40,40,60,.8); border:1px solid #4a4a7a; border-radius:8px; color:#f0f0f0; font-size:16px; transition:all .3s ease; }
-        input:focus { outline:none; border-color:#64ff96; box-shadow:0 0 10px rgba(100,255,150,.3); }
-        .login-btn { width:100%; padding:12px; background:linear-gradient(135deg,#64ff96 0%,#2ecc71 100%); border:none; border-radius:8px; color:#1a1a2e; font-size:16px; font-weight:600; cursor:pointer; transition:all .3s ease; margin-top:10px; display:flex; justify-content:center; align-items:center; gap:8px; }
-        .login-btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 5px 15px rgba(100,255,150,.4); }
-        .login-btn:disabled { background:#555; cursor:not-allowed; opacity:0.7; }
-        .forgot-password { text-align:center; margin-top:20px; }
-        .forgot-password a { color:#64ff96; text-decoration:none; font-size:14px; transition:color .3s ease; }
-        .forgot-password a:hover { color:#a0f0c0; text-decoration:underline; }
-        .decoration { position:absolute; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle,rgba(100,255,150,.1) 0%,rgba(100,255,150,0) 70%); z-index:1; }
-        .decoration:nth-child(1){top:-50px;right:-50px;width:150px;height:150px;}
-        .decoration:nth-child(2){bottom:-80px;left:-80px;width:200px;height:200px;}
-        .camera-info { margin-top:15px; text-align:center; font-size:14px; color:#b0b0d0; }
-        .location-status { margin-top:10px; text-align:center; font-size:14px; display:flex; align-items:center; justify-content:center; gap:6px; }
-        .location-status i { font-size:16px; }
-        .location-status.success { color:#64ff96; }
-        .location-status.error { color:#ff6464; }
-        .location-status.waiting { color:#b0b0d0; }
-        .location-status.warning { color:#ffa500; }
-        .retry-btn { margin-top:12px; padding:8px 16px; background:#64ff96; color:#1a1a2e; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:14px; display:flex; align-items:center; gap:6px; }
-        .retry-btn:hover { background:#2ecc71; }
-        .spinner { width:16px; height:16px; border:2px solid #b0b0d0; border-top-color:#64ff96; border-radius:50%; animation:spin 1s linear infinite; }
-        @keyframes spin { to { transform:rotate(360deg); } }
-        .location-options { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
-        .location-option { padding:8px 12px; background:rgba(40,40,60,.8); border:1px solid #4a4a7a; border-radius:6px; color:#f0f0f0; cursor:pointer; transition:all .3s ease; text-align:center; font-size:14px; }
-        .location-option:hover { background:rgba(60,60,80,.8); border-color:#64ff96; }
-        .location-option i { margin-right:6px; }
-
-        /* Dashboard */
-        .dashboard { display:none; width:100%; height:100vh; background:linear-gradient(135deg,#0c0c0c 0%,#1a1a2e 100%); color:#f0f0f0; padding:20px; }
-        .dashboard-header { display:flex; justify-content:space-between; align-items:center; padding:20px; background:rgba(20,20,30,.8); border-radius:15px; margin-bottom:30px; box-shadow:0 10px 25px rgba(0,0,0,.3); }
-        .welcome-message { font-size:24px; font-weight:600; background:linear-gradient(135deg,#64ff96 0%,#2ecc71 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
-        .dashboard-logout { padding:10px 20px; background:linear-gradient(135deg,#64ff96 0%,#2ecc71 100%); border:none; border-radius:8px; color:#1a1a2e; font-size:16px; font-weight:600; cursor:pointer; transition:all .3s ease; display:flex; align-items:center; gap:8px; }
-        .dashboard-logout:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(100,255,150,.4); }
-        .dashboard-content { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; padding:20px; }
-        .dashboard-card { background:rgba(20,20,30,.8); border-radius:15px; padding:20px; box-shadow:0 10px 25px rgba(0,0,0,.3); transition:transform .3s ease; }
-        .dashboard-card:hover { transform:translateY(-5px); }
-        .dashboard-card h3 { font-size:18px; margin-bottom:15px; color:#a0f0c0; }
-        .dashboard-card p { color:#b0b0d0; line-height:1.6; }
-        .captured-photo-container { margin:20px auto; max-width:600px; text-align:center; padding:20px; background:rgba(20,20,30,.8); border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,.3); }
-        .captured-photo { max-width:100%; max-height:300px; border-radius:8px; margin-top:10px; border:2px solid #64ff96; }
-        .login-record { margin-top:15px; padding:15px; background:rgba(30,30,46,.7); border-radius:10px; text-align:left; font-size:14px; }
-        .login-record h4 { color:#64ff96; margin-bottom:10px; }
-        .login-record p { margin:6px 0; color:#b0b0d0; }
-        @media (max-width:768px){
-            .container{flex-direction:column;width:90%;height:auto;}
-            .camera-section{padding:40px 0;}
-            .login-section{padding:20px;}
-            .dashboard-header{flex-direction:column;gap:15px;text-align:center;}
-        }
+        body { background-color: #f3f4f6; font-family: sans-serif; }
+        .card-header { background-color: #FF7A00; color: white; }
+        .editable { cursor: pointer; font-family: monospace; }
+        .error { border-color: red; }
+        th.sticky { position: sticky; top: 0; background: white; z-index: 10; }
+        /* Sparkline placeholder styles (optional, using simple div) */
+        .sparkline { width: 100px; height: 20px; background: linear-gradient(to right, #ddd, #aaa); }
     </style>
 </head>
-<body>
-    <!-- Login Page -->
-    <div class="container" id="loginPage">
-        <div class="camera-section">
-            <div class="camera-container">
-                <video id="cameraPreview" autoplay muted playsinline></video>
-                <div class="capture-overlay" id="captureOverlay">
-                    <div class="capture-animation"></div>
+<body class="p-4">
+    <div class="max-w-7xl mx-auto">
+        <!-- Title -->
+        <h1 class="text-2xl font-bold text-center mb-4">Daily Production & Dispatch Dashboard — Date: <span id="dashboard-date">01-11-2025</span></h1>
+        
+        <!-- Top Action Bar -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white p-4 rounded-lg shadow">
+            <div class="flex items-center">
+                <label for="date-input" class="mr-2">Date:</label>
+                <input type="text" id="date-input" value="01-11-2025" class="border rounded p-1" onchange="updateDate(this.value)">
+            </div>
+            <div class="flex space-x-2 mt-2 md:mt-0">
+                <button onclick="exportCSV()" class="bg-blue-500 text-white px-4 py-2 rounded">Export CSV</button>
+                <button onclick="exportExcel()" class="bg-green-500 text-white px-4 py-2 rounded">Export Excel</button>
+                <button onclick="printDashboard()" class="bg-gray-500 text-white px-4 py-2 rounded">Print</button>
+            </div>
+        </div>
+        
+        <!-- Responsive Grid: 1 col mobile, 2 col desktop -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Section 1: Production Summary -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Summary of production metrics for the day and month.">Production Summary</h2>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="border p-2 sticky">Metric</th>
+                            <th class="border p-2 sticky" title="For The Day">FTD</th>
+                            <th class="border p-2 sticky" title="Month To Date">MTD</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border p-2">Mine Production</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Boulder Dispatch QTY</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Plant Production</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Dispatch QTY</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Basic Revenue</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Total Revenue</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Section 2: Royalty Requirement & Dispatch Planning -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Royalty balances and planning for materials.">Royalty Requirement & Dispatch Planning</h2>
+                <table class="w-full border-collapse" id="royalty-table">
+                    <thead>
+                        <tr>
+                            <th class="border p-2 sticky">Materiel</th>
+                            <th class="border p-2 sticky" title="10MM material">10MM</th>
+                            <th class="border p-2 sticky" title="20MM material">20MM</th>
+                            <th class="border p-2 sticky" title="40MM material">40MM</th>
+                            <th class="border p-2 sticky" title="40-65MM material">40–65MM</th>
+                            <th class="border p-2 sticky" title="Msand material">Msand</th>
+                            <th class="border p-2 sticky" title="GSB material">GSB</th>
+                            <th class="border p-2 sticky">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border p-2">Royalty Balance in MDL (Tons)</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">7.5</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">12.4</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">1</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">167</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2 font-bold" id="royalty-total">187.9</td> <!-- Pre-calculated -->
+                        </tr>
+                        <tr>
+                            <td class="border p-2 font-bold" colspan="7">Grand Total</td>
+                            <td class="border p-2 font-bold" id="royalty-grand-total">187.9</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Section 3: Today’s Dispatch Plan in Tons -->
+            <div class="bg-white p-4 rounded-lg shadow md:col-span-2"> <!-- Span 2 cols on desktop -->
+                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Dispatch plan by customer and material.">Today’s Dispatch Plan in Tons</h2>
+                <table class="w-full border-collapse" id="dispatch-table">
+                    <thead>
+                        <tr>
+                            <th class="border p-2 sticky">Customer</th>
+                            <th class="border p-2 sticky">10MM</th>
+                            <th class="border p-2 sticky">20MM</th>
+                            <th class="border p-2 sticky">40MM</th>
+                            <th class="border p-2 sticky">40–65MM</th>
+                            <th class="border p-2 sticky">Msand</th>
+                            <th class="border p-2 sticky">GSB</th>
+                            <th class="border p-2 sticky">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border p-2">Aravind Techno</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2 font-bold">0</td>
+                        </tr>
+                        <!-- Repeat for other customers -->
+                        <tr>
+                            <td class="border p-2">Chenderu & Co</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2 font-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Afcon Projects</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2 font-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">KEC</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2 font-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">JS Mineing</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2 font-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">L&T – P1</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2 font-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Others</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
+                            <td class="border p-2 font-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2 font-bold">Total</td>
+                            <td class="border p-2 font-bold">0</td>
+                            <td class="border p-2 font-bold">0</td>
+                            <td class="border p-2 font-bold">0</td>
+                            <td class="border p-2 font-bold">0</td>
+                            <td class="border p-2 font-bold">0</td>
+                            <td class="border p-2 font-bold">0</td>
+                            <td class="border p-2 font-bold">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Section 4: Stock Status -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Current stock levels.">Stock Status</h2>
+                <table class="w-full border-collapse">
+                    <tbody>
+                        <tr>
+                            <td class="border p-2">10MM</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">20MM</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">RIVO</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">M-Sand</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Railway Ballast (40–65MM)</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2 font-bold">Total Stock</td>
+                            <td class="border p-2 font-bold" id="stock-total">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Boulder Stock at Quarry</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Boulder Stock at Plant</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Diesel Stock</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Tire Stock</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Section 5: Equipment Update -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Status of equipment.">Equipment Update</h2>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="border p-2 sticky">Equipment</th>
+                            <th class="border p-2 sticky">Running</th>
+                            <th class="border p-2 sticky">Idle</th>
+                            <th class="border p-2 sticky">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border p-2">Tippers</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true"> </span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Excavators Working</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true"> </span></td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2">Loaders Working</td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                            <td class="border p-2"><span class="editable" contenteditable="true"> </span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Section 6: Operational Performance Summary -->
+            <div class="bg-white p-4 rounded-lg shadow md:col-span-2">
+                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Key performance indicators.">Operational Performance Summary</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-gray-100 p-4 rounded text-center">
+                        <h3 class="font-bold">Total Trips of Tippers</h3>
+                        <span class="text-2xl editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span>
+                        <div class="sparkline mx-auto mt-2"></div>
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded text-center">
+                        <h3 class="font-bold">Total Tonnage Moved</h3>
+                        <span class="text-2xl editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span>
+                        <div class="sparkline mx-auto mt-2"></div>
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded text-center">
+                        <h3 class="font-bold">Excavator Working Hours</h3>
+                        <span class="text-2xl editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span>
+                        <div class="sparkline mx-auto mt-2"></div>
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded text-center">
+                        <h3 class="font-bold">Compressor Holes Drilled</h3>
+                        <span class="text-2xl editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span>
+                        <div class="sparkline mx-auto mt-2"></div>
+                    </div>
                 </div>
             </div>
-            <div class="camera-info">Camera will capture your photo upon login</div>
-            <div class="location-status waiting" id="locationStatus">
-                <div class="spinner"></div> Getting your location…
-            </div>
-            <div class="location-options" id="locationOptions" style="display:none;">
-                <button class="location-option" id="retryLocation">
-                    <i class="fas fa-redo"></i> Retry High Accuracy Location
-                </button>
-                <button class="location-option" id="useApproximateLocation">
-                    <i class="fas fa-map-marker-alt"></i> Use Approximate Location
-                </button>
-                <button class="location-option" id="skipLocation">
-                    <i class="fas fa-forward"></i> Skip Location (Limited Access)
-                </button>
-            </div>
-        </div>
-
-        <div class="login-section">
-            <div class="decoration"></div>
-            <div class="decoration"></div>
-            <h1 class="company-title">SGX MINERALS</h1>
-            <p class="company-subtitle">Resource Management System</p>
-
-            <form class="login-form" id="loginForm">
-                <h2>Welcome Back</h2>
-                <div class="input-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" placeholder="Enter your username" required>
+            
+            <!-- Section 7: Fund Requirement & Collection Plan -->
+            <div class="bg-white p-4 rounded-lg shadow md:col-span-2">
+                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Financial planning for funds and collections.">Fund Requirement & Collection Plan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="font-bold mb-2">Fund Requirement</h3>
+                        <table class="w-full border-collapse" id="fund-requirement-table">
+                            <thead>
+                                <tr>
+                                    <th class="border p-2">Vendor Name</th>
+                                    <th class="border p-2">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Add rows dynamically or static; for example -->
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                                </tr>
+                                <!-- Add more rows as needed, or use JS to add -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="border p-2 font-bold">Total Fund Requirement</td>
+                                    <td class="border p-2 font-bold" id="fund-total">0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div>
+                        <h3 class="font-bold mb-2">Expected Collection</h3>
+                        <table class="w-full border-collapse" id="collection-table">
+                            <thead>
+                                <tr>
+                                    <th class="border p-2">Customer Name</th>
+                                    <th class="border p-2">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
+                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)">0</span></td>
+                                </tr>
+                                <!-- Add more -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="border p-2 font-bold">Total Expected Collection</td>
+                                    <td class="border p-2 font-bold" id="collection-total">0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required>
-                </div>
-                <button type="submit" class="login-btn" id="loginBtn" disabled>
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-                <div class="forgot-password"><a href="#">Forgot Password?</a></div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Dashboard Page -->
-    <div class="dashboard" id="dashboardPage">
-        <div class="dashboard-header">
-            <div class="welcome-message" id="welcomeMessage">Welcome, Employee!</div>
-            <button class="dashboard-logout" id="logoutBtn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
-
-        <div class="captured-photo-container">
-            <h3>Login Security Record</h3>
-            <img id="capturedPhoto" class="captured-photo" src="" alt="Captured login photo">
-            <div class="login-record" id="loginRecord">
-                <h4>Login Details:</h4>
-                <div id="loginDetails"></div>
-                <p id="locationName" style="margin-top:10px; font-weight:600; color:#64ff96;"></p>
             </div>
-        </div>
-
-        <div class="dashboard-content">
-            <div class="dashboard-card"><h3>Resource Overview</h3><p>View and manage all mineral resources, inventory levels, and extraction schedules.</p></div>
-            <div class="dashboard-card"><h3>Production Analytics</h3><p>Monitor production metrics, efficiency rates, and operational performance.</p></div>
-            <div class="dashboard-card"><h3>Employee Management</h3><p>Manage staff schedules, assignments, and performance tracking.</p></div>
-            <div class="dashboard-card"><h3>Equipment Status</h3><p>Track equipment maintenance schedules and operational status.</p></div>
-            <div class="dashboard-card"><h3>Environmental Compliance</h3><p>Monitor environmental impact and ensure regulatory compliance.</p></div>
-            <div class="dashboard-card"><h3>Reports & Documentation</h3><p>Generate reports, export data, and manage documentation.</p></div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // ---------- DOM ----------
-            const loginPage       = document.getElementById('loginPage');
-            const dashboardPage   = document.getElementById('dashboardPage');
-            const welcomeMessage  = document.getElementById('welcomeMessage');
-            const logoutBtn       = document.getElementById('logoutBtn');
-            const usernameInput   = document.getElementById('username');
-            const passwordInput   = document.getElementById('password');
-            const loginForm       = document.getElementById('loginForm');
-            const loginBtn        = document.getElementById('loginBtn');
-            const cameraPreview   = document.getElementById('cameraPreview');
-            const captureOverlay  = document.getElementById('captureOverlay');
-            const capturedPhoto   = document.getElementById('capturedPhoto');
-            const loginDetails    = document.getElementById('loginDetails');
-            const locationStatus  = document.getElementById('locationStatus');
-            const locationNameEl  = document.getElementById('locationName');
-            const locationOptions = document.getElementById('locationOptions');
-            const retryBtn        = document.getElementById('retryLocation');
-            const approxBtn       = document.getElementById('useApproximateLocation');
-            const skipBtn         = document.getElementById('skipLocation');
+        // Update date
+        function updateDate(newDate) {
+            document.getElementById('dashboard-date').textContent = newDate;
+        }
 
-            // ---------- STATE ----------
-            let currentStream = null;
-            let isCameraActive = false;
-            let userLocation = null;
-            let locationAcquired = false;
-            let locationType = 'none'; // 'high', 'approximate', 'none'
-            let geolocationWatchId = null;
+        // Validate and update totals
+        function validateAndUpdate(element) {
+            const value = element.textContent.trim();
+            if (element.dataset.type === 'number' && isNaN(parseFloat(value))) {
+                element.classList.add('error');
+                return;
+            }
+            element.classList.remove('error');
+            updateTotals();
+        }
 
-            // ---------- EMPLOYEE DB ----------
-            const employees = {
-                'sgxminerals': { password: 'admin123', name: 'Alex Johnson', role: 'Operations Manager' },
-                'jdoe':        { password: 'mineral2023', name: 'Jane Doe', role: 'Geologist' },
-                'rsmith':      { password: 'extraction22', name: 'Robert Smith', role: 'Field Supervisor' }
-            };
+        // Update all totals
+        function updateTotals() {
+            // Royalty Table
+            const royaltyRow = document.querySelector('#royalty-table tbody tr');
+            let royaltyTotal = 0;
+            royaltyRow.querySelectorAll('.editable').forEach(cell => {
+                const val = parseFloat(cell.textContent) || 0;
+                royaltyTotal += val;
+            });
+            document.getElementById('royalty-total').textContent = royaltyTotal.toFixed(1);
+            document.getElementById('royalty-grand-total').textContent = royaltyTotal.toFixed(1);
 
-            // Pre-fill demo
-            usernameInput.value = 'sgxminerals';
-            passwordInput.value = 'admin123';
-
-            // ---------- CAMERA ----------
-            function startCamera() {
-                if (currentStream) stopCamera();
-                navigator.mediaDevices.getUserMedia({ 
-                    video: { width: { ideal: 640 }, height: { ideal: 480 } }, 
-                    audio: false 
-                })
-                .then(stream => { 
-                    currentStream = stream; 
-                    cameraPreview.srcObject = stream; 
-                    isCameraActive = true; 
-                })
-                .catch(err => { 
-                    console.error('Camera error:', err); 
-                    alert('Camera access denied or unavailable.'); 
+            // Dispatch Table
+            const dispatchRows = document.querySelectorAll('#dispatch-table tbody tr:not(:last-child)');
+            const columnTotals = Array(6).fill(0);
+            let grandTotal = 0;
+            dispatchRows.forEach(row => {
+                let rowTotal = 0;
+                const cells = row.querySelectorAll('.editable');
+                cells.forEach((cell, idx) => {
+                    const val = parseFloat(cell.textContent) || 0;
+                    rowTotal += val;
+                    columnTotals[idx] += val;
                 });
+                row.querySelector('td:last-child').textContent = rowTotal;
+                grandTotal += rowTotal;
+            });
+            const totalRow = document.querySelector('#dispatch-table tbody tr:last-child');
+            totalRow.querySelectorAll('td:not(:first-child):not(:last-child)').forEach((td, idx) => {
+                td.textContent = columnTotals[idx];
+            });
+            totalRow.querySelector('td:last-child').textContent = grandTotal;
+
+            // Stock Total
+            let stockTotal = 0;
+            document.querySelectorAll('[id="stock-total"]').forEach(total => {
+                const stockRows = total.closest('table').querySelectorAll('tr:nth-child(-n+5) .editable'); // First 5 are materials
+                stockTotal = Array.from(stockRows).reduce((sum, cell) => sum + (parseFloat(cell.textContent) || 0), 0);
+                total.textContent = stockTotal;
+            });
+
+            // Fund and Collection Totals
+            ['fund-requirement-table', 'collection-table'].forEach(id => {
+                const table = document.getElementById(id);
+                let total = 0;
+                table.querySelectorAll('tbody .editable[data-type="number"]').forEach(cell => {
+                    total += parseFloat(cell.textContent) || 0;
+                });
+                table.querySelector('tfoot td:last-child').textContent = total;
+            });
+        }
+
+        // Export CSV
+        function exportCSV() {
+            let csv = 'Section,Data\n'; // Collect all data
+            // Add logic to iterate through all tables and append to csv
+            // For brevity, example for one table
+            const tables = document.querySelectorAll('table');
+            tables.forEach((table, idx) => {
+                csv += `Table ${idx + 1}\n`;
+                Array.from(table.rows).forEach(row => {
+                    csv += Array.from(row.cells).map(cell => cell.textContent.trim()).join(',') + '\n';
+                });
+                csv += '\n';
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'dashboard.csv';
+            a.click();
+        }
+
+        // Export Excel using SheetJS
+        function exportExcel() {
+            if (typeof XLSX === 'undefined') {
+                alert('SheetJS not loaded, falling back to CSV');
+                exportCSV();
+                return;
             }
+            const wb = XLSX.utils.book_new();
+            document.querySelectorAll('table').forEach((table, idx) => {
+                const ws = XLSX.utils.table_to_sheet(table);
+                XLSX.utils.book_append_sheet(wb, ws, `Sheet${idx + 1}`);
+            });
+            XLSX.writeFile(wb, 'dashboard.xlsx');
+        }
 
-            function stopCamera() {
-                if (currentStream) { 
-                    currentStream.getTracks().forEach(t => t.stop()); 
-                    currentStream = null; 
-                    isCameraActive = false; 
-                }
-            }
+        // Print
+        function printDashboard() {
+            // Hide controls
+            document.querySelector('.flex.justify-between').style.display = 'none';
+            window.print();
+            document.querySelector('.flex.justify-between').style.display = 'flex';
+        }
 
-            // ---------- LOCATION (IMPROVED) ----------
-            function requestLocation() {
-                locationStatus.innerHTML = '<div class="spinner"></div> Getting your location…';
-                locationStatus.className = 'location-status waiting';
-                locationOptions.style.display = 'none';
-                locationAcquired = false;
-                locationType = 'none';
-                loginBtn.disabled = true;
+        // Initial update
+        updateTotals();
 
-                if (!navigator.geolocation) {
-                    locationFailed('Geolocation not supported by your browser.');
-                    return;
-                }
-
-                // First try with high accuracy
-                const highAccuracyOptions = {
-                    enableHighAccuracy: true,
-                    timeout: 15000,
-                    maximumAge: 0
-                };
-
-                navigator.geolocation.getCurrentPosition(
-                    // Success callback
-                    function(position) {
-                        handleLocationSuccess(position, 'high');
-                    },
-                    // Error callback
-                    function(error) {
-                        console.warn('High accuracy location failed, trying with lower accuracy:', error);
-                        
-                        // Try with lower accuracy
-                        const lowAccuracyOptions = {
-                            enableHighAccuracy: false,
-                            timeout: 10000,
-                            maximumAge: 60000 // Accept cached location up to 1 minute old
-                        };
-                        
-                        navigator.geolocation.getCurrentPosition(
-                            function(position) {
-                                handleLocationSuccess(position, 'approximate');
-                            },
-                            function(error) {
-                                handleLocationError(error);
-                            },
-                            lowAccuracyOptions
-                        );
-                    },
-                    highAccuracyOptions
-                );
-            }
-
-            function handleLocationSuccess(position, accuracy) {
-                userLocation = {
-                    lat: position.coords.latitude,
-                    lon: position.coords.longitude,
-                    acc: position.coords.accuracy,
-                    alt: position.coords.altitude,
-                    heading: position.coords.heading,
-                    speed: position.coords.speed,
-                    timestamp: new Date(position.timestamp)
-                };
-                
-                locationAcquired = true;
-                locationType = accuracy;
-                loginBtn.disabled = false;
-                
-                if (accuracy === 'high') {
-                    locationStatus.innerHTML = '<i class="fas fa-check-circle"></i> High accuracy location captured';
-                    locationStatus.className = 'location-status success';
-                } else {
-                    locationStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Approximate location captured';
-                    locationStatus.className = 'location-status warning';
-                }
-                
-                // Get address from coordinates
-                reverseGeocode(userLocation.lat, userLocation.lon);
-            }
-
-            function handleLocationError(error) {
-                let errorMessage = 'Failed to get location. ';
-                
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        errorMessage = 'Location permission denied. Please enable location services in your browser settings.';
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        errorMessage = 'Location information unavailable. Please check your device location settings.';
-                        break;
-                    case error.TIMEOUT:
-                        errorMessage = 'Location request timed out. Please check your internet connection.';
-                        break;
-                    default:
-                        errorMessage = 'An unknown error occurred while getting location.';
-                        break;
-                }
-                
-                locationFailed(errorMessage);
-            }
-
-            function locationFailed(message) {
-                userLocation = null;
-                locationAcquired = false;
-                locationType = 'none';
-                loginBtn.disabled = true;
-                locationStatus.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
-                locationStatus.className = 'location-status error';
-                locationOptions.style.display = 'flex';
-                locationNameEl.textContent = '';
-            }
-
-            function useApproximateLocation() {
-                // Try to get approximate location from IP
-                locationStatus.innerHTML = '<div class="spinner"></div> Getting approximate location…';
-                locationStatus.className = 'location-status waiting';
-                locationOptions.style.display = 'none';
-                
-                fetch('https://ipapi.co/json/')
-                    .then(response => response.json())
-                    .then(data => {
-                        userLocation = {
-                            lat: data.latitude,
-                            lon: data.longitude,
-                            acc: 50000, // Approximate accuracy for IP-based location
-                            timestamp: new Date()
-                        };
-                        
-                        locationAcquired = true;
-                        locationType = 'approximate';
-                        loginBtn.disabled = false;
-                        locationStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Approximate location (IP-based)';
-                        locationStatus.className = 'location-status warning';
-                        
-                        locationNameEl.textContent = `📍 ${data.city}, ${data.region}, ${data.country_name}`;
-                    })
-                    .catch(error => {
-                        console.error('IP-based location failed:', error);
-                        locationFailed('Could not determine approximate location. Please try high accuracy location or skip.');
-                    });
-            }
-
-            function skipLocation() {
-                locationAcquired = false;
-                locationType = 'none';
-                loginBtn.disabled = false;
-                locationStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Location not captured - Limited access';
-                locationStatus.className = 'location-status warning';
-                locationOptions.style.display = 'none';
-                locationNameEl.textContent = '';
-            }
-
-            // ---------- REVERSE GEOCODE (IMPROVED) ----------
-            async function reverseGeocode(lat, lon) {
-                try {
-                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
-                    
-                    if (!res.ok) {
-                        throw new Error('Geocoding service unavailable');
-                    }
-                    
-                    const data = await res.json();
-                    let address = 'Unknown location';
-                    
-                    if (data && data.display_name) {
-                        address = data.display_name;
-                    } else {
-                        address = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
-                    }
-                    
-                    locationNameEl.textContent = `📍 ${address}`;
-                    
-                } catch (error) {
-                    console.error('Reverse geocoding error:', error);
-                    locationNameEl.textContent = `📍 ${lat.toFixed(6)}, ${lon.toFixed(6)}`;
-                }
-            }
-
-            // ---------- CAPTURE ----------
-            async function captureImage() {
-                if (!isCameraActive) {
-                    console.warn('Camera not active for capture');
-                    return null;
-                }
-                
-                captureOverlay.classList.add('active');
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                try {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = cameraPreview.videoWidth || 640;
-                    canvas.height = cameraPreview.videoHeight || 480;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-                    captureOverlay.classList.remove('active');
-                    return dataUrl;
-                } catch (error) {
-                    console.error('Image capture error:', error);
-                    captureOverlay.classList.remove('active');
-                    return null;
-                }
-            }
-
-            // ---------- LOGIN (IMPROVED) ----------
-            async function loginSuccess(name) {
-                const photo = await captureImage();
-                loginPage.style.display = 'none';
-                dashboardPage.style.display = 'block';
-                welcomeMessage.textContent = `Welcome, ${name}!`;
-                
-                if (photo) {
-                    capturedPhoto.src = photo;
-                } else {
-                    capturedPhoto.alt = 'Photo capture failed';
-                }
-
-                const now = new Date();
-                let locationInfo = '';
-                
-                if (userLocation) {
-                    locationInfo = `
-                        <p><strong>Coordinates:</strong> ${userLocation.lat.toFixed(6)}, ${userLocation.lon.toFixed(6)}</p>
-                        <p><strong>Accuracy:</strong> ${Math.round(userLocation.acc)} meters</p>
-                        <p><strong>Type:</strong> ${locationType === 'high' ? 'High Accuracy' : 'Approximate'}</p>
-                        <p><strong>Timestamp:</strong> ${userLocation.timestamp.toLocaleTimeString()}</p>
-                    `;
-                } else {
-                    locationInfo = '<p><strong>Location:</strong> Not captured</p>';
-                }
-
-                loginDetails.innerHTML = `
-                    <p><strong>User:</strong> ${name}</p>
-                    <p><strong>Login Time:</strong> ${now.toLocaleString()}</p>
-                    ${locationInfo}
-                `;
-            }
-
-            function handleLogin() {
-                if (!locationAcquired && locationType === 'none') {
-                    alert('Location is required for full system access. Please try to capture your location or use approximate location.');
-                    return;
-                }
-                
-                const username = usernameInput.value.trim();
-                const password = passwordInput.value;
-                
-                if (employees[username] && employees[username].password === password) {
-                    loginSuccess(employees[username].name);
-                } else {
-                    alert('Invalid username or password.\n\nDemo credentials:\nUsername: sgxminerals\nPassword: admin123');
-                }
-            }
-
-            // ---------- LOGOUT ----------
-            function logout() {
-                loginPage.style.display = 'flex';
-                dashboardPage.style.display = 'none';
-                usernameInput.value = 'sgxminerals';
-                passwordInput.value = 'admin123';
-                capturedPhoto.src = '';
-                loginDetails.innerHTML = '';
-                locationNameEl.textContent = '';
-                
-                // Reset location status
-                locationStatus.innerHTML = '<div class="spinner"></div> Getting your location…';
-                locationStatus.className = 'location-status waiting';
-                locationOptions.style.display = 'none';
-                loginBtn.disabled = true;
-                
-                // Restart services
-                startCamera();
-                requestLocation();
-            }
-
-            // ---------- EVENT LISTENERS ----------
-            loginForm.addEventListener('submit', function(e) {
+        // Accessibility: Keyboard navigation for editable cells
+        document.addEventListener('keydown', (e) => {
+            if (e.target.classList.contains('editable') && e.key === 'Enter') {
                 e.preventDefault();
-                handleLogin();
-            });
-
-            logoutBtn.addEventListener('click', logout);
-            retryBtn.addEventListener('click', requestLocation);
-            approxBtn.addEventListener('click', useApproximateLocation);
-            skipBtn.addEventListener('click', skipLocation);
-
-            // Form glow effect
-            [usernameInput, passwordInput].forEach(input => {
-                input.addEventListener('focus', () => loginForm.classList.add('glow'));
-                input.addEventListener('blur', () => {
-                    if (!usernameInput.matches(':focus') && !passwordInput.matches(':focus')) {
-                        loginForm.classList.remove('glow');
-                    }
-                });
-            });
-
-            // ---------- INITIALIZATION ----------
-            startCamera();
-            requestLocation();
+                e.target.blur();
+            }
         });
     </script>
 </body>
