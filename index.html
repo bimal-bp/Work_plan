@@ -41,10 +41,15 @@
         .location-status.success { color:#64ff96; }
         .location-status.error { color:#ff6464; }
         .location-status.waiting { color:#b0b0d0; }
+        .location-status.warning { color:#ffa500; }
         .retry-btn { margin-top:12px; padding:8px 16px; background:#64ff96; color:#1a1a2e; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:14px; display:flex; align-items:center; gap:6px; }
         .retry-btn:hover { background:#2ecc71; }
         .spinner { width:16px; height:16px; border:2px solid #b0b0d0; border-top-color:#64ff96; border-radius:50%; animation:spin 1s linear infinite; }
         @keyframes spin { to { transform:rotate(360deg); } }
+        .location-options { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+        .location-option { padding:8px 12px; background:rgba(40,40,60,.8); border:1px solid #4a4a7a; border-radius:6px; color:#f0f0f0; cursor:pointer; transition:all .3s ease; text-align:center; font-size:14px; }
+        .location-option:hover { background:rgba(60,60,80,.8); border-color:#64ff96; }
+        .location-option i { margin-right:6px; }
 
         /* Dashboard */
         .dashboard { display:none; width:100%; height:100vh; background:linear-gradient(135deg,#0c0c0c 0%,#1a1a2e 100%); color:#f0f0f0; padding:20px; }
@@ -84,9 +89,17 @@
             <div class="location-status waiting" id="locationStatus">
                 <div class="spinner"></div> Getting your location…
             </div>
-            <button class="retry-btn" id="retryLocation" style="display:none;">
-                <i class="fas fa-redo"></i> Retry Location
-            </button>
+            <div class="location-options" id="locationOptions" style="display:none;">
+                <button class="location-option" id="retryLocation">
+                    <i class="fas fa-redo"></i> Retry High Accuracy Location
+                </button>
+                <button class="location-option" id="useApproximateLocation">
+                    <i class="fas fa-map-marker-alt"></i> Use Approximate Location
+                </button>
+                <button class="location-option" id="skipLocation">
+                    <i class="fas fa-forward"></i> Skip Location (Limited Access)
+                </button>
+            </div>
         </div>
 
         <div class="login-section">
@@ -159,13 +172,18 @@
             const loginDetails    = document.getElementById('loginDetails');
             const locationStatus  = document.getElementById('locationStatus');
             const locationNameEl  = document.getElementById('locationName');
+            const locationOptions = document.getElementById('locationOptions');
             const retryBtn        = document.getElementById('retryLocation');
+            const approxBtn       = document.getElementById('useApproximateLocation');
+            const skipBtn         = document.getElementById('skipLocation');
 
             // ---------- STATE ----------
             let currentStream = null;
             let isCameraActive = false;
             let userLocation = null;
             let locationAcquired = false;
+            let locationType = 'none'; // 'high', 'approximate', 'none'
+            let geolocationWatchId = null;
 
             // ---------- EMPLOYEE DB ----------
             const employees = {
@@ -191,7 +209,7 @@
                     isCameraActive = true; 
                 })
                 .catch(err => { 
-                    console.error(err); 
+                    console.error('Camera error:', err); 
                     alert('Camera access denied or unavailable.'); 
                 });
             }
@@ -204,146 +222,301 @@
                 }
             }
 
-            // ---------- LOCATION ----------
+            // ---------- LOCATION (IMPROVED) ----------
             function requestLocation() {
                 locationStatus.innerHTML = '<div class="spinner"></div> Getting your location…';
                 locationStatus.className = 'location-status waiting';
-                retryBtn.style.display = 'none';
+                locationOptions.style.display = 'none';
                 locationAcquired = false;
+                locationType = 'none';
                 loginBtn.disabled = true;
 
                 if (!navigator.geolocation) {
-                    locationFailed('Geolocation not supported.');
+                    locationFailed('Geolocation not supported by your browser.');
                     return;
                 }
 
+                // First try with high accuracy
+                const highAccuracyOptions = {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
+                };
+
                 navigator.geolocation.getCurrentPosition(
-                    pos => {
-                        userLocation = {
-                            lat: pos.coords.latitude,
-                            lon: pos.coords.longitude,
-                            acc: pos.coords.accuracy
+                    // Success callback
+                    function(position) {
+                        handleLocationSuccess(position, 'high');
+                    },
+                    // Error callback
+                    function(error) {
+                        console.warn('High accuracy location failed, trying with lower accuracy:', error);
+                        
+                        // Try with lower accuracy
+                        const lowAccuracyOptions = {
+                            enableHighAccuracy: false,
+                            timeout: 10000,
+                            maximumAge: 60000 // Accept cached location up to 1 minute old
                         };
-                        locationAcquired = true;
-                        loginBtn.disabled = false;
-                        locationStatus.innerHTML = '<i class="fas fa-check-circle"></i> Location captured';
-                        locationStatus.className = 'location-status success';
-                        reverseGeocode(userLocation.lat, userLocation.lon);
+                        
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                handleLocationSuccess(position, 'approximate');
+                            },
+                            function(error) {
+                                handleLocationError(error);
+                            },
+                            lowAccuracyOptions
+                        );
                     },
-                    err => {
-                        let msg = 'Failed to get location.';
-                        if (err.code === err.PERMISSION_DENIED) msg = 'Location permission denied.';
-                        else if (err.code === err.POSITION_UNAVAILABLE) msg = 'Location unavailable.';
-                        else if (err.code === err.TIMEOUT) msg = 'Location request timed out.';
-                        locationFailed(msg);
-                    },
-                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                    highAccuracyOptions
                 );
+            }
+
+            function handleLocationSuccess(position, accuracy) {
+                userLocation = {
+                    lat: position.coords.latitude,
+                    lon: position.coords.longitude,
+                    acc: position.coords.accuracy,
+                    alt: position.coords.altitude,
+                    heading: position.coords.heading,
+                    speed: position.coords.speed,
+                    timestamp: new Date(position.timestamp)
+                };
+                
+                locationAcquired = true;
+                locationType = accuracy;
+                loginBtn.disabled = false;
+                
+                if (accuracy === 'high') {
+                    locationStatus.innerHTML = '<i class="fas fa-check-circle"></i> High accuracy location captured';
+                    locationStatus.className = 'location-status success';
+                } else {
+                    locationStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Approximate location captured';
+                    locationStatus.className = 'location-status warning';
+                }
+                
+                // Get address from coordinates
+                reverseGeocode(userLocation.lat, userLocation.lon);
+            }
+
+            function handleLocationError(error) {
+                let errorMessage = 'Failed to get location. ';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = 'Location permission denied. Please enable location services in your browser settings.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = 'Location information unavailable. Please check your device location settings.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = 'Location request timed out. Please check your internet connection.';
+                        break;
+                    default:
+                        errorMessage = 'An unknown error occurred while getting location.';
+                        break;
+                }
+                
+                locationFailed(errorMessage);
             }
 
             function locationFailed(message) {
                 userLocation = null;
                 locationAcquired = false;
+                locationType = 'none';
                 loginBtn.disabled = true;
                 locationStatus.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
                 locationStatus.className = 'location-status error';
-                retryBtn.style.display = 'flex';
+                locationOptions.style.display = 'flex';
                 locationNameEl.textContent = '';
             }
 
-            // ---------- REVERSE GEOCODE ----------
+            function useApproximateLocation() {
+                // Try to get approximate location from IP
+                locationStatus.innerHTML = '<div class="spinner"></div> Getting approximate location…';
+                locationStatus.className = 'location-status waiting';
+                locationOptions.style.display = 'none';
+                
+                fetch('https://ipapi.co/json/')
+                    .then(response => response.json())
+                    .then(data => {
+                        userLocation = {
+                            lat: data.latitude,
+                            lon: data.longitude,
+                            acc: 50000, // Approximate accuracy for IP-based location
+                            timestamp: new Date()
+                        };
+                        
+                        locationAcquired = true;
+                        locationType = 'approximate';
+                        loginBtn.disabled = false;
+                        locationStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Approximate location (IP-based)';
+                        locationStatus.className = 'location-status warning';
+                        
+                        locationNameEl.textContent = `📍 ${data.city}, ${data.region}, ${data.country_name}`;
+                    })
+                    .catch(error => {
+                        console.error('IP-based location failed:', error);
+                        locationFailed('Could not determine approximate location. Please try high accuracy location or skip.');
+                    });
+            }
+
+            function skipLocation() {
+                locationAcquired = false;
+                locationType = 'none';
+                loginBtn.disabled = false;
+                locationStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Location not captured - Limited access';
+                locationStatus.className = 'location-status warning';
+                locationOptions.style.display = 'none';
+                locationNameEl.textContent = '';
+            }
+
+            // ---------- REVERSE GEOCODE (IMPROVED) ----------
             async function reverseGeocode(lat, lon) {
                 try {
                     const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
+                    
+                    if (!res.ok) {
+                        throw new Error('Geocoding service unavailable');
+                    }
+                    
                     const data = await res.json();
-                    const address = data.display_name || `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
-                    locationNameEl.textContent = `Location: ${address}`;
-                } catch (e) {
-                    console.error(e);
-                    locationNameEl.textContent = `Location: ${lat.toFixed(6)}, ${lon.toFixed(6)} (geocoding failed)`;
+                    let address = 'Unknown location';
+                    
+                    if (data && data.display_name) {
+                        address = data.display_name;
+                    } else {
+                        address = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+                    }
+                    
+                    locationNameEl.textContent = `📍 ${address}`;
+                    
+                } catch (error) {
+                    console.error('Reverse geocoding error:', error);
+                    locationNameEl.textContent = `📍 ${lat.toFixed(6)}, ${lon.toFixed(6)}`;
                 }
             }
 
             // ---------- CAPTURE ----------
             async function captureImage() {
-                if (!isCameraActive) return null;
+                if (!isCameraActive) {
+                    console.warn('Camera not active for capture');
+                    return null;
+                }
+                
                 captureOverlay.classList.add('active');
-                await new Promise(r => setTimeout(r, 1000));
-                const canvas = document.createElement('canvas');
-                canvas.width = cameraPreview.videoWidth || 640;
-                canvas.height = cameraPreview.videoHeight || 480;
-                canvas.getContext('2d').drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-                captureOverlay.classList.remove('active');
-                return dataUrl;
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = cameraPreview.videoWidth || 640;
+                    canvas.height = cameraPreview.videoHeight || 480;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                    captureOverlay.classList.remove('active');
+                    return dataUrl;
+                } catch (error) {
+                    console.error('Image capture error:', error);
+                    captureOverlay.classList.remove('active');
+                    return null;
+                }
             }
 
-            // ---------- LOGIN ----------
+            // ---------- LOGIN (IMPROVED) ----------
             async function loginSuccess(name) {
                 const photo = await captureImage();
                 loginPage.style.display = 'none';
                 dashboardPage.style.display = 'block';
                 welcomeMessage.textContent = `Welcome, ${name}!`;
-                if (photo) capturedPhoto.src = photo;
+                
+                if (photo) {
+                    capturedPhoto.src = photo;
+                } else {
+                    capturedPhoto.alt = 'Photo capture failed';
+                }
 
                 const now = new Date();
-                const coordText = userLocation ? `${userLocation.lat.toFixed(6)}, ${userLocation.lon.toFixed(6)}` : 'N/A';
+                let locationInfo = '';
+                
+                if (userLocation) {
+                    locationInfo = `
+                        <p><strong>Coordinates:</strong> ${userLocation.lat.toFixed(6)}, ${userLocation.lon.toFixed(6)}</p>
+                        <p><strong>Accuracy:</strong> ${Math.round(userLocation.acc)} meters</p>
+                        <p><strong>Type:</strong> ${locationType === 'high' ? 'High Accuracy' : 'Approximate'}</p>
+                        <p><strong>Timestamp:</strong> ${userLocation.timestamp.toLocaleTimeString()}</p>
+                    `;
+                } else {
+                    locationInfo = '<p><strong>Location:</strong> Not captured</p>';
+                }
+
                 loginDetails.innerHTML = `
                     <p><strong>User:</strong> ${name}</p>
                     <p><strong>Login Time:</strong> ${now.toLocaleString()}</p>
-                    <p><strong>Coordinates:</strong> ${coordText}</p>
-                    <p><strong>Accuracy:</strong> ${userLocation ? userLocation.acc + ' m' : 'N/A'}</p>
+                    ${locationInfo}
                 `;
+            }
+
+            function handleLogin() {
+                if (!locationAcquired && locationType === 'none') {
+                    alert('Location is required for full system access. Please try to capture your location or use approximate location.');
+                    return;
+                }
+                
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value;
+                
+                if (employees[username] && employees[username].password === password) {
+                    loginSuccess(employees[username].name);
+                } else {
+                    alert('Invalid username or password.\n\nDemo credentials:\nUsername: sgxminerals\nPassword: admin123');
+                }
             }
 
             // ---------- LOGOUT ----------
             function logout() {
                 loginPage.style.display = 'flex';
                 dashboardPage.style.display = 'none';
-                loginForm.reset();
                 usernameInput.value = 'sgxminerals';
                 passwordInput.value = 'admin123';
                 capturedPhoto.src = '';
                 loginDetails.innerHTML = '';
                 locationNameEl.textContent = '';
+                
+                // Reset location status
                 locationStatus.innerHTML = '<div class="spinner"></div> Getting your location…';
                 locationStatus.className = 'location-status waiting';
-                retryBtn.style.display = 'none';
+                locationOptions.style.display = 'none';
                 loginBtn.disabled = true;
+                
+                // Restart services
                 startCamera();
                 requestLocation();
             }
 
-            // ---------- EVENTS ----------
-            loginForm.addEventListener('submit', async e => {
+            // ---------- EVENT LISTENERS ----------
+            loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                if (!locationAcquired) {
-                    alert('Please wait for location to be captured.');
-                    return;
-                }
-                const u = usernameInput.value.trim();
-                const p = passwordInput.value;
-                if (employees[u] && employees[u].password === p) {
-                    await loginSuccess(employees[u].name);
-                } else {
-                    alert('Invalid credentials.\nHint: sgxminerals / admin123');
-                }
+                handleLogin();
             });
 
             logoutBtn.addEventListener('click', logout);
             retryBtn.addEventListener('click', requestLocation);
+            approxBtn.addEventListener('click', useApproximateLocation);
+            skipBtn.addEventListener('click', skipLocation);
 
-            // Glow effect
-            [usernameInput, passwordInput].forEach(i => {
-                i.addEventListener('focus', () => loginForm.classList.add('glow'));
-                i.addEventListener('blur', () => {
+            // Form glow effect
+            [usernameInput, passwordInput].forEach(input => {
+                input.addEventListener('focus', () => loginForm.classList.add('glow'));
+                input.addEventListener('blur', () => {
                     if (!usernameInput.matches(':focus') && !passwordInput.matches(':focus')) {
                         loginForm.classList.remove('glow');
                     }
                 });
             });
 
-            // ---------- INIT ----------
+            // ---------- INITIALIZATION ----------
             startCamera();
             requestLocation();
         });
