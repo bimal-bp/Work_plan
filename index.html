@@ -61,35 +61,6 @@
             background: #2a2a4a;
         }
 
-        .camera-controls {
-            margin-top: 20px;
-            display: flex;
-            gap: 15px;
-        }
-
-        .camera-btn {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
-            border: none;
-            border-radius: 8px;
-            color: #1a1a2e;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .camera-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(100, 255, 150, 0.4);
-        }
-
-        .camera-btn.secondary {
-            background: rgba(40, 40, 60, 0.8);
-            color: #f0f0f0;
-            border: 1px solid #4a4a7a;
-        }
-
         .capture-overlay {
             position: absolute;
             top: 0;
@@ -269,33 +240,11 @@
             height: 200px;
         }
 
-        .login-options {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 15px;
-        }
-
-        .login-option-btn {
-            padding: 8px 15px;
-            background: rgba(40, 40, 60, 0.8);
-            border: 1px solid #4a4a7a;
-            border-radius: 8px;
-            color: #b0b0d0;
+        .camera-info {
+            margin-top: 15px;
+            text-align: center;
             font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .login-option-btn:hover {
-            border-color: #64ff96;
-            color: #f0f0f0;
-        }
-
-        .login-option-btn.active {
-            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
-            color: #1a1a2e;
-            border-color: transparent;
+            color: #b0b0d0;
         }
 
         /* Dashboard Styles */
@@ -375,6 +324,17 @@
             line-height: 1.6;
         }
 
+        .captured-photo-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .captured-photo {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -402,22 +362,13 @@
                     <div class="capture-animation"></div>
                 </div>
             </div>
-            <div class="camera-controls">
-                <button class="camera-btn" id="captureBtn">Capture</button>
-                <button class="camera-btn secondary" id="switchCameraBtn">Switch Camera</button>
-            </div>
-            <div class="camera-instruction">Use camera login or traditional login</div>
+            <div class="camera-info">Camera will capture your photo upon login</div>
         </div>
         <div class="login-section">
             <div class="decoration"></div>
             <div class="decoration"></div>
             <h1 class="company-title">SGX MINERALS</h1>
             <p class="company-subtitle">Resource Management System</p>
-            
-            <div class="login-options">
-                <button class="login-option-btn active" id="traditionalLoginBtn">Traditional Login</button>
-                <button class="login-option-btn" id="cameraLoginBtn">Camera Login</button>
-            </div>
             
             <form class="login-form" id="loginForm">
                 <h2>Welcome Back</h2>
@@ -442,6 +393,11 @@
         <div class="dashboard-header">
             <div class="welcome-message" id="welcomeMessage">Welcome, Employee!</div>
             <button class="dashboard-logout" id="logoutBtn">Logout</button>
+        </div>
+        <div class="captured-photo-container">
+            <h3>Login Photo Record</h3>
+            <div id="capturedPhotoInfo"></div>
+            <img id="capturedPhoto" class="captured-photo" src="" alt="Captured login photo">
         </div>
         <div class="dashboard-content">
             <div class="dashboard-card">
@@ -482,16 +438,14 @@
             const passwordInput = document.getElementById('password');
             const loginForm = document.getElementById('loginForm');
             const cameraPreview = document.getElementById('cameraPreview');
-            const captureBtn = document.getElementById('captureBtn');
-            const switchCameraBtn = document.getElementById('switchCameraBtn');
             const captureOverlay = document.getElementById('captureOverlay');
-            const traditionalLoginBtn = document.getElementById('traditionalLoginBtn');
-            const cameraLoginBtn = document.getElementById('cameraLoginBtn');
+            const capturedPhoto = document.getElementById('capturedPhoto');
+            const capturedPhotoInfo = document.getElementById('capturedPhotoInfo');
             
             // Variables
             let currentStream = null;
             let isCameraActive = false;
-            let facingMode = 'user'; // 'user' for front camera, 'environment' for back camera
+            let capturedPhotoData = null;
             
             // Employee database (in a real app, this would be on the server)
             const employees = {
@@ -524,7 +478,6 @@
                 
                 const constraints = {
                     video: { 
-                        facingMode: facingMode,
                         width: { ideal: 640 },
                         height: { ideal: 480 }
                     },
@@ -554,41 +507,44 @@
                 }
             }
             
-            // Function to switch between front and back camera
-            function switchCamera() {
-                facingMode = facingMode === 'user' ? 'environment' : 'user';
-                startCamera();
-            }
-            
-            // Function to capture image and simulate facial recognition
+            // Function to capture image from camera
             function captureImage() {
                 if (!isCameraActive) {
-                    alert("Camera is not active. Please start the camera first.");
-                    return;
+                    alert("Camera is not active. Please try again.");
+                    return null;
                 }
                 
-                // Show capture animation
-                captureOverlay.classList.add('active');
-                
-                // Simulate facial recognition process
-                setTimeout(function() {
-                    // Hide capture animation
-                    captureOverlay.classList.remove('active');
+                return new Promise((resolve) => {
+                    // Show capture animation
+                    captureOverlay.classList.add('active');
                     
-                    // Simulate successful recognition for demo purposes
-                    // In a real app, this would involve actual facial recognition
-                    const recognizedEmployee = employees['sgxminerals']; // Default for demo
-                    
-                    if (recognizedEmployee) {
-                        loginSuccess(recognizedEmployee.name);
-                    } else {
-                        alert("Face not recognized. Please try again or use traditional login.");
-                    }
-                }, 3000);
+                    // Wait for animation to show
+                    setTimeout(() => {
+                        // Create a canvas to capture the image
+                        const canvas = document.createElement('canvas');
+                        canvas.width = cameraPreview.videoWidth;
+                        canvas.height = cameraPreview.videoHeight;
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Draw the current video frame to the canvas
+                        ctx.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
+                        
+                        // Get the image data as a data URL
+                        const imageData = canvas.toDataURL('image/jpeg');
+                        
+                        // Hide capture animation
+                        captureOverlay.classList.remove('active');
+                        
+                        resolve(imageData);
+                    }, 1000);
+                });
             }
             
             // Function to handle successful login
-            function loginSuccess(employeeName) {
+            async function loginSuccess(employeeName) {
+                // Capture photo before proceeding
+                const photoData = await captureImage();
+                
                 // Hide login page and show dashboard
                 loginPage.style.display = 'none';
                 dashboardPage.style.display = 'block';
@@ -596,7 +552,17 @@
                 // Update welcome message
                 welcomeMessage.textContent = `Welcome, ${employeeName}!`;
                 
-                // Stop camera if active
+                // Display captured photo and timestamp
+                if (photoData) {
+                    capturedPhoto.src = photoData;
+                    const now = new Date();
+                    capturedPhotoInfo.innerHTML = `
+                        <p>Login recorded: ${now.toLocaleString()}</p>
+                        <p>User: ${employeeName}</p>
+                    `;
+                }
+                
+                // Stop camera
                 stopCamera();
             }
             
@@ -611,35 +577,23 @@
                 usernameInput.value = 'sgxminerals';
                 passwordInput.value = 'admin123';
                 
-                // Stop camera if active
-                stopCamera();
+                // Clear captured photo
+                capturedPhoto.src = '';
+                capturedPhotoInfo.innerHTML = '';
+                
+                // Restart camera
+                startCamera();
             }
             
-            // Event Listeners
-            captureBtn.addEventListener('click', captureImage);
-            switchCameraBtn.addEventListener('click', switchCamera);
-            
-            traditionalLoginBtn.addEventListener('click', function() {
-                traditionalLoginBtn.classList.add('active');
-                cameraLoginBtn.classList.remove('active');
-                stopCamera();
-            });
-            
-            cameraLoginBtn.addEventListener('click', function() {
-                cameraLoginBtn.classList.add('active');
-                traditionalLoginBtn.classList.remove('active');
-                startCamera();
-            });
-            
             // Form submission
-            loginForm.addEventListener('submit', function(e) {
+            loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 const username = usernameInput.value;
                 const password = passwordInput.value;
                 
                 if (employees[username] && employees[username].password === password) {
-                    loginSuccess(employees[username].name);
+                    await loginSuccess(employees[username].name);
                 } else {
                     alert('Invalid credentials. Please try again.\nHint: Username: sgxminerals, Password: admin123');
                 }
@@ -647,13 +601,6 @@
             
             // Logout button
             logoutBtn.addEventListener('click', logout);
-            
-            // Initialize camera login option
-            cameraLoginBtn.addEventListener('click', function() {
-                if (!isCameraActive) {
-                    startCamera();
-                }
-            });
             
             // Add glow effect to login form on input focus
             [usernameInput, passwordInput].forEach(input => {
@@ -667,6 +614,9 @@
                     }
                 });
             });
+            
+            // Initialize camera on page load
+            startCamera();
         });
     </script>
 </body>
