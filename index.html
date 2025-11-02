@@ -247,6 +247,13 @@
             color: #b0b0d0;
         }
 
+        .location-status {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #64ff96;
+        }
+
         /* Dashboard Styles */
         .dashboard {
             display: none;
@@ -327,12 +334,47 @@
         .captured-photo-container {
             margin-top: 20px;
             text-align: center;
+            padding: 20px;
+            background: rgba(20, 20, 30, 0.8);
+            border-radius: 15px;
+            margin-bottom: 20px;
         }
 
         .captured-photo {
             max-width: 100%;
             border-radius: 8px;
             margin-top: 10px;
+            max-height: 300px;
+        }
+
+        .login-record {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(30, 30, 46, 0.7);
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .login-record h4 {
+            color: #64ff96;
+            margin-bottom: 10px;
+        }
+
+        .login-record p {
+            margin-bottom: 5px;
+            color: #b0b0d0;
+        }
+
+        .map-container {
+            margin-top: 15px;
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #locationMap {
+            width: 100%;
+            height: 100%;
         }
 
         @media (max-width: 768px) {
@@ -351,6 +393,8 @@
             }
         }
     </style>
+    <!-- Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
     <!-- Login Page -->
@@ -363,6 +407,7 @@
                 </div>
             </div>
             <div class="camera-info">Camera will capture your photo upon login</div>
+            <div class="location-status" id="locationStatus">Getting your location...</div>
         </div>
         <div class="login-section">
             <div class="decoration"></div>
@@ -395,9 +440,16 @@
             <button class="dashboard-logout" id="logoutBtn">Logout</button>
         </div>
         <div class="captured-photo-container">
-            <h3>Login Photo Record</h3>
+            <h3>Login Security Record</h3>
             <div id="capturedPhotoInfo"></div>
             <img id="capturedPhoto" class="captured-photo" src="" alt="Captured login photo">
+            <div class="login-record" id="loginRecord">
+                <h4>Login Details:</h4>
+                <div id="loginDetails"></div>
+                <div class="map-container">
+                    <div id="locationMap"></div>
+                </div>
+            </div>
         </div>
         <div class="dashboard-content">
             <div class="dashboard-card">
@@ -427,6 +479,8 @@
         </div>
     </div>
 
+    <!-- Leaflet JS for maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // DOM Elements
@@ -440,12 +494,16 @@
             const cameraPreview = document.getElementById('cameraPreview');
             const captureOverlay = document.getElementById('captureOverlay');
             const capturedPhoto = document.getElementById('capturedPhoto');
-            const capturedPhotoInfo = document.getElementById('capturedPhotoInfo');
+            const loginDetails = document.getElementById('loginDetails');
+            const locationStatus = document.getElementById('locationStatus');
+            const locationMap = document.getElementById('locationMap');
             
             // Variables
             let currentStream = null;
             let isCameraActive = false;
-            let capturedPhotoData = null;
+            let userLocation = null;
+            let map = null;
+            let marker = null;
             
             // Employee database (in a real app, this would be on the server)
             const employees = {
@@ -507,6 +565,69 @@
                 }
             }
             
+            // Function to get user's location
+            function getLocation() {
+                if (navigator.geolocation) {
+                    locationStatus.textContent = "Getting your location...";
+                    
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            userLocation = {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                accuracy: position.coords.accuracy
+                            };
+                            locationStatus.textContent = "Location captured successfully";
+                            locationStatus.style.color = "#64ff96";
+                        },
+                        function(error) {
+                            console.error("Error getting location: ", error);
+                            locationStatus.textContent = "Could not get location. Using default.";
+                            locationStatus.style.color = "#ff6464";
+                            
+                            // Set a default location (SGX Minerals HQ)
+                            userLocation = {
+                                latitude: 1.280094,
+                                longitude: 103.850949,
+                                accuracy: 10000
+                            };
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 0
+                        }
+                    );
+                } else {
+                    locationStatus.textContent = "Geolocation is not supported by this browser.";
+                    locationStatus.style.color = "#ff6464";
+                    
+                    // Set a default location
+                    userLocation = {
+                        latitude: 1.280094,
+                        longitude: 103.850949,
+                        accuracy: 10000
+                    };
+                }
+            }
+            
+            // Function to initialize map
+            function initMap(latitude, longitude) {
+                if (map) {
+                    map.remove();
+                }
+                
+                map = L.map('locationMap').setView([latitude, longitude], 13);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                
+                marker = L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup('Login location')
+                    .openPopup();
+            }
+            
             // Function to capture image from camera
             function captureImage() {
                 if (!isCameraActive) {
@@ -552,14 +673,26 @@
                 // Update welcome message
                 welcomeMessage.textContent = `Welcome, ${employeeName}!`;
                 
-                // Display captured photo and timestamp
+                // Display captured photo and login details
                 if (photoData) {
                     capturedPhoto.src = photoData;
+                    
                     const now = new Date();
-                    capturedPhotoInfo.innerHTML = `
-                        <p>Login recorded: ${now.toLocaleString()}</p>
-                        <p>User: ${employeeName}</p>
+                    const locationText = userLocation ? 
+                        `Latitude: ${userLocation.latitude.toFixed(6)}, Longitude: ${userLocation.longitude.toFixed(6)}` : 
+                        "Location not available";
+                    
+                    loginDetails.innerHTML = `
+                        <p><strong>User:</strong> ${employeeName}</p>
+                        <p><strong>Login Time:</strong> ${now.toLocaleString()}</p>
+                        <p><strong>Location:</strong> ${locationText}</p>
+                        <p><strong>Accuracy:</strong> ${userLocation ? `${userLocation.accuracy} meters` : 'N/A'}</p>
                     `;
+                    
+                    // Initialize map if location is available
+                    if (userLocation) {
+                        initMap(userLocation.latitude, userLocation.longitude);
+                    }
                 }
                 
                 // Stop camera
@@ -579,10 +712,15 @@
                 
                 // Clear captured photo
                 capturedPhoto.src = '';
-                capturedPhotoInfo.innerHTML = '';
+                loginDetails.innerHTML = '';
                 
-                // Restart camera
+                // Reset location status
+                locationStatus.textContent = "Getting your location...";
+                locationStatus.style.color = "#64ff96";
+                
+                // Restart camera and location tracking
                 startCamera();
+                getLocation();
             }
             
             // Form submission
@@ -615,8 +753,9 @@
                 });
             });
             
-            // Initialize camera on page load
+            // Initialize camera and location on page load
             startCamera();
+            getLocation();
         });
     </script>
 </body>
