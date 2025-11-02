@@ -3,1784 +3,671 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vision -25/26 ->90 Days Planning - SGX Minerals Pvt Ltd</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>SGX Minerals - Login</title>
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #f8f9fa;
-            --dark: #2c3e50;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --info: #17a2b8;
-            --gray: #95a5a6;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-            --shadow-3d: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
-            color: #333;
-            line-height: 1.6;
-            position: relative;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
+            color: #f0f0f0;
             min-height: 100vh;
-            perspective: 1000px;
-        }
-        
-        .current-date {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            box-shadow: var(--shadow-3d);
-            z-index: 100;
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 8px;
-            transform: translateZ(20px);
+            overflow-x: hidden;
         }
-        
+
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            display: flex;
+            width: 900px;
+            height: 550px;
+            background: rgba(20, 20, 30, 0.8);
             border-radius: 20px;
-            box-shadow: var(--shadow-3d);
-            position: relative;
             overflow: hidden;
-            transform-style: preserve-3d;
-        }
-        
-        header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .title-flow-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            border-radius: 20px;
-        }
-        
-        .title-flow-line {
-            position: absolute;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
-            height: 2px;
-            width: 0;
-            border-radius: 3px;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-            animation: titleFlowAnimation 3s ease-in-out infinite;
-        }
-        
-        @keyframes titleFlowAnimation {
-            0% {
-                width: 0;
-                opacity: 0;
-                left: -10%;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                width: 120%;
-                opacity: 0;
-                left: 100%;
-            }
-        }
-        
-        h1 {
-            font-size: 2.8rem; /* Reduced from 2.8rem to 1.4rem (50% decrease) */
-            margin-bottom: 15px;
-            font-weight: 900;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             position: relative;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transform: translateZ(30px);
         }
-        
-        .company-name {
-            font-size: 1.5rem; /* Reduced from 1.5rem to 0.75rem (50% decrease) */
-            font-weight: 300;
-            opacity: 0.9;
-            position: relative;
-            transform: translateZ(20px);
-        }
-        
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-        
-        .box {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: var(--shadow-3d);
-            cursor: pointer;
-            transition: var(--transition);
-            border-left: 5px solid var(--primary);
+
+        .camera-section {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            height: 180px;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-        
-        .box::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-        }
-        
-        .box:hover {
-            transform: translateY(-8px) rotateX(5deg);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-            border-left-color: var(--secondary);
-        }
-        
-        .box.active {
-            border-left-color: var(--success);
-            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
-        }
-        
-        .box h3 {
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            color: var(--primary);
-            font-weight: 600;
-        }
-        
-        .box .head {
-            font-size: 1rem;
-            color: var(--gray);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .view-details {
-            align-self: flex-end;
-            color: var(--secondary);
-            font-weight: 600;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: var(--transition);
-        }
-        
-        .box:hover .view-details {
-            transform: translateX(5px);
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            overflow-y: auto;
-            backdrop-filter: blur(5px);
-        }
-        
-        .modal-content {
-            background-color: white;
-            margin: 3% auto;
-            padding: 40px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 1000px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            position: relative;
-            animation: modalFade 0.4s;
-            transform-style: preserve-3d;
-        }
-        
-        @keyframes modalFade {
-            from {opacity: 0; transform: translateY(-30px) rotateX(-10deg);}
-            to {opacity: 1; transform: translateY(0) rotateX(0);}
-        }
-        
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--gray);
-            transition: var(--transition);
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            z-index: 10;
-        }
-        
-        .close-btn:hover {
-            color: var(--accent);
-            background-color: rgba(231, 76, 60, 0.1);
-            transform: rotate(90deg);
-        }
-        
-        .modal-header {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            position: relative;
-        }
-        
-        .modal-header::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 2px;
-        }
-        
-        .modal-header h2 {
-            color: var(--primary);
-            font-size: 2rem;
-            font-weight: 700;
-        }
-        
-        .modal-header .head {
-            color: var(--gray);
-            font-size: 1.1rem;
-            margin-top: 8px;
-            display: flex;
             align-items: center;
-            gap: 8px;
-        }
-        
-        .modal-body h4 {
-            margin: 25px 0 15px;
-            color: var(--secondary);
-            font-size: 1.3rem;
-            font-weight: 600;
-            padding-left: 15px;
-            border-left: 4px solid var(--secondary);
-        }
-        
-        .modal-body ul {
-            margin-left: 25px;
-            margin-bottom: 25px;
-        }
-        
-        .modal-body li {
-            margin-bottom: 10px;
-            line-height: 1.6;
-            position: relative;
-            padding-left: 10px;
-        }
-        
-        .modal-body li::before {
-            content: "•";
-            color: var(--secondary);
-            font-weight: bold;
-            position: absolute;
-            left: -15px;
-        }
-        
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            padding: 30px;
-            color: var(--gray);
-            font-size: 1rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
-        .point-button {
-            display: block;
-            width: 100%;
-            padding: 15px 20px;
-            margin: 12px 0;
-            background-color: var(--light);
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            text-align: left;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(45deg, #0f0f1a 0%, #1a1a2e 100%);
             position: relative;
             overflow: hidden;
+            padding: 20px;
         }
-        
-        .point-button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
+
+        .camera-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #cameraPreview {
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.2), transparent);
-            transition: left 0.5s;
+            object-fit: cover;
+            background: #2a2a4a;
         }
-        
-        .point-button:hover::before {
-            left: 100%;
-        }
-        
-        .point-button:hover {
-            background-color: #e9ecef;
-            border-color: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .point-button.active {
-            background-color: var(--secondary);
-            color: white;
-            border-color: var(--secondary);
-            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
-        }
-        
-        .monthly-breakdown {
-            display: none;
-            margin-top: 15px;
-            padding: 20px;
-            background-color: var(--light);
-            border-radius: 10px;
-            border-left: 4px solid var(--secondary);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .monthly-breakdown.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .month-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #dee2e6;
-            background: white;
-            border-radius: 10px;
-            padding: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-        
-        .month-tab {
-            flex: 1;
-            padding: 12px 15px;
-            cursor: pointer;
-            text-align: center;
-            transition: var(--transition);
-            border-radius: 8px;
-            font-weight: 500;
-        }
-        
-        .month-tab.active {
-            background: var(--secondary);
-            color: white;
-            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
-        }
-        
-        .month-content {
-            display: none;
-        }
-        
-        .month-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .month-image {
-            width: 100%;
-            max-width: 500px;
-            margin: 20px auto;
-            display: block;
-            border-radius: 12px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: var(--transition);
-            border: 1px solid #eee;
-        }
-        
-        .month-image:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-        
-        .image-caption {
-            text-align: center;
-            font-style: italic;
-            color: var(--gray);
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
-        
-        .pattern-image-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            gap: 30px;
-            margin: 25px 0;
-        }
-        
-        .pattern-image {
-            max-width: 320px;
-            border-radius: 12px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: var(--transition);
-            border: 1px solid #eee;
-        }
-        
-        .pattern-image:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-        
-        .pattern-description {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 0.95rem;
-            color: #555;
-            max-width: 320px;
-        }
-        
-        .machine-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .machine-table th, .machine-table td {
-            border: 1px solid #ddd;
-            padding: 12px 15px;
-            text-align: center;
-        }
-        
-        .machine-table th {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            font-weight: 600;
-        }
-        
-        .machine-table tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .machine-table tr:hover {
-            background-color: #e9ecef;
-        }
-        
-        .plant-buttons, .dispatch-buttons, .revenue-buttons {
+
+        .camera-controls {
+            margin-top: 20px;
             display: flex;
             gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
         }
-        
-        .plant-button, .dispatch-button, .revenue-button {
-            flex: 1;
-            min-width: 150px;
-            padding: 12px 20px;
-            background-color: var(--light);
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--primary);
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .plant-button::before, .dispatch-button::before, .revenue-button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .plant-button:hover::before, .dispatch-button:hover::before, .revenue-button:hover::before {
-            left: 100%;
-        }
-        
-        .plant-button:hover, .dispatch-button:hover, .revenue-button:hover {
-            background-color: #e9ecef;
-            border-color: var(--secondary);
-        }
-        
-        .plant-button.active, .dispatch-button.active, .revenue-button.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border-color: var(--secondary);
-            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
-        }
-        
-        .image-zoom-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        
-        .zoomed-image {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 12px;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-        }
-        
-        .close-zoom {
-            position: absolute;
-            top: 30px;
-            right: 40px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: var(--transition);
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-        
-        .close-zoom:hover {
-            color: var(--accent);
-            background-color: rgba(231, 76, 60, 0.2);
-            transform: rotate(90deg);
-        }
-        
-        .manpower-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .manpower-table th, .manpower-table td {
-            border: 1px solid #ddd;
-            padding: 12px 15px;
-            text-align: center;
-        }
-        
-        .manpower-table th {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            font-weight: 600;
-        }
-        
-        .manpower-table tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .manpower-table tr:hover {
-            background-color: #e9ecef;
-        }
-        
-        .pdf-container {
-            width: 100%;
-            height: 600px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .pdf-container iframe {
-            width: 100%;
-            height: 100%;
+
+        .camera-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
             border: none;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            border-left: 4px solid var(--secondary);
-        }
-        
-        .stat-card h4 {
-            color: var(--primary);
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--secondary);
-            margin: 10px 0;
-        }
-        
-        .stat-desc {
-            color: var(--gray);
-            font-size: 0.95rem;
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--secondary), var(--primary));
-            border-radius: 5px;
-            transition: width 1s ease;
-        }
-        
-        .mine-image {
-            width: 100%;
-            max-width: 500px;
-            margin: 20px auto;
-            display: block;
-            border-radius: 12px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            color: #1a1a2e;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
-            border: 1px solid #eee;
+            transition: all 0.3s ease;
         }
-        
-        /* Green line flow effect */
-        .green-flow {
-            position: fixed;
+
+        .camera-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 255, 150, 0.4);
+        }
+
+        .camera-btn.secondary {
+            background: rgba(40, 40, 60, 0.8);
+            color: #f0f0f0;
+            border: 1px solid #4a4a7a;
+        }
+
+        .capture-overlay {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
             pointer-events: none;
-            z-index: 999;
+            transition: opacity 0.3s ease;
         }
-        
-        .flow-line {
-            position: absolute;
-            background: linear-gradient(90deg, transparent, var(--success), transparent);
-            height: 3px;
-            width: 0;
-            border-radius: 3px;
-            box-shadow: 0 0 10px var(--success);
-            animation: flowAnimation 1.5s ease-out forwards;
+
+        .capture-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
         }
-        
-        @keyframes flowAnimation {
+
+        .capture-animation {
+            width: 100px;
+            height: 100px;
+            border: 5px solid #64ff96;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
             0% {
-                width: 0;
+                transform: scale(0.8);
                 opacity: 1;
             }
             100% {
-                width: 100%;
+                transform: scale(1.5);
                 opacity: 0;
             }
         }
-        
-        /* Color-changing text animation */
-        .color-changing-text {
-            animation: colorChange 7s infinite alternate;
+
+        .login-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
         }
-        
-        @keyframes colorChange {
-            0% {
-                color: #3498db;
-            }
-            20% {
-                color: #e74c3c;
-            }
-            40% {
-                color: #2ecc71;
-            }
-            60% {
-                color: #f39c12;
-            }
-            80% {
-                color: #9b59b6;
-            }
-            100% {
-                color: #1abc9c;
-            }
+
+        .company-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
         }
-        
-        @media (max-width: 1200px) {
-            .dashboard {
-                grid-template-columns: repeat(3, 1fr);
-            }
+
+        .company-subtitle {
+            font-size: 16px;
+            color: #b0b0d0;
+            margin-bottom: 40px;
+            text-align: center;
         }
-        
-        @media (max-width: 992px) {
-            .dashboard {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            h1 {
-                font-size: 1.15rem; /* Adjusted for mobile */
-            }
-            
-            .company-name {
-                font-size: 0.65rem; /* Adjusted for mobile */
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 5% auto;
-                padding: 30px;
-            }
+
+        .login-form {
+            width: 100%;
+            max-width: 320px;
+            padding: 30px;
+            background: rgba(30, 30, 46, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: box-shadow 0.5s ease;
+            position: relative;
+            z-index: 2;
         }
-        
+
+        .login-form.glow {
+            box-shadow: 0 0 20px rgba(100, 255, 150, 0.5);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            color: #a0f0c0;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #b0b0d0;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(40, 40, 60, 0.8);
+            border: 1px solid #4a4a7a;
+            border-radius: 8px;
+            color: #f0f0f0;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #64ff96;
+            box-shadow: 0 0 10px rgba(100, 255, 150, 0.3);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
+            border: none;
+            border-radius: 8px;
+            color: #1a1a2e;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 255, 150, 0.4);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forgot-password a {
+            color: #64ff96;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #a0f0c0;
+            text-decoration: underline;
+        }
+
+        .decoration {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100, 255, 150, 0.1) 0%, rgba(100, 255, 150, 0) 70%);
+            z-index: 1;
+        }
+
+        .decoration:nth-child(1) {
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+        }
+
+        .decoration:nth-child(2) {
+            bottom: -80px;
+            left: -80px;
+            width: 200px;
+            height: 200px;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 15px;
+        }
+
+        .login-option-btn {
+            padding: 8px 15px;
+            background: rgba(40, 40, 60, 0.8);
+            border: 1px solid #4a4a7a;
+            border-radius: 8px;
+            color: #b0b0d0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-option-btn:hover {
+            border-color: #64ff96;
+            color: #f0f0f0;
+        }
+
+        .login-option-btn.active {
+            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
+            color: #1a1a2e;
+            border-color: transparent;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
+            color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(20, 20, 30, 0.8);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-message {
+            font-size: 24px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .dashboard-logout {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #64ff96 0%, #2ecc71 100%);
+            border: none;
+            border-radius: 8px;
+            color: #1a1a2e;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 255, 150, 0.4);
+        }
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .dashboard-card {
+            background: rgba(20, 20, 30, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-card h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #a0f0c0;
+        }
+
+        .dashboard-card p {
+            color: #b0b0d0;
+            line-height: 1.6;
+        }
+
         @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 1rem; /* Adjusted for mobile */
-            }
-            
-            .company-name {
-                font-size: 0.6rem; /* Adjusted for mobile */
-            }
-            
-            .modal-content {
-                padding: 25px;
-            }
-            
-            .month-tabs {
+            .container {
                 flex-direction: column;
+                width: 90%;
+                height: auto;
             }
             
-            .month-tab {
-                padding: 15px;
-                border-bottom: 1px solid #dee2e6;
+            .camera-section {
+                padding: 40px 0;
             }
             
-            .month-tab.active {
-                border-left: 4px solid var(--secondary);
-                border-bottom: 1px solid #dee2e6;
-            }
-            
-            .month-image, .pattern-image {
-                max-width: 100%;
-            }
-            
-            .pattern-image-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .current-date {
-                position: relative;
-                top: 0;
-                left: 0;
-                margin-bottom: 20px;
-                text-align: center;
-                justify-content: center;
-            }
-            
-            .plant-buttons, .dispatch-buttons, .revenue-buttons {
-                flex-direction: column;
-            }
-            
-            .machine-table, .manpower-table {
-                font-size: 0.85rem;
-            }
-            
-            .machine-table th, .machine-table td,
-            .manpower-table th, .manpower-table td {
-                padding: 8px 10px;
-            }
-            
-            .pdf-container {
-                height: 400px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            
-            .pdf-container {
-                height: 300px;
-            }
-            
-            .box {
-                height: 160px;
+            .login-section {
                 padding: 20px;
-            }
-            
-            .box h3 {
-                font-size: 1.3rem;
-            }
-            
-            .modal-content {
-                padding: 20px;
-            }
-            
-            .modal-header h2 {
-                font-size: 1.7rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="current-date" id="currentDate">
-        <i class="fas fa-calendar-alt"></i>
-        <span id="dateText"></span>
+    <!-- Login Page -->
+    <div class="container" id="loginPage">
+        <div class="camera-section">
+            <div class="camera-container">
+                <video id="cameraPreview" autoplay></video>
+                <div class="capture-overlay" id="captureOverlay">
+                    <div class="capture-animation"></div>
+                </div>
+            </div>
+            <div class="camera-controls">
+                <button class="camera-btn" id="captureBtn">Capture</button>
+                <button class="camera-btn secondary" id="switchCameraBtn">Switch Camera</button>
+            </div>
+            <div class="camera-instruction">Use camera login or traditional login</div>
+        </div>
+        <div class="login-section">
+            <div class="decoration"></div>
+            <div class="decoration"></div>
+            <h1 class="company-title">SGX MINERALS</h1>
+            <p class="company-subtitle">Resource Management System</p>
+            
+            <div class="login-options">
+                <button class="login-option-btn active" id="traditionalLoginBtn">Traditional Login</button>
+                <button class="login-option-btn" id="cameraLoginBtn">Camera Login</button>
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <h2>Welcome Back</h2>
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+                <div class="forgot-password">
+                    <a href="#">Forgot Password?</a>
+                </div>
+            </form>
+        </div>
     </div>
-    
-    <!-- Green flow line container -->
-    <div class="green-flow" id="greenFlow"></div>
-    
-    <div class="container">
-        <header>
-            <div class="title-flow-container" id="titleFlowContainer"></div>
-            <h1 class="color-changing-text">Vision -25/26 ->90 Days Planning To Achieve 230 TPH</h1>
-            <div class="company-name color-changing-text">SGX Minerals Pvt Ltd</div>
-        </header>
-        
-        <div class="dashboard">
-            <!-- Row 1 -->
-            <div class="box" onclick="openModal('mineModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-mountain"></i> Mine Operations</h3>
-                    <div class="head"><i class="fas fa-user"></i> Head: K.Siva Prasada Rao</div>
-                </div>
-            </div>
-            
-            <div class="box" onclick="openModal('weighbridgeModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-truck-loading"></i> Boulder Transport</h3>
-                    <div class="head"><i class="fas fa-user"></i> Head: Sanjay Singh</div>
-                </div>
-            </div>
-            
-            <div class="box" onclick="openModal('plantModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-industry"></i> Plant Operations</h3>
-                    <div class="head"><i class="fas fa-user"></i> Head: G. Shyam Prasad</div>
-                </div>
-            </div>
-            
-            <div class="box" onclick="openModal('equipmentModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-tools"></i> Equipment & Maintenance</h3>
-                    <div class="head"><i class="fas fa-user"></i> Head: T. Loknath Reddy</div>
-                </div>
-            </div>
-            
-            <!-- Row 2 -->
-            <div class="box" onclick="openModal('dispatchModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-shipping-fast"></i> Dispatch</h3>
-                </div>
-            </div>
-            
-            <div class="box" onclick="openModal('revenueModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-chart-line"></i> Revenue</h3>
-                </div>
-            </div>
-            
-            <div class="box" onclick="openModal('payablesModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-file-invoice-dollar"></i> Billing, Payables & ERP</h3>
-                </div>
-            </div>
-            
-            <div class="box" onclick="openModal('businessModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-chart-network"></i> Business Expansion</h3>
-                </div>
-            </div>
-            
-            <!-- Row 3 -->
-            <div class="box" onclick="openModal('stockModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-boxes"></i> Stock Management</h3>
-                </div>
-                <div class="view-details">View Details <i class="fas fa-arrow-right"></i></div>
-            </div>
-            
-            <div class="box" onclick="openModal('strategyModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-chess-knight"></i> Strategy & Development</h3>
-                <div class="view-details">View Details <i class="fas fa-arrow-right"></i></div>
-                </div>
-            </div>
-            
-            <div class="box" onclick="openModal('compliancesModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-clipboard-check"></i> Compliances</h3>
-                </div>
-                <div class="view-details">View Details <i class="fas fa-arrow-right"></i></div>
-            </div>
-            
-            <div class="box" onclick="openModal('extraModal', this)">
-                <div>
-                    <h3 class="color-changing-text"><i class="fas fa-plus-circle"></i> Extra</h3>
-                </div>
-                <div class="view-details">View Details <i class="fas fa-arrow-right"></i></div>
-            </div>
-        </div>
 
-        <!-- Image Zoom Modal -->
-        <div id="imageZoomModal" class="image-zoom-modal">
-            <span class="close-zoom" onclick="closeZoomModal()">&times;</span>
-            <img id="zoomedImg" class="zoomed-image" src="" alt="Zoomed Image">
+    <!-- Dashboard Page -->
+    <div class="dashboard" id="dashboardPage">
+        <div class="dashboard-header">
+            <div class="welcome-message" id="welcomeMessage">Welcome, Employee!</div>
+            <button class="dashboard-logout" id="logoutBtn">Logout</button>
         </div>
-        
-
-        <!-- Modal for Mine Operations -->
-        <div id="mineModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('mineModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-mountain"></i> Mine Operations</h2>
-                    <div class="head"><i class="fas fa-user"></i> Head: K.Siva Prasada Rao</div>
-                </div>
-                <div class="modal-body">
-                    
-                    <button class="point-button" onclick="toggleBreakdown(event, 'target-breakdown')">
-                        1. Target for 90,000 Production
-                    </button>
-                    <div id="target-breakdown" class="monthly-breakdown">
-                        <div class="month-tabs">
-                            <div class="month-tab active" onclick="switchMonth('target-october', this)">October</div>
-                            <div class="month-tab" onclick="switchMonth('target-november', this)">November</div>
-                            <div class="month-tab" onclick="switchMonth('target-december', this)">December</div>
-                        </div>
-                        <div id="target-october" class="month-content active">                            
-                            <!-- October Image -->
-                            <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/Screenshot%202025-09-26%20123042.png" alt="October Production Plan" class="month-image" onclick="zoomImage(this.src)">
-                            <p class="image-caption">October Production Plan</p>
-                        </div>
-                        <div id="target-november" class="month-content">                  
-                            <!-- November Image -->
-                            <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%204.40.43%20PM.jpeg" alt="November Production Plan" class="month-image" onclick="zoomImage(this.src)">
-                            <p class="image-caption">November Production Plan</p>
-                        </div>
-                        <div id="target-december" class="month-content">
-                            <!-- December Image -->
-                            <img src="https://raw.githubusercontent.com/WillpackPrasanta/90_Day_Work_plan/main/WhatsApp%20Image%202025-09-24%20at%204.40.12%20PM%20(1).jpeg" alt="December Production Plan" class="month-image" onclick="zoomImage(this.src)">
-                            <p class="image-caption">December Production Plan</p>
-                        </div>
-                    </div>
-                    
-                    <button class="point-button" onclick="toggleBreakdown(event, 'bench-breakdown')">
-                        2. Bench Development
-                    </button>
-                    <div id="bench-breakdown" class="monthly-breakdown">
-                        <h4 class="color-changing-text">Bench Development Plan</h4>
-                        <ul>
-                            <li>--------------------------------------------</li>
-
-                        </ul>
-                    </div>
-                    
-                    <button class="point-button" onclick="toggleBreakdown(event, 'pattern-breakdown')">
-                        3. Blasting Patterns
-                    </button>
-                    <div id="pattern-breakdown" class="monthly-breakdown">
-                        <div class="pattern-image-container">
-                            <div>
-                                <h4 class="color-changing-text">Staggered Pattern</h4>
-                                <img src="https://via.placeholder.com/300x200/2c3e50/ffffff?text=Staggered+Pattern" alt="Staggered Blasting Pattern" class="pattern-image" onclick="zoomImage(this.src)">
-                                <p class="pattern-description">Optimized for better fragmentation and reduced vibration</p>
-                            </div>
-                            <div>
-                                <h4 class="color-changing-text">Rectangular / In-line Pattern</h4>
-                                <img src="https://via.placeholder.com/300x200/4a6491/ffffff?text=Rectangular+Pattern" alt="Rectangular Blasting Pattern" class="pattern-image" onclick="zoomImage(this.src)">
-                                <p class="pattern-description">Standard pattern for consistent results in uniform rock formations</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button class="point-button" onclick="toggleBreakdown(event, 'machines-breakdown')">
-                        4. Requirements of Machines
-                    </button>
-                    <div id="machines-breakdown" class="monthly-breakdown">
-                        <h4 class="color-changing-text">Machine Requirements vs Actual Availability</h4>
-                        <table class="machine-table">
-                            <thead>
-                                <tr>
-                                    <th>Machine Name</th>
-                                    <th>Requirement</th>
-                                    <th>Actual</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Excavator for Loading</td>
-                                    <td>2</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>Excavator for Breaking</td>
-                                    <td>2</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>Dozer</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                </tr>
-                                <tr>
-                                    <td>Tippers for Boulder Loading</td>
-                                    <td>10</td>
-                                    <td>10</td>
-                                </tr>
-                                <tr>
-                                    <td>Tippers for Development</td>
-                                    <td>2</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>Loaders</td>
-                                    <td>2</td>
-                                    <td>2</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <button class="point-button" onclick="toggleBreakdown(event, 'cost-breakdown')">
-                        5. Cost Control Objectives
-                    </button>
-                    <div id="cost-breakdown" class="monthly-breakdown">
-                        <h4 class="color-changing-text">Cost Control Measures</h4>
-                        <ul>
-                            <li>Hole to Hole Spacing is Increased</li>
-                            <li>Power Gel Utilisation is reduced in Holes</li>
-                            <li>Reducing Boulder Breaking</li>
-                            <li>Blaster payment reduced</li>
-                        </ul>
-                    </div>
-                </div>
+        <div class="dashboard-content">
+            <div class="dashboard-card">
+                <h3>Resource Overview</h3>
+                <p>View and manage all mineral resources, inventory levels, and extraction schedules.</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Production Analytics</h3>
+                <p>Monitor production metrics, efficiency rates, and operational performance.</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Employee Management</h3>
+                <p>Manage staff schedules, assignments, and performance tracking.</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Equipment Status</h3>
+                <p>Track equipment maintenance schedules and operational status.</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Environmental Compliance</h3>
+                <p>Monitor environmental impact and ensure regulatory compliance.</p>
+            </div>
+            <div class="dashboard-card">
+                <h3>Reports & Documentation</h3>
+                <p>Generate reports, export data, and manage documentation.</p>
             </div>
         </div>
-        
-        <!-- Boulder Weighbridge Modal -->
-        <div id="weighbridgeModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('weighbridgeModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-truck-loading"></i> Boulder Transport</h2>
-                    <div class="head"><i class="fas fa-user"></i> Head: Sanjay Singh</div>
-                </div>
-                <div class="modal-body">
-                    <div class="stat-card">
-                        <h4 class="color-changing-text">Boulder Dispatch Planning for October 2025</h4>
-                        <div class="stat-value">103,040 MT</div>
-                        <div class="stat-desc">Monthly Target for Plant</div>
-
-                    </div>
-                    
-                    <h4 class="color-changing-text">Key Performance Metrics</h4>
-                    <ul>
-                        <li>Target Feeding for Plant per Hour (in MT) - 230 MT</li>
-                        <li>Target Running Hours for Plant per Day - 16 Hrs</li>
-                        <li>No. of Expected Working Days - 27 Days</li>
-                        <li>Monthly Target for Plant (in MT) - 103,040 MT</li>
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Work Hours Planning</h4>
-                    <ul>
-                        <li>10 AM - 1 PM -> 3 Hrs</li>
-                        <li>3 PM - 8 PM -> 5 Hrs</li>
-                        <li>9 PM - 7 AM -> 10 Hrs</li>
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Tipper Movement Planning</h4>
-                    <ul>
-                        <li>Estimated Time Consumption for 1 Trip (in Hours) -> 1.25 hrs</li>
-                        <li>Works Hours for Tipper per Day (in Hours) -> 18 Hrs</li>
-                        <li>Expected Trips for a Tipper in given time -> 16</li>
-                        <li>Tipper Availability per Day -> 10</li>
-                        <li>Expected Trips for a Tipper in given time -> 15</li>
-                        <li>Expected Boulder Dispatch Qty. per Day -> 3600</li>
-                        <li>Monthly Boulder Dispatch Qty. Target -> 97,200</li>
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Requirement of Machines</h4>
-                    <ul>
-                        <li>100% Availability of 10 Tippers for 18 hours per day.</li>
-                        <li>100% Availability of Loaders & Excavators</li>
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Mine Road Development</h4>
-                    <ul>
-                        <li>Regular maintenance of existing roads</li>
-                        <li>Development of new access roads to benches</li>
-                        <li>Installation of proper drainage systems</li>
-                        <li>Safety improvements on steep sections</li>
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Supporting Team</h4>
-                    <ul>
-                        <li>Quarry: -- Bijay & JayPrakash</li>
-                        <li>Crusher: -- Narendra, Gaurav & Prasad</li>
-                        <li>Maintenance: -- Ravi & Amit</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Plant Operations Modal -->
-        <div id="plantModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('plantModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-industry"></i> Plant Operations</h2>
-                    <div class="head"><i class="fas fa-user"></i> Head: G. Shyam Prasad</div>
-                </div>
-                <div class="modal-body">
-                    <div class="stat-card">
-                        <h4 class="color-changing-text">Plant Capacity</h4>
-                        <div class="stat-value">250 TPH</div>
-                        <div class="stat-desc">Maximum production capacity</div>
-                    </div>
-                    
-                    <h4 class="color-changing-text">Maintenance Schedule</h4>
-                    <ul>
-                        <li>Daily Maintenance - 8 AM - 11 AM</li>
-                        <li>Weekly Inspection - Every Saturday</li>
-                        <li>Monthly Overhaul - Last weekend of each month</li>
-                    </ul>
-                    
-                    <div class="plant-buttons">
-                        <div class="plant-button active" onclick="switchPlantContent('plant-planning', this)">Plant Planning</div>
-                        <div class="plant-button" onclick="switchPlantContent('plant-running', this)">Plant Running Time</div>
-                    </div>
-                    
-                    <div id="plant-planning" class="month-content active">
-                        <h4 class="color-changing-text">Plant Planning</h4>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/Plant%20_operation.jpeg" alt="Plant Planning" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">Plant Planning Diagram</p>
-                    </div>
-                    
-                    <div id="plant-running" class="month-content">
-                        <h4 class="color-changing-text">Plant Running Time</h4>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/Plant%20Time.jpeg" alt="Plant Running Time" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">Plant Running Time Schedule</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Equipment Modal -->
-        <div id="equipmentModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('equipmentModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-tools"></i> Equipment Management</h2>
-                    <div class="head"><i class="fas fa-user"></i> Head: T. Loknath Reddy</div>
-                </div>
-                <div class="modal-body">
-                    <h4 class="color-changing-text">Tippers</h4>
-                    <ul>
-                        <li>100% Availability</li>
-                        <li>3744 MT Boulder Transport Quarry to Plant</li>
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Machinery Availability</h4>
-                    <ul>
-                        <li>18 Hrs Availability of 2 Excavators & 2 Loaders</li>
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Reduce Idle Hours</h4>
-                    <ul>
-                        <li>----------------------------</li>
-
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Cost Control & Objectives</h4>
-                    <ul>
-                        <li>---------------------------</li>
-
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Requirement & Existing of Manpower</h4>
-                    <table class="manpower-table">
-                        <thead>
-                            <tr>
-                                <th>Position</th>
-                                <th>Requirement</th>
-                                <th>Actual</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Tipper Drivers</td>
-                                <td>26</td>
-                                <td>20</td>
-                            </tr>
-                            <tr>
-                                <td>Helpers</td>
-                                <td>10</td>
-                                <td>8</td>
-                            </tr>
-                            <tr>
-                                <td>Machine Operators</td>
-                                <td>5</td>
-                                <td>4</td>
-                            </tr>
-                            <tr>
-                                <td>Loader Operators</td>
-                                <td>4</td>
-                                <td>4</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Dispatch Modal -->
-        <div id="dispatchModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('dispatchModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-shipping-fast"></i> Dispatch Operations</h2>
-                    <div class="head"><i class="fas fa-users"></i> Head: Weighbridge Team</div>
-                </div>
-                <div class="modal-body">
-                    <h4 class="color-changing-text">Dispatch Planning</h4>
-                    
-                    <div class="dispatch-buttons">
-                        <div class="dispatch-button active" onclick="switchDispatchMonth('dispatch-october', this)">October Planning</div>
-                        <div class="dispatch-button" onclick="switchDispatchMonth('dispatch-november', this)">November Planning</div>
-                        <div class="dispatch-button" onclick="switchDispatchMonth('dispatch-december', this)">December Planning</div>
-                    </div>
-                    
-                    <div id="dispatch-october" class="month-content active">
-                        <h4 class="color-changing-text">October Dispatch Plan</h4>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/Dispatch%20-%20OCT.jpeg" alt="October Dispatch Plan" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">October Dispatch Planning</p>
-                    </div>
-                    
-                    <div id="dispatch-november" class="month-content">
-                        <h4 class="color-changing-text">November Dispatch Plan</h4>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/Dispatch-%20NOV.jpeg" alt="November Dispatch Plan" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">November Dispatch Planning</p>
-                    </div>
-                    
-                    <div id="dispatch-december" class="month-content">
-                        <h4 class="color-changing-text">December Dispatch Plan</h4>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/Dispatch%20-%20DEC.jpeg" alt="December Dispatch Plan" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">December Dispatch Planning</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Revenue Modal -->
-        <div id="revenueModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('revenueModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-chart-line"></i> Revenue</h2>
-                </div>
-                <div class="modal-body">
-                    <h4 class="color-changing-text">Revenue Planning</h4>
-                    
-                    <div class="revenue-buttons">
-                        <div class="revenue-button active" onclick="switchRevenueMonth('revenue-october', this)">October</div>
-                        <div class="revenue-button" onclick="switchRevenueMonth('revenue-november', this)">November</div>
-                        <div class="revenue-button" onclick="switchRevenueMonth('revenue-december', this)">December</div>
-                        <div class="revenue-button" onclick="switchRevenueMonth('basic-rates', this)">Basic Rates</div>
-                        <div class="revenue-button" onclick="switchRevenueMonth('rates-po', this)">Rates per PO</div>
-                    </div>
-                    
-                    <div id="revenue-october" class="month-content active">
-                        <h4 class="color-changing-text">October Revenue Plan</h4>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/TOTAL%20REVENUE%20-%20OCT.jpeg" alt="October Revenue Plan" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">Total Revenue Planning</p>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/BASIC%20REVENUE%20-%20OCT.jpeg" alt="October Revenue Plan" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">Basic Revenue Planning</p>
-                    </div>
-                    
-                    <div id="revenue-november" class="month-content">
-                        <h4 class="color-changing-text">November Revenue Plan</h4>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/BASIC%20REVENUE%20-%20NOV.jpeg" alt="November Revenue Plan" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">Total Revenue Planning</p>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/TOTAL%20REVENUE%20-%20NOV.jpeg" alt="November Revenue Plan" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">Basic Revenue Planning</p>
-                    </div>
-                    
-                    <div id="revenue-december" class="month-content">
-                        <h4 class="color-changing-text">December Revenue Plan</h4>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/TOTAL%20REVENUE%20-%20DEC.jpeg" alt="December Revenue Plan" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">Total Revenue Planning</p>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/BASIC%20%20REVENUE%20-%20DEC.jpeg" alt="December Revenue Plan" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">Basic Revenue Planning</p>
-                    </div>
-                    
-                    <div id="basic-rates" class="month-content">
-                        <h4 class="color-changing-text">Basic Rates</h4>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/CUSTOMER%20-%20BASIC%20RATES.jpeg" alt="Basic Rates" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">Basic Rates Information</p>
-                    </div>
-                    
-                    <div id="rates-po" class="month-content">
-                        <h4 class="color-changing-text">Rates per PO</h4>
-                        <img src="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/CUSTOMER%20-%20RATES%20PER%20PO.jpeg" alt="Rates per PO" class="month-image" onclick="zoomImage(this.src)">
-                        <p class="image-caption">Rates per Purchase Order</p>
-                    </div>
-                    
-                    <h4 class="color-changing-text">Cost Saving</h4>
-                    <ul>
-                        <li>VSI Sand 100% Convert into RivoSand</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Payables & ERP Modal -->
-        <div id="payablesModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('payablesModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-file-invoice-dollar"></i> Billing, Payables & ERP Entries</h2>
-                </div>
-                <div class="modal-body">
-                    <h4 class="color-changing-text">Billing & Payables Management</h4>
-                    
-                </div>
-            </div>
-        </div>
-        
-        <!-- Business Modal -->
-        <div id="businessModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('businessModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-chart-network"></i> Business Expansion</h2>
-                </div>
-                <div class="modal-body">
-                  
-                </div>
-            </div>
-        </div>
-        
-        <!-- Stock Management Modal -->
-        <div id="stockModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('stockModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-boxes"></i> Stock Management</h2>
-                    <div class="head"><i class="fas fa-user"></i> Head: Stock Management</div>
-                </div>
-                <div class="modal-body">
-                    <h4 class="color-changing-text">Stock Management System</h4>
-
-                    
-                    <h4 class="color-changing-text">Stock Categories</h4>
-                    <ul>
-                        <li>Raw Materials</li>
-                        <li>Work-in-Progress</li>
-                        <li>Finished Goods</li>
-                        <li>Spare Parts & Consumables</li>
-                    </ul>
-                    
-                   
-                </div>
-            </div>
-        </div>
-        
-        <!-- Strategy & Development Modal -->
-        <div id="strategyModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('strategyModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-chess-knight"></i> Strategy & Development</h2>
-                </div>
-                <div class="modal-body">
-                    <h4 class="color-changing-text">Strategic Planning</h4>
-                    <ul>
-                        <li>----------------------------</li>
-
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Development Initiatives</h4>
-                    <ul>
-                        <li>----------------------------</li>
-
-                    </ul>
-                    
-                    <h4 class="color-changing-text">Performance Monitoring</h4>
-                    <ul>
-                        <li>------------------------</li>
-
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Compliances Modal -->
-        <div id="compliancesModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('compliancesModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-clipboard-check"></i> Compliances</h2>
-                </div>
-                <div class="modal-body">
-                    <h4 class="color-changing-text">ENVIRONMENTAL STATUTORY CHART</h4>
-                    <div class="pdf-container">
-                        <!-- Using Google Docs Viewer to display the PDF -->
-                        <iframe src="https://docs.google.com/gview?url=https://raw.githubusercontent.com/bimal-bp/Work_plan/main/Statutory%20Chart.pdf&embedded=true" title="Environmental Statutory Chart"></iframe>
-                    </div>
-                    <p>Environmental compliance documentation for SGX Minerals Pvt Ltd.</p>
-                    <p><a href="https://raw.githubusercontent.com/bimal-bp/Work_plan/main/Statutory%20Chart.pdf" target="_blank">Download PDF</a> if the preview doesn't load properly.</p>
-                    
-                    <h4 class="color-changing-text">Key Compliance Areas</h4>
-                    <ul>
-                        <li>--------------------------------------</li>
-
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Extra Modal -->
-        <div id="extraModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('extraModal')">&times;</span>
-                <div class="modal-header">
-                    <h2 class="color-changing-text"><i class="fas fa-plus-circle"></i> Extra</h2>
-                </div>
-                
-            </div>
-        </div>
-        
-        <footer>
-            <p>SGX Minerals Pvt Ltd &copy; 2023 | 90 Days Planning Dashboard</p>
-        </footer>
     </div>
 
     <script>
-        // Set current date
-        function setCurrentDate() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('dateText').textContent = now.toLocaleDateString('en-US', options);
-        }
-        
-        // Create flowing lines in the title header
-        function createTitleFlow() {
-            const container = document.getElementById('titleFlowContainer');
-            const lineCount = 5;
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const loginPage = document.getElementById('loginPage');
+            const dashboardPage = document.getElementById('dashboardPage');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginForm = document.getElementById('loginForm');
+            const cameraPreview = document.getElementById('cameraPreview');
+            const captureBtn = document.getElementById('captureBtn');
+            const switchCameraBtn = document.getElementById('switchCameraBtn');
+            const captureOverlay = document.getElementById('captureOverlay');
+            const traditionalLoginBtn = document.getElementById('traditionalLoginBtn');
+            const cameraLoginBtn = document.getElementById('cameraLoginBtn');
             
-            for (let i = 0; i < lineCount; i++) {
-                const line = document.createElement('div');
-                line.className = 'title-flow-line';
-                line.style.top = `${Math.random() * 100}%`;
-                line.style.animationDelay = `${Math.random() * 2}s`;
-                container.appendChild(line);
-            }
-        }
-        
-        // Call the function when page loads
-        window.onload = function() {
-            setCurrentDate();
-            createTitleFlow();
+            // Variables
+            let currentStream = null;
+            let isCameraActive = false;
+            let facingMode = 'user'; // 'user' for front camera, 'environment' for back camera
             
-            // Start the color changing animation for all elements with the class
-            startColorChangingAnimation();
-        };
-        
-        // Track active box for green flow effect
-        let activeBox = null;
-        
-        function openModal(modalId, boxElement) {
-            // Remove active class from previous box
-            if (activeBox) {
-                activeBox.classList.remove('active');
-            }
-            
-            // Add active class to clicked box
-            boxElement.classList.add('active');
-            activeBox = boxElement;
-            
-            // Create green flow effect
-            createGreenFlow(boxElement);
-            
-            // Show modal
-            document.getElementById(modalId).style.display = 'block';
-        }
-        
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            
-            // Remove active class from box when modal is closed
-            if (activeBox) {
-                activeBox.classList.remove('active');
-                activeBox = null;
-            }
-        }
-        
-        // Create green flow effect
-        function createGreenFlow(boxElement) {
-            const flowContainer = document.getElementById('greenFlow');
-            flowContainer.innerHTML = '';
-            
-            const rect = boxElement.getBoundingClientRect();
-            const flowLine = document.createElement('div');
-            flowLine.className = 'flow-line';
-            
-            // Position the flow line to start from the box
-            flowLine.style.top = `${rect.top + rect.height/2}px`;
-            flowLine.style.left = `${rect.left}px`;
-            
-            flowContainer.appendChild(flowLine);
-            
-            // Remove the flow line after animation completes
-            setTimeout(() => {
-                flowLine.remove();
-            }, 1500);
-        }
-        
-        // Close modal when clicking outside of it
-        window.onclick = function(event) {
-            const modals = document.getElementsByClassName('modal');
-            for (let i = 0; i < modals.length; i++) {
-                if (event.target == modals[i]) {
-                    modals[i].style.display = 'none';
-                    
-                    // Remove active class from box when modal is closed
-                    if (activeBox) {
-                        activeBox.classList.remove('active');
-                        activeBox = null;
-                    }
+            // Employee database (in a real app, this would be on the server)
+            const employees = {
+                'sgxminerals': {
+                    password: 'admin123',
+                    name: 'Alex Johnson',
+                    role: 'Operations Manager'
+                },
+                'jdoe': {
+                    password: 'mineral2023',
+                    name: 'Jane Doe',
+                    role: 'Geologist'
+                },
+                'rsmith': {
+                    password: 'extraction22',
+                    name: 'Robert Smith',
+                    role: 'Field Supervisor'
                 }
-            }
-        }
-        
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                const modals = document.getElementsByClassName('modal');
-                for (let i = 0; i < modals.length; i++) {
-                    modals[i].style.display = 'none';
+            };
+            
+            // Initialize the login form with demo credentials
+            usernameInput.value = 'sgxminerals';
+            passwordInput.value = 'admin123';
+            
+            // Function to start the camera
+            function startCamera() {
+                if (currentStream) {
+                    stopCamera();
                 }
                 
-                // Remove active class from box when modal is closed
-                if (activeBox) {
-                    activeBox.classList.remove('active');
-                    activeBox = null;
+                const constraints = {
+                    video: { 
+                        facingMode: facingMode,
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    },
+                    audio: false
+                };
+                
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function(stream) {
+                        currentStream = stream;
+                        cameraPreview.srcObject = stream;
+                        isCameraActive = true;
+                    })
+                    .catch(function(err) {
+                        console.error("Error accessing camera: ", err);
+                        alert("Could not access camera. Please check permissions and try again.");
+                    });
+            }
+            
+            // Function to stop the camera
+            function stopCamera() {
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => {
+                        track.stop();
+                    });
+                    currentStream = null;
+                    isCameraActive = false;
                 }
             }
-        });
-        
-        // Image zoom functionality
-        function zoomImage(src) {
-            document.getElementById('zoomedImg').src = src;
-            document.getElementById('imageZoomModal').style.display = 'flex';
-        }
-        
-        function closeZoomModal() {
-            document.getElementById('imageZoomModal').style.display = 'none';
-        }
-        
-        // Close image zoom modal when clicking outside the image
-        document.getElementById('imageZoomModal').addEventListener('click', function(event) {
-            if (event.target === this) {
-                closeZoomModal();
+            
+            // Function to switch between front and back camera
+            function switchCamera() {
+                facingMode = facingMode === 'user' ? 'environment' : 'user';
+                startCamera();
             }
-        });
-        
-        // New functions for the enhanced mine operations modal
-        function toggleBreakdown(event, breakdownId) {
-            const breakdown = document.getElementById(breakdownId);
-            const button = event.target;
             
-            // Toggle active class on button
-            button.classList.toggle('active');
-            
-            // Toggle display of breakdown
-            if (breakdown.classList.contains('active')) {
-                breakdown.classList.remove('active');
-            } else {
-                breakdown.classList.add('active');
+            // Function to capture image and simulate facial recognition
+            function captureImage() {
+                if (!isCameraActive) {
+                    alert("Camera is not active. Please start the camera first.");
+                    return;
+                }
+                
+                // Show capture animation
+                captureOverlay.classList.add('active');
+                
+                // Simulate facial recognition process
+                setTimeout(function() {
+                    // Hide capture animation
+                    captureOverlay.classList.remove('active');
+                    
+                    // Simulate successful recognition for demo purposes
+                    // In a real app, this would involve actual facial recognition
+                    const recognizedEmployee = employees['sgxminerals']; // Default for demo
+                    
+                    if (recognizedEmployee) {
+                        loginSuccess(recognizedEmployee.name);
+                    } else {
+                        alert("Face not recognized. Please try again or use traditional login.");
+                    }
+                }, 3000);
             }
-        }
-        
-        function switchMonth(monthId, tabElement) {
-            // Get all tabs and contents in the same breakdown
-            const breakdown = tabElement.closest('.monthly-breakdown');
-            const tabs = breakdown.querySelectorAll('.month-tab');
-            const contents = breakdown.querySelectorAll('.month-content');
             
-            // Remove active class from all tabs and contents
-            tabs.forEach(tab => tab.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
+            // Function to handle successful login
+            function loginSuccess(employeeName) {
+                // Hide login page and show dashboard
+                loginPage.style.display = 'none';
+                dashboardPage.style.display = 'block';
+                
+                // Update welcome message
+                welcomeMessage.textContent = `Welcome, ${employeeName}!`;
+                
+                // Stop camera if active
+                stopCamera();
+            }
             
-            // Add active class to clicked tab and corresponding content
-            tabElement.classList.add('active');
-            document.getElementById(monthId).classList.add('active');
-        }
-        
-        // Plant operations content switching
-        function switchPlantContent(contentId, buttonElement) {
-            // Get all buttons and contents in the plant modal
-            const buttons = document.querySelectorAll('#plantModal .plant-button');
-            const contents = document.querySelectorAll('#plantModal .month-content');
+            // Function to handle logout
+            function logout() {
+                // Show login page and hide dashboard
+                loginPage.style.display = 'flex';
+                dashboardPage.style.display = 'none';
+                
+                // Reset form
+                loginForm.reset();
+                usernameInput.value = 'sgxminerals';
+                passwordInput.value = 'admin123';
+                
+                // Stop camera if active
+                stopCamera();
+            }
             
-            // Remove active class from all buttons and contents
-            buttons.forEach(button => button.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
+            // Event Listeners
+            captureBtn.addEventListener('click', captureImage);
+            switchCameraBtn.addEventListener('click', switchCamera);
             
-            // Add active class to clicked button and corresponding content
-            buttonElement.classList.add('active');
-            document.getElementById(contentId).classList.add('active');
-        }
-        
-        // Dispatch month content switching
-        function switchDispatchMonth(contentId, buttonElement) {
-            // Get all buttons and contents in the dispatch modal
-            const buttons = document.querySelectorAll('#dispatchModal .dispatch-button');
-            const contents = document.querySelectorAll('#dispatchModal .month-content');
+            traditionalLoginBtn.addEventListener('click', function() {
+                traditionalLoginBtn.classList.add('active');
+                cameraLoginBtn.classList.remove('active');
+                stopCamera();
+            });
             
-            // Remove active class from all buttons and contents
-            buttons.forEach(button => button.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
+            cameraLoginBtn.addEventListener('click', function() {
+                cameraLoginBtn.classList.add('active');
+                traditionalLoginBtn.classList.remove('active');
+                startCamera();
+            });
             
-            // Add active class to clicked button and corresponding content
-            buttonElement.classList.add('active');
-            document.getElementById(contentId).classList.add('active');
-        }
-        
-        // Revenue month content switching
-        function switchRevenueMonth(contentId, buttonElement) {
-            // Get all buttons and contents in the revenue modal
-            const buttons = document.querySelectorAll('#revenueModal .revenue-button');
-            const contents = document.querySelectorAll('#revenueModal .month-content');
+            // Form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = usernameInput.value;
+                const password = passwordInput.value;
+                
+                if (employees[username] && employees[username].password === password) {
+                    loginSuccess(employees[username].name);
+                } else {
+                    alert('Invalid credentials. Please try again.\nHint: Username: sgxminerals, Password: admin123');
+                }
+            });
             
-            // Remove active class from all buttons and contents
-            buttons.forEach(button => button.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
+            // Logout button
+            logoutBtn.addEventListener('click', logout);
             
-            // Add active class to clicked button and corresponding content
-            buttonElement.classList.add('active');
-            document.getElementById(contentId).classList.add('active');
-        }
-        
-        // Color changing animation function
-        function startColorChangingAnimation() {
-            // Get all elements with the color-changing-text class
-            const colorChangingElements = document.querySelectorAll('.color-changing-text');
+            // Initialize camera login option
+            cameraLoginBtn.addEventListener('click', function() {
+                if (!isCameraActive) {
+                    startCamera();
+                }
+            });
             
-            // Define color palette for the animation
-            const colors = [
-                '#3498db', // Blue
-                '#e74c3c', // Red
-                '#2ecc71', // Green
-                '#f39c12', // Orange
-                '#9b59b6', // Purple
-                '#1abc9c', // Teal
-                '#d35400', // Dark Orange
-                '#c0392b', // Dark Red
-                '#16a085', // Dark Teal
-                '#8e44ad'  // Dark Purple
-            ];
-
-            
-            // Function to change colors
-            function changeColors() {
-                colorChangingElements.forEach(element => {
-                    // Generate a random color from the palette
-                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                    element.style.color = randomColor;
+            // Add glow effect to login form on input focus
+            [usernameInput, passwordInput].forEach(input => {
+                input.addEventListener('focus', function() {
+                    loginForm.classList.add('glow');
                 });
-            }
-            
-            // Change colors initially
-            changeColors();
-            
-            // Set interval to change colors every 7 seconds
-            setInterval(changeColors, 20000);
-        }
+                
+                input.addEventListener('blur', function() {
+                    if (!usernameInput.matches(':focus') && !passwordInput.matches(':focus')) {
+                        loginForm.classList.remove('glow');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
