@@ -3,435 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Production & Dispatch Dashboard</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS for Excel export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <title>Spare Parts Inventory</title>
     <style>
-        body { background-color: #f3f4f6; font-family: sans-serif; }
-        .card-header { background-color: #FF7A00; color: white; }
-        .editable { cursor: pointer; font-family: monospace; }
-        .error { border-color: red; }
-        th.sticky { position: sticky; top: 0; background: white; z-index: 10; }
-        .sparkline { width: 100px; height: 20px; background: linear-gradient(to right, #ddd, #aaa); }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+        
+        .company-list {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .company-list h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a6491;
+        }
+        
+        .company-item {
+            padding: 15px;
+            margin-bottom: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #4a6491;
+        }
+        
+        .company-item:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .company-item.active {
+            background-color: #4a6491;
+            color: white;
+            border-left: 4px solid #2c3e50;
+        }
+        
+        .company-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .company-address {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        .parts-details {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .parts-details h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a6491;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .company-info {
+            font-size: 1rem;
+            color: #4a6491;
+            font-weight: normal;
+        }
+        
+        .no-selection {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th {
+            background-color: #4a6491;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .duplicate-item {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .duplicate-item:hover {
+            background-color: #ffeaa7;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #d35400;
+        }
+        
+        .summary {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .summary-item {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .summary-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .invoice-id {
+            background-color: #e9ecef;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #495057;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
     </style>
 </head>
-<body class="p-4">
-    <div class="max-w-7xl mx-auto">
-        <!-- Title -->
-        <h1 class="text-2xl font-bold text-center mb-4">Daily Production & Dispatch Dashboard — Date: <span id="dashboard-date">01-11-2025</span></h1>
+<body>
+    <div class="container">
+        <header>
+            <h1>Spare Parts Inventory System</h1>
+            <p class="subtitle">Select a company to view their spare parts details with pricing and dates</p>
+        </header>
         
-        <!-- Top Action Bar -->
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white p-4 rounded-lg shadow">
-            <div class="flex items-center">
-                <label for="date-input" class="mr-2">Date:</label>
-                <input type="text" id="date-input" value="01-11-2025" class="border rounded p-1" onchange="updateDate(this.value)">
-            </div>
-            <div class="flex space-x-2 mt-2 md:mt-0">
-                <button onclick="exportCSV()" class="bg-blue-500 text-white px-4 py-2 rounded">Export CSV</button>
-                <button onclick="exportExcel()" class="bg-green-500 text-white px-4 py-2 rounded">Export Excel</button>
-                <button onclick="printDashboard()" class="bg-gray-500 text-white px-4 py-2 rounded">Print</button>
-            </div>
-        </div>
-        
-        <!-- Responsive Grid: 1 col mobile, 2 col desktop -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <!-- Section 1: Production Summary -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Summary of production metrics for the day and month.">Production Summary</h2>
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr>
-                            <th class="border p-2 sticky">Metric</th>
-                            <th class="border p-2 sticky" title="For The Day">FTD</th>
-                            <th class="border p-2 sticky" title="Month To Date">MTD</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border p-2">Mine Production</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Boulder Dispatch QTY</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Plant Production</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Dispatch QTY</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Basic Revenue</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Total Revenue</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Section 2: Royalty Requirement & Dispatch Planning -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Royalty balances and planning for materials.">Royalty Requirement & Dispatch Planning</h2>
-                <table class="w-full border-collapse" id="royalty-table">
-                    <thead>
-                        <tr>
-                            <th class="border p-2 sticky">Materiel</th>
-                            <th class="border p-2 sticky" title="10MM material">10MM</th>
-                            <th class="border p-2 sticky" title="20MM material">20MM</th>
-                            <th class="border p-2 sticky" title="40MM material">40MM</th>
-                            <th class="border p-2 sticky" title="40-65MM material">40–65MM</th>
-                            <th class="border p-2 sticky" title="Msand material">Msand</th>
-                            <th class="border p-2 sticky" title="GSB material">GSB</th>
-                            <th class="border p-2 sticky">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border p-2">Royalty Balance in MDL (Tons)</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2 font-bold" id="royalty-total">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2 font-bold" colspan="7">Grand Total</td>
-                            <td class="border p-2 font-bold" id="royalty-grand-total">0</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <!-- Blasting Details -->
-                <div class="mt-4">
-                    <h3 class="font-semibold mb-2">Blasting Details</h3>
-                    <table class="w-full border-collapse">
-                        <thead>
-                            <tr>
-                                <th class="border p-2">No. of Holes</th>
-                                <th class="border p-2">Total Feetage</th>
-                                <th class="border p-2">Blasting (Yes/No)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                <td class="border p-2">
-                                    <select class="w-full p-1 border rounded" onchange="validateAndUpdate(this)">
-                                        <option value=""></option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <div class="main-content">
+            <div class="company-list">
+                <h2>Companies</h2>
+                <div id="company-container">
+                    <!-- Companies will be dynamically loaded here -->
                 </div>
             </div>
             
-            <!-- Section 3: Today's Dispatch Plan in Tons -->
-            <div class="bg-white p-4 rounded-lg shadow md:col-span-2">
-                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Dispatch plan by customer and material.">Today's Dispatch Plan in Tons</h2>
-                <table class="w-full border-collapse" id="dispatch-table">
-                    <thead>
-                        <tr>
-                            <th class="border p-2 sticky">Customer</th>
-                            <th class="border p-2 sticky">10MM</th>
-                            <th class="border p-2 sticky">20MM</th>
-                            <th class="border p-2 sticky">40MM</th>
-                            <th class="border p-2 sticky">40–65MM</th>
-                            <th class="border p-2 sticky">Msand</th>
-                            <th class="border p-2 sticky">GSB</th>
-                            <th class="border p-2 sticky">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border p-2">Aravind Techno</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2 font-bold">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Chenderu & Co</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2 font-bold">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Afcon Projects</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2 font-bold">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">KEC</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2 font-bold">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">JS Mineing</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2 font-bold">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">L&T – P1</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2 font-bold">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Others</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2 font-bold">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2 font-bold">Total</td>
-                            <td class="border p-2 font-bold">0</td>
-                            <td class="border p-2 font-bold">0</td>
-                            <td class="border p-2 font-bold">0</td>
-                            <td class="border p-2 font-bold">0</td>
-                            <td class="border p-2 font-bold">0</td>
-                            <td class="border p-2 font-bold">0</td>
-                            <td class="border p-2 font-bold">0</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Section 4: Stock Status -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Current stock levels.">Stock Status</h2>
-                <table class="w-full border-collapse">
-                    <tbody>
-                        <tr>
-                            <td class="border p-2">10MM</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">20MM</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">RIVO</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">M-Sand</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Railway Ballast (40–65MM)</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2 font-bold">Total Stock</td>
-                            <td class="border p-2 font-bold" id="stock-total">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Boulder Stock at Quarry</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Boulder Stock at Plant</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Diesel Stock</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Tire Stock</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Section 5: Equipment Update -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Status of equipment.">Equipment Update</h2>
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr>
-                            <th class="border p-2 sticky">Equipment</th>
-                            <th class="border p-2 sticky">Running</th>
-                            <th class="border p-2 sticky">Idle</th>
-                            <th class="border p-2 sticky">Remarks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border p-2">Tippers</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Excavators Working</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Loaders Working</td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                            <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Total Trips of Tippers</td>
-                            <td class="border p-2" colspan="3"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Total Tonnage Moved</td>
-                            <td class="border p-2" colspan="3"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">Excavator Working Hours</td>
-                            <td class="border p-2" colspan="3"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Section 6: Fund Requirement & Collection Plan -->
-            <div class="bg-white p-4 rounded-lg shadow md:col-span-2">
-                <h2 class="card-header text-lg font-semibold p-2 rounded-t-lg" title="Financial planning for funds and collections.">Fund Requirement & Collection Plan</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h3 class="font-bold mb-2">Fund Requirement</h3>
-                        <table class="w-full border-collapse" id="fund-requirement-table">
-                            <thead>
-                                <tr>
-                                    <th class="border p-2">Vendor Name</th>
-                                    <th class="border p-2">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td class="border p-2 font-bold">Total Fund Requirement</td>
-                                    <td class="border p-2 font-bold" id="fund-total">0</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <div>
-                        <h3 class="font-bold mb-2">Expected Collection</h3>
-                        <table class="w-full border-collapse" id="collection-table">
-                            <thead>
-                                <tr>
-                                    <th class="border p-2">Customer Name</th>
-                                    <th class="border p-2">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                                <tr>
-                                    <td class="border p-2"><span class="editable" contenteditable="true"></span></td>
-                                    <td class="border p-2"><span class="editable" contenteditable="true" data-type="number" onblur="validateAndUpdate(this)"></span></td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td class="border p-2 font-bold">Total Expected Collection</td>
-                                    <td class="border p-2 font-bold" id="collection-total">0</td>
-                                </tr>
-                            </tfoot>
-                        </table>
+            <div class="parts-details">
+                <h2>
+                    <span>Spare Parts Details</span>
+                    <span id="selected-company" class="company-info">No company selected</span>
+                </h2>
+                
+                <div id="parts-container">
+                    <div class="no-selection">
+                        <p>Please select a company from the list to view their spare parts inventory.</p>
                     </div>
                 </div>
             </div>
@@ -439,128 +255,287 @@
     </div>
 
     <script>
-        // Update date
-        function updateDate(newDate) {
-            document.getElementById('dashboard-date').textContent = newDate;
-        }
-
-        // Validate and update totals
-        function validateAndUpdate(element) {
-            const value = element.textContent ? element.textContent.trim() : element.value;
-            if (element.dataset && element.dataset.type === 'number' && isNaN(parseFloat(value))) {
-                element.classList.add('error');
-                return;
+        // Spare parts data extracted from the PDF
+        const sparePartsData = [
+            {
+                id: 1,
+                name: "P. P. ENTERPRISES",
+                address: "Ground Floor House No. 1854, Bhim Nagar Ghansoli Navi Mumbai",
+                state: "Maharashtra",
+                gstin: "27BRPP6406A1Z1",
+                phone: "9167887709",
+                parts: [
+                    { name: "SPACER", date: "07-07-2025", invoice: "80", hsn: "8487", quantity: 2, price: 620.00, gst: 223.20, total: 1483.20 },
+                    { name: "BREAKING PULLEY", date: "07-07-2025", invoice: "80", hsn: "8487", quantity: 2, price: 320.00, gst: 115.20, total: 755.20 },
+                    { name: "PILLER PLATE 250×100×3 MM LH", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 5, price: 750.00, gst: 675.00, total: 4425.00 },
+                    { name: "PILLER PLATE 250×100×3 MM RH", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 5, price: 750.00, gst: 675.00, total: 4425.00 },
+                    { name: "RUBBER ROLLER 100MM WITH SHAFT", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 20, price: 1350.00, gst: 4860.00, total: 31860.00 },
+                    { name: "RUBBER ROLLER WITH SHAFT 200MM", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 20, price: 1805.00, gst: 6498.00, total: 42598.00 },
+                    { name: "RUBBER ROLLER 150MM WITH SHAFT", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 20, price: 1675.00, gst: 6030.00, total: 39530.00 },
+                    { name: "ALU PLATE 16×16×165", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 1, price: 105.00, gst: 18.90, total: 123.90 },
+                    { name: "ALU PLATE 16×16×155", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 1, price: 95.00, gst: 17.10, total: 112.10 },
+                    { name: "ALU PLATE 16×16×145", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 1, price: 95.00, gst: 17.10, total: 112.10 },
+                    { name: "ALU ROLLER 150", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 2, price: 750.00, gst: 270.00, total: 1770.00 },
+                    { name: "PILLER SUPPORTING 150", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 2, price: 750.00, gst: 270.00, total: 1770.00 },
+                    { name: "SS CORE LOCK PATH", date: "05-09-2025", invoice: "100 (Cancelled)", hsn: "8487", quantity: 12, price: 35.00, gst: 75.60, total: 495.60 },
+                    { name: "GREEN 100 LOOSE PART", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 12100.00, gst: 6534.00, total: 18634.00 },
+                    { name: "SPRING FLANGE", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 600.00, gst: 648.00, total: 1248.00 },
+                    { name: "KNURIAL ASSEMBLY100", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 450.00, gst: 243.00, total: 693.00 },
+                    { name: "GREEN 150 LOOSE PART", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 13050.00, gst: 7047.00, total: 20097.00 },
+                    { name: "SPRING FLANGE", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 600.00, gst: 324.00, total: 924.00 },
+                    { name: "KNURIAL ASSEMBLY 150", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 475.00, gst: 256.50, total: 731.50 },
+                    { name: "GREEN 150 LOOSE PART", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 15500.00, gst: 5580.00, total: 21080.00 },
+                    { name: "SPRING FLANGE", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 600.00, gst: 432.00, total: 1032.00 },
+                    { name: "KNURIAL ASSEMBLY200", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 625.00, gst: 189.00, total: 814.00 },
+                    { name: "GREEN 150 LOOSE PART", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 500.00, gst: 450.00, total: 950.00 },
+                    { name: "GREEN 150 LOOSE PART", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 550.00, gst: 450.00, total: 1000.00 },
+                    { name: "GREEN 150 LOOSE PART", date: "N/A", invoice: "N/A", hsn: "8487", quantity: 1, price: 520.00, gst: 936.00, total: 1456.00 },
+                    { name: "CONVEYOR TIE ROD 114", date: "N/A", invoice: "N/A", hsn: "8445", quantity: 1, price: 7900.00, gst: 1422.00, total: 9322.00 },
+                    { name: "112 BASE SUPPORT SQUARE ROD", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 2, price: 120.00, gst: 43.20, total: 283.20 },
+                    { name: "113 PEELER PLATE MOUNTING SHAFT", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 280.00, gst: 50.40, total: 330.40 },
+                    { name: "PEELER PLATE 150 MM", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 600.00, gst: 108.00, total: 708.00 },
+                    { name: "PRODUCT STOPPER", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 500.00, gst: 90.00, total: 590.00 },
+                    { name: "REWINDER HSG", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 550.00, gst: 99.00, total: 649.00 },
+                    { name: "REWINDER ROLLER 150", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 750.00, gst: 135.00, total: 885.00 },
+                    { name: "REWINDER SHAFT", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 250.00, gst: 45.00, total: 295.00 },
+                    { name: "REWINDER PULLEY SPACER", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 40.00, gst: 7.20, total: 47.20 },
+                    { name: "REWINDER PULLEY", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 160.00, gst: 28.80, total: 188.80 },
+                    { name: "DANCING ROLLER HSG", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 450.00, gst: 81.00, total: 531.00 },
+                    { name: "SPOOL SUPPORT BOTTAM", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 375.00, gst: 67.50, total: 442.50 },
+                    { name: "SPOOL ROLLER ASSEMBLY 150 MM", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 950.00, gst: 171.00, total: 1121.00 },
+                    { name: "DANCING ARM SHAFT", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 140.00, gst: 25.20, total: 165.20 },
+                    { name: "SPOOL SUPPORT TOP", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 375.00, gst: 67.50, total: 442.50 },
+                    { name: "REEL CENTRE CORE", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 450.00, gst: 81.00, total: 531.00 },
+                    { name: "DANCING ROLLER 150 ASSEMBLY", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 900.00, gst: 162.00, total: 1062.00 },
+                    { name: "BREAKING PULLEY", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 320.00, gst: 57.60, total: 377.60 },
+                    { name: "BREAKING LEVER 1", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 150.00, gst: 27.00, total: 177.00 },
+                    { name: "BREAKING LEVER 2", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 180.00, gst: 32.40, total: 212.40 },
+                    { name: "BRASS BUSH", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 80.00, gst: 14.40, total: 94.40 },
+                    { name: "CORE LOCK PATH", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 3, price: 35.00, gst: 18.90, total: 123.90 },
+                    { name: "SPRING STUDE", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 110.00, gst: 19.80, total: 129.80 },
+                    { name: "DANCING ARM PIN HSG", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 450.00, gst: 81.00, total: 531.00 },
+                    { name: "PRESSING ROLLER BEARING HSG", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 2, price: 250.00, gst: 90.00, total: 590.00 },
+                    { name: "ARM SPACER PIPE", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 230.00, gst: 41.40, total: 271.40 },
+                    { name: "PRESSING ARM", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 550.00, gst: 99.00, total: 649.00 },
+                    { name: "PRESSING ROLLER SHAFT", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 350.00, gst: 63.00, total: 413.00 },
+                    { name: "HAND ROLLER SHAFT 150MM", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 2, price: 150.00, gst: 54.00, total: 354.00 },
+                    { name: "ARM END CAP", date: "14-07-2025", invoice: "84", hsn: "8487", quantity: 1, price: 30.00, gst: 5.40, total: 35.40 }
+                ]
+            },
+            {
+                id: 2,
+                name: "DE & NEPHEW",
+                address: "Plot No. 12, New GIDC, Near Shubh Laxmi Metal, Jannagar – Gujarat",
+                state: "Gujarat",
+                gstin: "24AAAFD1844R1ZA",
+                phone: "9820223554 / 9167851351",
+                parts: [
+                    { name: "420 L × 25 × 10 MM T BELT", date: "29-Jul-2025", invoice: "DN/00189/25-26", hsn: "40103999", quantity: 1, price: 1200.00, gst: 216.00, total: 1416.00 },
+                    { name: "100 L X 150 OD X 10 ID FOAM & SPONGE ROLLER", date: "22-Aug-25", invoice: "DN/00236/25-26", hsn: "40169990", quantity: 2, price: 1950.00, gst: 702.00, total: 4602.00 },
+                    { name: "600 L X 19 X 8 MM T RED RUBBER BELT", date: "22-Aug-25", invoice: "DN/00236/25-26", hsn: "40103999", quantity: 1, price: 1800.00, gst: 324.00, total: 2124.00 }
+                ]
+            },
+            {
+                id: 3,
+                name: "Seven Tools Trading Co.",
+                address: "Binggit Colony, Iraniwadi Road No.3, Mumbai (West)",
+                state: "Maharashtra",
+                gstin: "27AABPT4231H12S",
+                phone: "N/A",
+                parts: [
+                    { name: "Al Hand Wheel", date: "21-Jul-25", invoice: "0385/25-26", hsn: "6804", quantity: 100, price: 210.00, gst: 3780.00, total: 24780.00 },
+                    { name: "TIMING BELT DOUBLE TEETH DTS62012", date: "21-Jul-25", invoice: "0385/25-26", hsn: "9520", quantity: 2, price: 550.00, gst: 198.00, total: 1298.00 },
+                    { name: "SILICON SHEET 1ITX1IT", date: "21-Jul-25", invoice: "0385/25-26", hsn: "N/A", quantity: 2, price: 450.00, gst: 162.00, total: 1062.00 },
+                    { name: "Packing & Forwarding", date: "21-Jul-25", invoice: "0385/25-26", hsn: "N/A", quantity: 1, price: 0.00, gst: 0.00, total: 0.00 }
+                ]
+            },
+            {
+                id: 4,
+                name: "Shree Engineering",
+                address: "Room No 4, Mhatre Chawl, T.P. Road, Tanaji Wadi, Bhandup West – Mumbai – 400078",
+                state: "Maharashtra",
+                gstin: "27AIOP1270201ZT",
+                phone: "9594348169",
+                parts: [
+                    { name: "3-Point Pressing Assembly", date: "05-08-2025", invoice: "56", hsn: "84851000", quantity: 2, price: 10500.00, gst: 3780.00, total: 24780.00 },
+                    { name: "3-Point Wraparound Driving Assembly", date: "05-08-2025", invoice: "56", hsn: "84851000", quantity: 2, price: 9500.00, gst: 3420.00, total: 22420.00 }
+                ]
+            },
+            {
+                id: 5,
+                name: "Tech Vision",
+                address: "Badlapur (East), Thane, Maharashtra",
+                state: "Maharashtra",
+                gstin: "27ATMPK9434B1ZK",
+                phone: "N/A",
+                parts: [
+                    { name: "RUBBER TIMING BELT WITH RED RUBBER COATING (1400H X 10mm WIDTH X 6mm)", date: "25/09/2025", invoice: "TV/128/2025-26", hsn: "40103999", quantity: 2, price: 2925.00, gst: 1053.00, total: 6903.00 },
+                    { name: "RUBBER TIMING BELT WITH RED RUBBER COATING (900H X 20mm WIDTH X 6mm)", date: "25/09/2025", invoice: "TV/128/2025-26", hsn: "40103999", quantity: 1, price: 3025.00, gst: 544.50, total: 3569.50 }
+                ]
             }
-            if (element.classList) element.classList.remove('error');
-            updateTotals();
-        }
+        ];
 
-        // Update all totals
-        function updateTotals() {
-            // Royalty Table
-            const royaltyRow = document.querySelector('#royalty-table tbody tr');
-            let royaltyTotal = 0;
-            royaltyRow.querySelectorAll('.editable').forEach(cell => {
-                const val = parseFloat(cell.textContent) || 0;
-                royaltyTotal += val;
-            });
-            document.getElementById('royalty-total').textContent = royaltyTotal.toFixed(1);
-            document.getElementById('royalty-grand-total').textContent = royaltyTotal.toFixed(1);
-
-            // Dispatch Table
-            const dispatchRows = document.querySelectorAll('#dispatch-table tbody tr:not(:last-child)');
-            const columnTotals = Array(6).fill(0);
-            let grandTotal = 0;
-            dispatchRows.forEach(row => {
-                let rowTotal = 0;
-                const cells = row.querySelectorAll('.editable');
-                cells.forEach((cell, idx) => {
-                    const val = parseFloat(cell.textContent) || 0;
-                    rowTotal += val;
-                    columnTotals[idx] += val;
-                });
-                row.querySelector('td:last-child').textContent = rowTotal;
-                grandTotal += rowTotal;
-            });
-            const totalRow = document.querySelector('#dispatch-table tbody tr:last-child');
-            totalRow.querySelectorAll('td:not(:first-child):not(:last-child)').forEach((td, idx) => {
-                td.textContent = columnTotals[idx];
-            });
-            totalRow.querySelector('td:last-child').textContent = grandTotal;
-
-            // Stock Total
-            let stockTotal = 0;
-            document.querySelectorAll('[id="stock-total"]').forEach(total => {
-                const stockRows = total.closest('table').querySelectorAll('tr:nth-child(-n+5) .editable'); // First 5 are materials
-                stockTotal = Array.from(stockRows).reduce((sum, cell) => sum + (parseFloat(cell.textContent) || 0), 0);
-                total.textContent = stockTotal;
-            });
-
-            // Fund and Collection Totals
-            ['fund-requirement-table', 'collection-table'].forEach(id => {
-                const table = document.getElementById(id);
-                let total = 0;
-                table.querySelectorAll('tbody .editable[data-type="number"]').forEach(cell => {
-                    total += parseFloat(cell.textContent) || 0;
-                });
-                table.querySelector('tfoot td:last-child').textContent = total;
-            });
-        }
-
-        // Export CSV
-        function exportCSV() {
-            let csv = 'Section,Data\n'; // Collect all data
-            // Add logic to iterate through all tables and append to csv
-            // For brevity, example for one table
-            const tables = document.querySelectorAll('table');
-            tables.forEach((table, idx) => {
-                csv += `Table ${idx + 1}\n`;
-                Array.from(table.rows).forEach(row => {
-                    csv += Array.from(row.cells).map(cell => cell.textContent.trim()).join(',') + '\n';
-                });
-                csv += '\n';
-            });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'dashboard.csv';
-            a.click();
-        }
-
-        // Export Excel using SheetJS
-        function exportExcel() {
-            if (typeof XLSX === 'undefined') {
-                alert('SheetJS not loaded, falling back to CSV');
-                exportCSV();
-                return;
-            }
-            const wb = XLSX.utils.book_new();
-            document.querySelectorAll('table').forEach((table, idx) => {
-                const ws = XLSX.utils.table_to_sheet(table);
-                XLSX.utils.book_append_sheet(wb, ws, `Sheet${idx + 1}`);
-            });
-            XLSX.writeFile(wb, 'dashboard.xlsx');
-        }
-
-        // Print
-        function printDashboard() {
-            // Hide controls
-            document.querySelector('.flex.justify-between').style.display = 'none';
-            window.print();
-            document.querySelector('.flex.justify-between').style.display = 'flex';
-        }
-
-        // Initial update
-        updateTotals();
-
-        // Accessibility: Keyboard navigation for editable cells
-        document.addEventListener('keydown', (e) => {
-            if (e.target.classList.contains('editable') && e.key === 'Enter') {
-                e.preventDefault();
-                e.target.blur();
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render company list
+            renderCompanyList();
+            
+            // Select first company by default
+            if (sparePartsData.length > 0) {
+                selectCompany(sparePartsData[0].id);
             }
         });
-    </script>  
+
+        // Render the company list
+        function renderCompanyList() {
+            const container = document.getElementById('company-container');
+            container.innerHTML = '';
+            
+            sparePartsData.forEach(company => {
+                const companyElement = document.createElement('div');
+                companyElement.className = 'company-item';
+                companyElement.dataset.id = company.id;
+                
+                companyElement.innerHTML = `
+                    <div class="company-name">${company.name}</div>
+                    <div class="company-address">${company.address}</div>
+                    <div class="company-address">GSTIN: ${company.gstin}</div>
+                `;
+                
+                companyElement.addEventListener('click', () => selectCompany(company.id));
+                container.appendChild(companyElement);
+            });
+        }
+
+        // Select a company and show its parts
+        function selectCompany(companyId) {
+            // Update active state in company list
+            document.querySelectorAll('.company-item').forEach(item => {
+                item.classList.remove('active');
+                if (parseInt(item.dataset.id) === companyId) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Find the selected company
+            const company = sparePartsData.find(c => c.id === companyId);
+            if (!company) return;
+            
+            // Update selected company info
+            document.getElementById('selected-company').textContent = company.name;
+            
+            // Render parts for this company
+            renderPartsTable(company);
+        }
+
+        // Render parts table for a company
+        function renderPartsTable(company) {
+            const container = document.getElementById('parts-container');
+            
+            // Identify duplicate parts with different prices
+            const duplicateParts = findDuplicateParts(company.parts);
+            
+            // Calculate summary
+            const totalParts = company.parts.length;
+            const totalQuantity = company.parts.reduce((sum, part) => sum + part.quantity, 0);
+            const totalValue = company.parts.reduce((sum, part) => sum + part.total, 0);
+            
+            // Create table HTML
+            let tableHTML = `
+                <div class="summary">
+                    <div class="summary-item">
+                        <div class="summary-value">${totalParts}</div>
+                        <div class="summary-label">Total Parts</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">${totalQuantity}</div>
+                        <div class="summary-label">Total Quantity</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">₹${totalValue.toLocaleString('en-IN')}</div>
+                        <div class="summary-label">Total Value</div>
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Spare Part Name</th>
+                            <th>Date</th>
+                            <th>Invoice</th>
+                            <th>HSN/SAC</th>
+                            <th>Quantity</th>
+                            <th>Price/Unit</th>
+                            <th>GST</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // Sort parts by name and date
+            const sortedParts = [...company.parts].sort((a, b) => {
+                if (a.name < b.name) return -1;
+                if (a.name > b.name) return 1;
+                return new Date(a.date) - new Date(b.date);
+            });
+            
+            // Add rows for each part
+            sortedParts.forEach(part => {
+                const isDuplicate = duplicateParts.some(dp => 
+                    dp.name === part.name && dp.price !== part.price
+                );
+                
+                const rowClass = isDuplicate ? 'duplicate-item' : '';
+                
+                tableHTML += `
+                    <tr class="${rowClass}">
+                        <td>${part.name}</td>
+                        <td>${part.date}</td>
+                        <td><span class="invoice-id">${part.invoice}</span></td>
+                        <td>${part.hsn}</td>
+                        <td>${part.quantity}</td>
+                        <td class="highlight">₹${part.price.toLocaleString('en-IN')}</td>
+                        <td>₹${part.gst.toLocaleString('en-IN')}</td>
+                        <td><strong>₹${part.total.toLocaleString('en-IN')}</strong></td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += '</tbody></table>';
+            
+            // Add duplicate parts notice if any
+            if (duplicateParts.length > 0) {
+                tableHTML += `
+                    <div style="margin-top: 20px; padding: 10px; background-color: #f8d7da; color: #721c24; border-radius: 5px; font-size: 0.9rem;">
+                        <strong>Note:</strong> Some parts have multiple entries with different prices (highlighted in yellow). 
+                        These may represent different specifications, vendors, or purchase dates.
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = tableHTML;
+        }
+
+        // Find duplicate parts with different prices
+        function findDuplicateParts(parts) {
+            const duplicates = [];
+            const partMap = new Map();
+            
+            parts.forEach(part => {
+                if (partMap.has(part.name)) {
+                    const existingPart = partMap.get(part.name);
+                    if (existingPart.price !== part.price) {
+                        duplicates.push(existingPart);
+                        duplicates.push(part);
+                    }
+                } else {
+                    partMap.set(part.name, part);
+                }
+            });
+            
+            return duplicates;
+        }
+    </script>
 </body>
 </html>
