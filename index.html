@@ -3,1015 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Purchase Parts Management System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Invoice Spare Parts Organizer</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #333;
-            min-height: 100vh;
-            padding-bottom: 40px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-top: 20px;
-        }
-        
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
-        }
-        
-        .subtitle {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-        }
-        
-        .pdf-upload-section {
-            background-color: white;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            text-align: center;
-        }
-        
-        .github-url-input {
-            display: flex;
-            max-width: 700px;
-            margin: 0 auto 20px;
-        }
-        
-        .github-url-input input {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px 0 0 8px;
-            font-size: 16px;
-        }
-        
-        .github-url-input button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 0 25px;
-            border-radius: 0 8px 8px 0;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        
-        .github-url-input button:hover {
-            background-color: #2980b9;
-        }
-        
-        .demo-btn {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 16px;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-        
-        .demo-btn:hover {
-            background-color: #27ae60;
-        }
-        
-        .search-section {
-            background-color: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-        
-        .search-box {
-            display: flex;
-            max-width: 600px;
-        }
-        
-        .search-box input {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px 0 0 8px;
-            font-size: 16px;
-        }
-        
-        .search-box button {
-            background-color: #9b59b6;
-            color: white;
-            border: none;
-            padding: 0 25px;
-            border-radius: 0 8px 8px 0;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 16px;
-        }
-        
-        .content-area {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .companies-section {
-            flex: 1;
-            min-width: 300px;
-            background-color: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-        
-        .parts-section {
-            flex: 2;
-            min-width: 600px;
-            background-color: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-        
-        .section-title {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .company-list {
-            list-style: none;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        
-        .company-item {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-left: 4px solid #3498db;
-            background-color: #f9f9f9;
-        }
-        
-        .company-item:hover {
-            background-color: #e8f4fc;
-        }
-        
-        .company-item.active {
-            background-color: #d6eaf8;
-            border-left-color: #2c3e50;
-        }
-        
-        .company-name {
-            font-weight: 600;
-            font-size: 18px;
-            color: #2c3e50;
-        }
-        
-        .purchase-count {
-            background-color: #3498db;
-            color: white;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            margin-left: 10px;
-        }
-        
-        .parts-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .parts-table th {
-            text-align: left;
-            padding: 15px;
-            background-color: #f2f6fa;
-            color: #2c3e50;
-            font-weight: 600;
-            border-bottom: 2px solid #ddd;
-        }
-        
-        .parts-table td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .parts-table tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .price-cell {
-            font-weight: 600;
-            color: #27ae60;
-        }
-        
-        .different-price {
-            color: #e74c3c;
-        }
-        
-        .no-parts {
-            text-align: center;
-            color: #7f8c8d;
-            padding: 40px;
-            font-style: italic;
-        }
-        
-        .statistics {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        
-        .stat-box {
-            text-align: center;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            flex: 1;
-            margin: 0 10px;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-top: 5px;
-        }
-        
-        .highlight {
-            background-color: #fffacd;
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #7f8c8d;
-            font-size: 14px;
-        }
-        
-        @media (max-width: 1100px) {
-            .content-area {
-                flex-direction: column;
-            }
-            
-            .companies-section, .parts-section {
-                min-width: 100%;
-            }
-        }
-        
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { text-align: center; }
+        .company-section { margin-bottom: 40px; }
+        .company-section h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .search-container { text-align: center; margin-bottom: 20px; }
+        #searchInput { padding: 10px; width: 300px; }
+        #searchButton { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        #searchButton:hover { background-color: #45a049; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-tools"></i> Purchase Parts Management System</h1>
-            <p class="subtitle">Extract and analyze purchase data from PDF invoices with company-wise categorization</p>
-        </header>
-        
-        <section class="pdf-upload-section">
-            <h2>Read PDF from GitHub</h2>
-            <p>Enter the GitHub URL of your PDF invoice file or use demo data</p>
-            
-            <div class="github-url-input">
-                <input type="text" id="githubUrl" placeholder="https://github.com/username/repo/blob/main/invoices.pdf">
-                <button id="loadPdfBtn">
-                    <i class="fas fa-file-import"></i> Load PDF
-                </button>
-            </div>
-            
-            <button class="demo-btn" id="loadDemoBtn">
-                <i class="fas fa-vial"></i> Load Demo Data
-            </button>
-        </section>
-        
-        <section class="search-section">
-            <h2>Search Spare Parts Directly</h2>
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Enter spare part name (e.g., bearing, motor, valve)">
-                <button id="searchBtn">
-                    <i class="fas fa-search"></i> Search
-                </button>
-            </div>
-        </section>
-        
-        <div class="content-area">
-            <section class="companies-section">
-                <h3 class="section-title">
-                    <span>Supplier Companies</span>
-                    <span id="companyCount">0</span>
-                </h3>
-                <ul class="company-list" id="companyList">
-                    <!-- Companies will be loaded here -->
-                </ul>
-                
-                <div class="statistics">
-                    <div class="stat-box">
-                        <div class="stat-value" id="totalPurchases">0</div>
-                        <div class="stat-label">Total Purchases</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="totalSpent">$0</div>
-                        <div class="stat-label">Total Amount</div>
-                    </div>
-                </div>
-            </section>
-            
-            <section class="parts-section">
-                <h3 class="section-title">
-                    <span id="selectedCompany">Select a Company</span>
-                </h3>
-                
-                <div id="partsContainer">
-                    <table class="parts-table" id="partsTable">
-                        <thead>
-                            <tr>
-                                <th>Part Name</th>
-                                <th>Invoice #</th>
-                                <th>Price</th>
-                                <th>Date</th>
-                                <th>Notes</th>
-                            </tr>
-                        </thead>
-                        <tbody id="partsTableBody">
-                            <!-- Parts will be loaded here -->
-                        </tbody>
-                    </table>
-                    <div id="noPartsMessage" class="no-parts">
-                        <p>No parts data available. Please select a company or load PDF data.</p>
-                    </div>
-                </div>
-                
-                <div class="statistics">
-                    <div class="stat-box">
-                        <div class="stat-value" id="totalParts">0</div>
-                        <div class="stat-label">Parts in Selection</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="avgPrice">$0</div>
-                        <div class="stat-label">Average Price</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="dateRange">-</div>
-                        <div class="stat-label">Date Range</div>
-                    </div>
-                </div>
-            </section>
+    <h1>Spare Parts from Invoices</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for spare part name...">
+        <button id="searchButton">Search</button>
+    </div>
+
+    <div id="results">
+        <!-- P.P. Enterprises Section -->
+        <div class="company-section" data-company="P.P. Enterprises">
+            <h2>P.P. Enterprises</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Spare Part Name</th>
+                        <th>Invoice Number</th>
+                        <th>Date</th>
+                        <th>Price (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="part-row"><td>SPACER</td><td>80</td><td>07-07-2025</td><td>620.00</td></tr>
+                    <tr class="part-row"><td>BREAKING PULLEY</td><td>80</td><td>07-07-2025</td><td>320.00</td></tr>
+                    <tr class="part-row"><td>PILLER PLATE 250×100×3 MM LH</td><td>100</td><td>05-09-2025</td><td>750</td></tr>
+                    <tr class="part-row"><td>PILLER PLATE 250×100×3 MM RH</td><td>100</td><td>05-09-2025</td><td>750</td></tr>
+                    <tr class="part-row"><td>RUBBER ROLLER 100MM WITH SHAFT</td><td>100</td><td>05-09-2025</td><td>1,350</td></tr>
+                    <tr class="part-row"><td>RUBBER ROLLER WITH SHAFT 200MM</td><td>100</td><td>05-09-2025</td><td>1,805</td></tr>
+                    <tr class="part-row"><td>RUBBER ROLLER 150MM WITH SHAFT</td><td>100</td><td>05-09-2025</td><td>1,675</td></tr>
+                    <tr class="part-row"><td>ALU PLATE 16×16×165</td><td>100</td><td>05-09-2025</td><td>105</td></tr>
+                    <tr class="part-row"><td>ALU PLATE 16×16×155</td><td>100</td><td>05-09-2025</td><td>95</td></tr>
+                    <tr class="part-row"><td>ALU PLATE 16×16×145</td><td>100</td><td>05-09-2025</td><td>95</td></tr>
+                    <tr class="part-row"><td>ALU ROLLER 150</td><td>100</td><td>05-09-2025</td><td>750</td></tr>
+                    <tr class="part-row"><td>PILLER SUPPORTING 150</td><td>100</td><td>05-09-2025</td><td>750</td></tr>
+                    <tr class="part-row"><td>SS CORE LOCK PATTI</td><td>100</td><td>05-09-2025</td><td>35</td></tr>
+                    <tr class="part-row"><td>GREEN 100 LOOSE PART</td><td>Unknown</td><td>Unknown</td><td>12,100.00</td></tr>
+                    <tr class="part-row"><td>SPRING FLANGE</td><td>Unknown</td><td>Unknown</td><td>600.00</td></tr>
+                    <tr class="part-row"><td>KNURIAL ASSEMBLY100</td><td>Unknown</td><td>Unknown</td><td>450.00</td></tr>
+                    <tr class="part-row"><td>GREEN 150 LOOSE PART</td><td>Unknown</td><td>Unknown</td><td>13,050.00</td></tr>
+                    <tr class="part-row"><td>SPRING FLANGE</td><td>Unknown</td><td>Unknown</td><td>600.00</td></tr>
+                    <tr class="part-row"><td>KNURIAL ASSEMBLY 150</td><td>Unknown</td><td>Unknown</td><td>475.00</td></tr>
+                    <tr class="part-row"><td>GREEN 150 LOOSE PART</td><td>Unknown</td><td>Unknown</td><td>15,500.00</td></tr>
+                    <tr class="part-row"><td>SPRING FLANGE</td><td>Unknown</td><td>Unknown</td><td>600.00</td></tr>
+                    <tr class="part-row"><td>KNURIAL ASSEMBLY200</td><td>Unknown</td><td>Unknown</td><td>625.00</td></tr>
+                    <tr class="part-row"><td>GREEN 150 LOOSE PART</td><td>Unknown</td><td>Unknown</td><td>500.00</td></tr>
+                    <tr class="part-row"><td>GREEN 150 LOOSE PART</td><td>Unknown</td><td>Unknown</td><td>550.00</td></tr>
+                    <tr class="part-row"><td>GREEN 150 LOOSE PART</td><td>Unknown</td><td>Unknown</td><td>520.00</td></tr>
+                    <tr class="part-row"><td>CONVEYOR TIE ROD 114 0.75 HP</td><td>Unknown</td><td>Unknown</td><td>7,900.00</td></tr>
+                    <tr class="part-row"><td>112 BASE SUPPORT SQUARE ROD</td><td>84</td><td>14-07-2025</td><td>120.00</td></tr>
+                    <tr class="part-row"><td>113 PEELER PLATE MOUNTING SHAFT</td><td>84</td><td>14-07-2025</td><td>280.00</td></tr>
+                    <tr class="part-row"><td>PEELER PLATE 150 MM</td><td>84</td><td>14-07-2025</td><td>600.00</td></tr>
+                    <tr class="part-row"><td>PRODUCT STOPPER</td><td>84</td><td>14-07-2025</td><td>500.00</td></tr>
+                    <tr class="part-row"><td>REWINDER HSG</td><td>84</td><td>14-07-2025</td><td>550.00</td></tr>
+                    <tr class="part-row"><td>REWINDER ROLLER 150</td><td>84</td><td>14-07-2025</td><td>750.00</td></tr>
+                    <tr class="part-row"><td>REWINDER SHAFT</td><td>84</td><td>14-07-2025</td><td>250.00</td></tr>
+                    <tr class="part-row"><td>REWINDER PULLEY SPACER</td><td>84</td><td>14-07-2025</td><td>40.00</td></tr>
+                    <tr class="part-row"><td>REWINDER PULLEY</td><td>84</td><td>14-07-2025</td><td>160.00</td></tr>
+                    <tr class="part-row"><td>DANCING ROLLER HSG</td><td>84</td><td>14-07-2025</td><td>450.00</td></tr>
+                    <tr class="part-row"><td>SPOOL SUPPORT BOTTAM</td><td>84</td><td>14-07-2025</td><td>375.00</td></tr>
+                    <tr class="part-row"><td>SPOOL ROLLER ASSEMBLY 150 MM</td><td>84</td><td>14-07-2025</td><td>950.00</td></tr>
+                    <tr class="part-row"><td>DANCING ARM SHAFT</td><td>84</td><td>14-07-2025</td><td>140.00</td></tr>
+                    <tr class="part-row"><td>SPOOL SUPPORT TOP</td><td>84</td><td>14-07-2025</td><td>375.00</td></tr>
+                    <tr class="part-row"><td>REEL CENTRE CORE</td><td>84</td><td>14-07-2025</td><td>450.00</td></tr>
+                    <tr class="part-row"><td>DANCING ROLLER 150 ASSEMBLY</td><td>84</td><td>14-07-2025</td><td>900.00</td></tr>
+                    <tr class="part-row"><td>BREAKING PULLEY</td><td>84</td><td>14-07-2025</td><td>320.00</td></tr>
+                    <tr class="part-row"><td>BREAKING LEVER 1</td><td>84</td><td>14-07-2025</td><td>150.00</td></tr>
+                    <tr class="part-row"><td>BREAKING LEVER 2</td><td>84</td><td>14-07-2025</td><td>180.00</td></tr>
+                    <tr class="part-row"><td>BRASS BUSH</td><td>84</td><td>14-07-2025</td><td>80.00</td></tr>
+                    <tr class="part-row"><td>CORE LOCK PATTI</td><td>84</td><td>14-07-2025</td><td>35.00</td></tr>
+                    <tr class="part-row"><td>SPRING STUDE</td><td>84</td><td>14-07-2025</td><td>110.00</td></tr>
+                    <tr class="part-row"><td>DANCING ARM PIN HSG</td><td>84</td><td>14-07-2025</td><td>450.00</td></tr>
+                    <tr class="part-row"><td>PRESSING ROLLER BEARING HSG</td><td>84</td><td>14-07-2025</td><td>250.00</td></tr>
+                    <tr class="part-row"><td>ARM SPACER PIPE</td><td>84</td><td>14-07-2025</td><td>230.00</td></tr>
+                    <tr class="part-row"><td>PRESSING ARM</td><td>84</td><td>14-07-2025</td><td>550.00</td></tr>
+                    <tr class="part-row"><td>PRESSING ROLLER SHAFT</td><td>84</td><td>14-07-2025</td><td>350.00</td></tr>
+                    <tr class="part-row"><td>HAND ROLLER SHAFT 150MM</td><td>84</td><td>14-07-2025</td><td>150.00</td></tr>
+                    <tr class="part-row"><td>ARM END CAP</td><td>84</td><td>14-07-2025</td><td>30.00</td></tr>
+                    <tr class="part-row"><td>BACK PLATE 420 X125X10</td><td>112</td><td>27-09-2025</td><td>850.00</td></tr>
+                    <tr class="part-row"><td>ALU BACK PLATE 420 X100 X10</td><td>112</td><td>27-09-2025</td><td>850.00</td></tr>
+                    <tr class="part-row"><td>BACK PLATE 367 X100 X10</td><td>112</td><td>27-09-2025</td><td>800.00</td></tr>
+                    <tr class="part-row"><td>HANDLE PRESSING ROLLER CORE</td><td>112</td><td>27-09-2025</td><td>450.00</td></tr>
+                    <tr class="part-row"><td>SUPPORT RUBBER ROLLER CORE</td><td>112</td><td>27-09-2025</td><td>1,150.00</td></tr>
+                    <tr class="part-row"><td>CONVEYOR TIE ROD 05 HP 152MM</td><td>112</td><td>27-09-2025</td><td>8,500.00</td></tr>
+                    <tr class="part-row"><td>TIE ROD 2C152MM</td><td>112</td><td>27-09-2025</td><td>95.00</td></tr>
+                    <tr class="part-row"><td>LABELER 150 LOOSE PART</td><td>94</td><td>11-08-2025</td><td>13,050.00</td></tr>
+                    <tr class="part-row"><td>SPRING FLANGE</td><td>94</td><td>11-08-2025</td><td>600.00</td></tr>
+                    <tr class="part-row"><td>LABELER 100 LOOSE PART</td><td>94</td><td>11-08-2025</td><td>12,100.00</td></tr>
+                    <tr class="part-row"><td>PATH ROLLER ON ARM 100</td><td>94</td><td>11-08-2025</td><td>815.00</td></tr>
+                    <tr class="part-row"><td>KNURLAL ASSEMBLY 150</td><td>94</td><td>11-08-2025</td><td>375.00</td></tr>
+                    <tr class="part-row"><td>KNURLAL ASSEMBLY100</td><td>94</td><td>11-08-2025</td><td>450.00</td></tr>
+                    <tr class="part-row"><td>SS 304 SENSOR ROD 12 X350</td><td>94</td><td>11-08-2025</td><td>170.00</td></tr>
+                    <tr class="part-row"><td>SS 304 SENSOR ROD 12 X250</td><td>94</td><td>11-08-2025</td><td>160.00</td></tr>
+                    <tr class="part-row"><td>CONVEYOR FLANGE 75MM</td><td>94</td><td>11-08-2025</td><td>1,150.00</td></tr>
+                    <tr class="part-row"><td>CONVEYOR HSG 2C114</td><td>94</td><td>11-08-2025</td><td>600.00</td></tr>
+                    <tr class="part-row"><td>IDLER ROLLER NYLON 150MM</td><td>111</td><td>20-09-20XX</td><td>750.00</td></tr>
+                    <tr class="part-row"><td>421 IDLER ROLLER SHAFT 150MM</td><td>111</td><td>20-09-20XX</td><td>485.00</td></tr>
+                    <tr class="part-row"><td>KNURLAL ASSEMBLY 150</td><td>111</td><td>20-09-20XX</td><td>375.00</td></tr>
+                    <tr class="part-row"><td>REWINDER ASSEMBLY 150MM</td><td>111</td><td>20-09-20XX</td><td>950.00</td></tr>
+                    <tr class="part-row"><td>RUBBER ROLLER SHAFT 150MM</td><td>111</td><td>20-09-20XX</td><td>850.00</td></tr>
+                    <tr class="part-row"><td>SPRING FLANGE MAIN SHAFT 150MM</td><td>111</td><td>20-09-20XX</td><td>320.00</td></tr>
+                    <tr class="part-row"><td>416 PRESSING ROLLER SHAFT</td><td>111</td><td>20-09-20XX</td><td>350.00</td></tr>
+                    <tr class="part-row"><td>PATH ROLLER ASSEMBLY 150MM</td><td>111</td><td>20-09-20XX</td><td>985.00</td></tr>
+                    <tr class="part-row"><td>FLANGE</td><td>111</td><td>20-09-20XX</td><td>225.00</td></tr>
+                    <tr class="part-row"><td>PILLER PLATE SHAFT 150MM</td><td>111</td><td>20-09-20XX</td><td>275.00</td></tr>
+                    <tr class="part-row"><td>SS PLATE FLANGE</td><td>111</td><td>20-09-20XX</td><td>265.00</td></tr>
+                    <tr class="part-row"><td>SS SPACER ROD</td><td>111</td><td>20-09-20XX</td><td>125.00</td></tr>
+                    <tr class="part-row"><td>PILLER PLATE SEMI AUTOMATIC</td><td>111</td><td>20-09-20XX</td><td>600.00</td></tr>
+                    <tr class="part-row"><td>RUBBER ROLLER WITH SHAFT 200MM</td><td>77</td><td>02-07-20</td><td>1,950.00</td></tr>
+                    <tr class="part-row"><td>SS 304 5/16 ROD 12 X120</td><td>77</td><td>02-07-20</td><td>85.00</td></tr>
+                    <tr class="part-row"><td>Labeler Loose Parts 200 MM</td><td>109</td><td>16-09-2025</td><td>14,900.00</td></tr>
+                    <tr class="part-row"><td>Knurl Assembly 200</td><td>109</td><td>16-09-2025</td><td>450.00</td></tr>
+                    <tr class="part-row"><td>Spring Flange</td><td>109</td><td>16-09-2025</td><td>600.00</td></tr>
+                    <tr class="part-row"><td>Rewinder Disk (Sharlog)</td><td>109</td><td>16-09-2025</td><td>275.00</td></tr>
+                    <tr class="part-row"><td>Nylon Adler</td><td>106</td><td>09-09-2025</td><td>175.00</td></tr>
+                    <tr class="part-row"><td>Spring Flange Roller with Shaft 100</td><td>106</td><td>09-09-2025</td><td>850.00</td></tr>
+                    <tr class="part-row"><td>Piller Knurl Roller 100 MM</td><td>106</td><td>09-09-2025</td><td>750.00</td></tr>
+                    <tr class="part-row"><td>INSERT FOR WORAM</td><td>107</td><td>09-09-2025</td><td>850.00</td></tr>
+                    <tr class="part-row"><td>Labeler 100 Loose Part</td><td>81</td><td>09-07-2025</td><td>12,100.00</td></tr>
+                    <tr class="part-row"><td>Knurl Assembly 100</td><td>81</td><td>09-07-2025</td><td>375.00</td></tr>
+                    <tr class="part-row"><td>Idler</td><td>81</td><td>09-07-2025</td><td>590.00</td></tr>
+                    <tr class="part-row"><td>Spring Flange</td><td>81</td><td>09-07-2025</td><td>600.00</td></tr>
+                    <tr class="part-row"><td>SS 304 Pillar Plate 150 MM</td><td>81</td><td>09-07-2025</td><td>570.00</td></tr>
+                </tbody>
+            </table>
         </div>
-        
-        <div class="footer">
-            <p>Purchase Parts Management System &copy; 2023 | Automatically extracts purchase data from PDF invoices</p>
+
+        <!-- DE & Nephew Section -->
+        <div class="company-section" data-company="DE & Nephew">
+            <h2>DE & Nephew</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Spare Part Name</th>
+                        <th>Invoice Number</th>
+                        <th>Date</th>
+                        <th>Price (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="part-row"><td>420 L × 25 × 10 MM T BELT</td><td>Unknown</td><td>Unknown</td><td>1,200.00</td></tr>
+                    <tr class="part-row"><td>100 L X 150 OD X 10 ID FOAM & SPONGE ROLLER</td><td>DN/00236/25-26</td><td>22-Aug-25</td><td>1,950.00</td></tr>
+                    <tr class="part-row"><td>600 L X 19 X 8 MM T RED RUBBER BELT</td><td>DN/00236/25-26</td><td>22-Aug-25</td><td>1,800.00</td></tr>
+                    <tr class="part-row"><td>420 L X 35 X 10 MM T BELT</td><td>DN/00190/25-26</td><td>29-Jul-25</td><td>2,260.00</td></tr>
+                    <tr class="part-row"><td>130 L X 100 OD X 12 ID FOAM ROLLER</td><td>DN/00190/25-26</td><td>29-Jul-25</td><td>1,350.00</td></tr>
+                    <tr class="part-row"><td>935 X 150/100 X 10 MM T BELT</td><td>DN/00217/25-26</td><td>12-Aug-25</td><td>4,480.00</td></tr>
+                    <tr class="part-row"><td>20 L × 35 × 10 MM T BELT</td><td>DN/00190/25-26</td><td>Unknown</td><td>2,260.00</td></tr>
+                    <tr class="part-row"><td>30 L × 100 OD × 12 ID FOAM ROLLER</td><td>DN/00190/25-26</td><td>Unknown</td><td>1,350.00</td></tr>
+                    <tr class="part-row"><td>1028 L X 25 X 13 MM T ORANGE BELT</td><td>DN/00199/25-26</td><td>8-Aug-25</td><td>4,000.00</td></tr>
+                    <tr class="part-row"><td>1028 L X 50 X 13 MM T ORANGE BELT</td><td>DN/00199/25-26</td><td>8-Aug-25</td><td>8,000.00</td></tr>
+                    <tr class="part-row"><td>45 × 55 OD × 10 ID Orange Sponge Roller</td><td>DN/00224/25-26</td><td>14-Aug-2025</td><td>400.00</td></tr>
+                    <tr class="part-row"><td>420 L × 100 × 10 MM T Belt</td><td>DN/00234/25-26</td><td>21-Aug-2025</td><td>5,000.00</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Seven Tools Trading Co. Section -->
+        <div class="company-section" data-company="Seven Tools Trading Co.">
+            <h2>Seven Tools Trading Co.</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Spare Part Name</th>
+                        <th>Invoice Number</th>
+                        <th>Date</th>
+                        <th>Price (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="part-row"><td>Al Hand Wheel</td><td>0385/25-26</td><td>21-Jul-25</td><td>210.00</td></tr>
+                    <tr class="part-row"><td>TIMING BELT DOUBLE TEETH</td><td>0385/25-26</td><td>21-Jul-25</td><td>550.00</td></tr>
+                    <tr class="part-row"><td>DTS 620</td><td>0385/25-26</td><td>21-Jul-25</td><td>Unknown</td></tr>
+                    <tr class="part-row"><td>SILICON SHEET 1ITX1IT</td><td>0385/25-26</td><td>21-Jul-25</td><td>450.00</td></tr>
+                    <tr class="part-row"><td>Packing & Forwarding</td><td>0385/25-26</td><td>21-Jul-25</td><td>Unknown</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Shree Engineering Section -->
+        <div class="company-section" data-company="Shree Engineering">
+            <h2>Shree Engineering</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Spare Part Name</th>
+                        <th>Invoice Number</th>
+                        <th>Date</th>
+                        <th>Price (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="part-row"><td>3-Point Pressing Assembly</td><td>Unknown</td><td>Unknown</td><td>10500</td></tr>
+                    <tr class="part-row"><td>3-Point Wraparound Driving Assembly</td><td>Unknown</td><td>Unknown</td><td>9500</td></tr>
+                    <tr class="part-row"><td>Spacer Assembly Belt Type With Slide - LH</td><td>34</td><td>14-07-2025</td><td>10200</td></tr>
+                    <tr class="part-row"><td>Wraparound Assembly With Vertical Slide 420 L X 100W</td><td>34</td><td>14-07-2025</td><td>15000</td></tr>
+                    <tr class="part-row"><td>Wraparound Assembly With Vertical Slide 420 L X 125W 20 - LH</td><td>34</td><td>14-07-2025</td><td>15200</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tech Vision Section -->
+        <div class="company-section" data-company="Tech Vision">
+            <h2>Tech Vision</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Spare Part Name</th>
+                        <th>Invoice Number</th>
+                        <th>Date</th>
+                        <th>Price (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="part-row"><td>RUBBER TIMING BELT WITH RED RUBBER COATING (1400H X 10mm WIDTH X 6mm)</td><td>TV/128/2025-26</td><td>25/09/2025</td><td>2,925.00</td></tr>
+                    <tr class="part-row"><td>RUBBER TIMING BELT WITH RED RUBBER COATING (900H X 20mm WIDTH X 6mm)</td><td>TV/128/2025-26</td><td>25/09/2025</td><td>3,025.00</td></tr>
+                    <tr class="part-row"><td>Mecvel Make – 0.25 HP, 1:10 Worm Gear Box with Motor B030FB02CO FC B63B5 + EM 0.18 KW</td><td>TV/067/2025-26</td><td>Unknown</td><td>9,500.00</td></tr>
+                    <tr class="part-row"><td>Mecvel Make – 0.25 HP, 1:20 Worm Gear Box with Motor B030FB04CO FC B63B5 + EM 0.18 KW</td><td>TV/067/2025-26</td><td>Unknown</td><td>9,500.00</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Ingenium Electronics Pvt. Ltd. Section -->
+        <div class="company-section" data-company="Ingenium Electronics Pvt. Ltd.">
+            <h2>Ingenium Electronics Pvt. Ltd.</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Spare Part Name</th>
+                        <th>Invoice Number</th>
+                        <th>Date</th>
+                        <th>Price (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="part-row"><td>Delta PLC Programming cable with USB to Serial Cable</td><td>EPL/FY25-26/206</td><td>Unknown</td><td>2,500.00</td></tr>
+                    <tr class="part-row"><td>Packaging & Forwarding Charges</td><td>EPL/FY25-26/206</td><td>Unknown</td><td>Unknown</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Unknown/Other Companies or Partial Invoices -->
+        <div class="company-section" data-company="Other">
+            <h2>Other/Partial Invoices</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Spare Part Name</th>
+                        <th>Invoice Number</th>
+                        <th>Date</th>
+                        <th>Price (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="part-row"><td>SEMBLY: 35,944,000 AMAT</td><td>Unknown</td><td>9-Jul-21</td><td>Unknown</td></tr>
+                    <tr class="part-row"><td>10X10X300 KEYS SS.</td><td>Unknown</td><td>Unknown</td><td>350.00</td></tr>
+                    <tr class="part-row"><td>8X6X300 KEYS SS.</td><td>Unknown</td><td>Unknown</td><td>250.00</td></tr>
+                    <tr class="part-row"><td>S.S CAP M 5X12.</td><td>Unknown</td><td>Unknown</td><td>2.50</td></tr>
+                    <tr class="part-row"><td>S.S CAP M 8X100.</td><td>Unknown</td><td>Unknown</td><td>24.00</td></tr>
+                    <tr class="part-row"><td>61902 ZZ SKF BEARING.</td><td>Unknown</td><td>Unknown</td><td>230.00</td></tr>
+                    <tr class="part-row"><td>61802 ZZ SKF BEARING.</td><td>Unknown</td><td>Unknown</td><td>650.00</td></tr>
+                    <tr class="part-row"><td>61802 ZRS BEARING SKF</td><td>Unknown</td><td>Unknown</td><td>695.00</td></tr>
+                    <tr class="part-row"><td>PIX PANA SET 6X7 - 20X22 MM</td><td>Unknown</td><td>Unknown</td><td>300.00</td></tr>
+                    <tr class="part-row"><td>6001 ZZ SKF BEARING</td><td>Unknown</td><td>Unknown</td><td>150.00</td></tr>
+                    <tr class="part-row"><td>UCF 205 MM BEARING.</td><td>Unknown</td><td>Unknown</td><td>250.00</td></tr>
+                    <tr class="part-row"><td>6006 ZZ DGBB SKF BEARING.</td><td>Unknown</td><td>Unknown</td><td>330.00</td></tr>
+                    <tr class="part-row"><td>6204 ZZ DGBB SKF BEARING</td><td>Unknown</td><td>Unknown</td><td>260.00</td></tr>
+                    <tr class="part-row"><td>5X5X300 KEYS SS.</td><td>Unknown</td><td>Unknown</td><td>150.00</td></tr>
+                    <tr class="part-row"><td>S.S PLAN WASHER 8MM</td><td>Unknown</td><td>Unknown</td><td>5.45</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        // Sample data - In a real implementation, this would be extracted from PDF
-        const demoPurchaseData = {
-            companies: [
-                {
-                    id: 1,
-                    name: "Precision Machinery Inc.",
-                    purchaseCount: 8,
-                    totalSpent: 24550.75
-                },
-                {
-                    id: 2,
-                    name: "Global Industrial Supplies",
-                    purchaseCount: 12,
-                    totalSpent: 18720.30
-                },
-                {
-                    id: 3,
-                    name: "Advanced Auto Parts Ltd.",
-                    purchaseCount: 5,
-                    totalSpent: 8920.50
-                },
-                {
-                    id: 4,
-                    name: "Tech Components Corp.",
-                    purchaseCount: 6,
-                    totalSpent: 15340.20
-                },
-                {
-                    id: 5,
-                    name: "Reliable Hardware Co.",
-                    purchaseCount: 3,
-                    totalSpent: 5420.00
-                }
-            ],
-            parts: [
-                {
-                    id: 1,
-                    companyId: 1,
-                    partName: "Axial Bearing",
-                    invoiceNumber: "INV-2023-001",
-                    price: 245.75,
-                    date: "2023-01-15",
-                    note: "High precision bearing"
-                },
-                {
-                    id: 2,
-                    companyId: 1,
-                    partName: "Hydraulic Pump",
-                    invoiceNumber: "INV-2023-012",
-                    price: 1250.00,
-                    date: "2023-02-10",
-                    note: "Heavy duty model"
-                },
-                {
-                    id: 3,
-                    companyId: 1,
-                    partName: "Axial Bearing",
-                    invoiceNumber: "INV-2023-025",
-                    price: 275.50,
-                    date: "2023-03-22",
-                    note: "Different supplier batch"
-                },
-                {
-                    id: 4,
-                    companyId: 2,
-                    partName: "Steel Valve",
-                    invoiceNumber: "INV-2023-005",
-                    price: 85.30,
-                    date: "2023-01-20",
-                    note: "Standard pressure valve"
-                },
-                {
-                    id: 5,
-                    companyId: 2,
-                    partName: "Electric Motor",
-                    invoiceNumber: "INV-2023-008",
-                    price: 450.00,
-                    date: "2023-01-28",
-                    note: "5 HP motor"
-                },
-                {
-                    id: 6,
-                    companyId: 2,
-                    partName: "Control Panel",
-                    invoiceNumber: "INV-2023-015",
-                    price: 1200.00,
-                    date: "2023-02-14",
-                    note: "With touchscreen"
-                },
-                {
-                    id: 7,
-                    companyId: 3,
-                    partName: "Brake Disc",
-                    invoiceNumber: "INV-2023-009",
-                    price: 65.50,
-                    date: "2023-02-05",
-                    note: "Vented brake disc"
-                },
-                {
-                    id: 8,
-                    companyId: 3,
-                    partName: "Oil Filter",
-                    invoiceNumber: "INV-2023-011",
-                    price: 12.75,
-                    date: "2023-02-08",
-                    note: "Synthetic media"
-                },
-                {
-                    id: 9,
-                    companyId: 4,
-                    partName: "Circuit Board",
-                    invoiceNumber: "INV-2023-017",
-                    price: 320.40,
-                    date: "2023-03-01",
-                    note: "Main control board"
-                },
-                {
-                    id: 10,
-                    companyId: 4,
-                    partName: "Temperature Sensor",
-                    invoiceNumber: "INV-2023-022",
-                    price: 45.80,
-                    date: "2023-03-15",
-                    note: "Digital sensor"
-                },
-                {
-                    id: 11,
-                    companyId: 5,
-                    partName: "Steel Valve",
-                    invoiceNumber: "INV-2023-028",
-                    price: 92.00,
-                    date: "2023-04-05",
-                    note: "High-pressure variant"
-                },
-                {
-                    id: 12,
-                    companyId: 1,
-                    partName: "Gear Assembly",
-                    invoiceNumber: "INV-2023-030",
-                    price: 875.25,
-                    date: "2023-04-10",
-                    note: "Custom gear ratio"
-                }
-            ]
-        };
-
-        // State variables
-        let currentData = null;
-        let selectedCompanyId = null;
-        let searchTerm = "";
-        
-        // DOM elements
-        const companyListEl = document.getElementById('companyList');
-        const partsTableBodyEl = document.getElementById('partsTableBody');
-        const noPartsMessageEl = document.getElementById('noPartsMessage');
-        const partsTableEl = document.getElementById('partsTable');
-        const companyCountEl = document.getElementById('companyCount');
-        const selectedCompanyEl = document.getElementById('selectedCompany');
-        const totalPurchasesEl = document.getElementById('totalPurchases');
-        const totalSpentEl = document.getElementById('totalSpent');
-        const totalPartsEl = document.getElementById('totalParts');
-        const avgPriceEl = document.getElementById('avgPrice');
-        const dateRangeEl = document.getElementById('dateRange');
-        const searchInputEl = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        const loadPdfBtn = document.getElementById('loadPdfBtn');
-        const loadDemoBtn = document.getElementById('loadDemoBtn');
-        const githubUrlEl = document.getElementById('githubUrl');
-        
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set up event listeners
-            searchBtn.addEventListener('click', performSearch);
-            searchInputEl.addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    performSearch();
+        document.getElementById('searchButton').addEventListener('click', function() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('.part-row');
+            rows.forEach(row => {
+                const partName = row.querySelector('td:first-child').textContent.toLowerCase();
+                if (partName.includes(searchTerm)) {
+                    row.style.display = '';
+                    row.closest('.company-section').classList.remove('hidden');
+                } else {
+                    row.style.display = 'none';
                 }
             });
-            
-            loadDemoBtn.addEventListener('click', loadDemoData);
-            loadPdfBtn.addEventListener('click', loadFromGithub);
-            
-            // Display initial state
-            updateDisplay();
+            // Hide sections with no visible rows
+            const sections = document.querySelectorAll('.company-section');
+            sections.forEach(section => {
+                const visibleRows = section.querySelectorAll('.part-row:not([style*="display: none"])');
+                if (visibleRows.length === 0) {
+                    section.classList.add('hidden');
+                } else {
+                    section.classList.remove('hidden');
+                }
+            });
         });
-        
-        // Load demo data
-        function loadDemoData() {
-            currentData = JSON.parse(JSON.stringify(demoPurchaseData)); // Deep copy
-            updateDisplay();
-            showNotification("Demo data loaded successfully!");
-            
-            // Auto-select first company
-            if (currentData.companies.length > 0) {
-                selectCompany(currentData.companies[0].id);
-            }
-        }
-        
-        // Simulate loading from GitHub (in a real app, this would fetch and parse PDF)
-        function loadFromGithub() {
-            const url = githubUrlEl.value.trim();
-            
-            if (!url) {
-                showNotification("Please enter a GitHub URL", "error");
-                return;
-            }
-            
-            // Show loading state
-            loadPdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-            loadPdfBtn.disabled = true;
-            
-            // Simulate API call delay
-            setTimeout(() => {
-                // In a real implementation, you would:
-                // 1. Fetch the PDF from GitHub
-                // 2. Parse the PDF to extract text/data
-                // 3. Process the text to find company names, parts, prices, etc.
-                // 4. Structure the data similar to demoPurchaseData
-                
-                // For this demo, we'll use the demo data with slight modifications
-                currentData = JSON.parse(JSON.stringify(demoPurchaseData));
-                
-                // Add a simulated company from the "loaded" PDF
-                currentData.companies.push({
-                    id: 6,
-                    name: "GitHub Imports Corp.",
-                    purchaseCount: 4,
-                    totalSpent: 7600.00
-                });
-                
-                // Add simulated parts
-                currentData.parts.push(
-                    {
-                        id: 13,
-                        companyId: 6,
-                        partName: "PDF-Specific Valve",
-                        invoiceNumber: "INV-GH-001",
-                        price: 210.50,
-                        date: "2023-05-01",
-                        note: "From GitHub PDF"
-                    },
-                    {
-                        id: 14,
-                        companyId: 6,
-                        partName: "Document Scanner Part",
-                        invoiceNumber: "INV-GH-002",
-                        price: 125.75,
-                        date: "2023-05-10",
-                        note: "From GitHub PDF"
-                    }
-                );
-                
-                // Update UI
-                updateDisplay();
-                loadPdfBtn.innerHTML = '<i class="fas fa-file-import"></i> Load PDF';
-                loadPdfBtn.disabled = false;
-                
-                showNotification(`PDF data loaded from GitHub URL. Found ${currentData.companies.length} companies and ${currentData.parts.length} parts.`);
-                
-                // Auto-select first company
-                if (currentData.companies.length > 0) {
-                    selectCompany(currentData.companies[0].id);
-                }
-            }, 1500);
-        }
-        
-        // Perform search for parts
-        function performSearch() {
-            searchTerm = searchInputEl.value.trim().toLowerCase();
-            
-            if (!currentData) {
-                showNotification("Please load data first", "error");
-                return;
-            }
-            
-            if (!searchTerm) {
-                showNotification("Please enter a search term", "error");
-                return;
-            }
-            
-            // Find parts matching the search
-            const matchingParts = currentData.parts.filter(part => 
-                part.partName.toLowerCase().includes(searchTerm)
-            );
-            
-            if (matchingParts.length === 0) {
-                showNotification(`No parts found matching "${searchTerm}"`, "error");
-                return;
-            }
-            
-            // Group by company
-            const companyMap = new Map();
-            matchingParts.forEach(part => {
-                if (!companyMap.has(part.companyId)) {
-                    const company = currentData.companies.find(c => c.id === part.companyId);
-                    companyMap.set(part.companyId, {
-                        company: company,
-                        parts: []
-                    });
-                }
-                companyMap.get(part.companyId).parts.push(part);
-            });
-            
-            // Display search results
-            displaySearchResults(companyMap, searchTerm);
-            showNotification(`Found ${matchingParts.length} parts matching "${searchTerm}"`);
-        }
-        
-        // Display search results
-        function displaySearchResults(companyMap, searchTerm) {
-            // Clear current selection
-            selectedCompanyId = null;
-            
-            // Update company list to show only companies with matching parts
-            companyListEl.innerHTML = '';
-            
-            let companyCount = 0;
-            companyMap.forEach((value, companyId) => {
-                const company = value.company;
-                const parts = value.parts;
-                
-                const companyItem = document.createElement('li');
-                companyItem.className = 'company-item';
-                companyItem.dataset.companyId = companyId;
-                companyItem.innerHTML = `
-                    <div class="company-name">${company.name}</div>
-                    <div style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">
-                        ${parts.length} matching part(s)
-                    </div>
-                `;
-                
-                companyItem.addEventListener('click', () => {
-                    // Highlight the selected company
-                    document.querySelectorAll('.company-item').forEach(item => {
-                        item.classList.remove('active');
-                    });
-                    companyItem.classList.add('active');
-                    
-                    // Show parts for this company (filtered by search)
-                    displayPartsForCompany(companyId, searchTerm);
-                });
-                
-                companyListEl.appendChild(companyItem);
-                companyCount++;
-            });
-            
-            // Update company count
-            companyCountEl.textContent = companyCount;
-            
-            // Show first company's parts if available
-            if (companyMap.size > 0) {
-                const firstCompanyId = Array.from(companyMap.keys())[0];
-                document.querySelector(`[data-company-id="${firstCompanyId}"]`).classList.add('active');
-                displayPartsForCompany(firstCompanyId, searchTerm);
-            }
-        }
-        
-        // Select a company to view its parts
-        function selectCompany(companyId) {
-            selectedCompanyId = companyId;
-            
-            // Highlight the selected company
-            document.querySelectorAll('.company-item').forEach(item => {
-                item.classList.remove('active');
-                if (parseInt(item.dataset.companyId) === companyId) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Display parts for this company
-            displayPartsForCompany(companyId);
-        }
-        
-        // Display parts for a specific company
-        function displayPartsForCompany(companyId, filterTerm = "") {
-            if (!currentData) return;
-            
-            const company = currentData.companies.find(c => c.id === companyId);
-            if (!company) return;
-            
-            // Update selected company title
-            selectedCompanyEl.textContent = `${company.name} - Parts`;
-            
-            // Get parts for this company
-            let companyParts = currentData.parts.filter(part => part.companyId === companyId);
-            
-            // Apply filter if provided
-            if (filterTerm) {
-                companyParts = companyParts.filter(part => 
-                    part.partName.toLowerCase().includes(filterTerm.toLowerCase())
-                );
-            }
-            
-            // Sort by date (newest first)
-            companyParts.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            // Clear table
-            partsTableBodyEl.innerHTML = '';
-            
-            if (companyParts.length === 0) {
-                partsTableEl.style.display = 'none';
-                noPartsMessageEl.style.display = 'block';
-                noPartsMessageEl.innerHTML = filterTerm 
-                    ? `<p>No parts found for "${filterTerm}" in ${company.name}.</p>`
-                    : `<p>No parts found for ${company.name}.</p>`;
-            } else {
-                partsTableEl.style.display = 'table';
-                noPartsMessageEl.style.display = 'none';
-                
-                // Group parts by name to check for different prices
-                const partPriceMap = new Map();
-                companyParts.forEach(part => {
-                    if (!partPriceMap.has(part.partName)) {
-                        partPriceMap.set(part.partName, []);
-                    }
-                    partPriceMap.get(part.partName).push(part.price);
-                });
-                
-                // Add rows to table
-                companyParts.forEach(part => {
-                    const row = document.createElement('tr');
-                    
-                    // Check if this part has different prices
-                    const prices = partPriceMap.get(part.partName);
-                    const hasDifferentPrices = prices && prices.length > 1 && new Set(prices).size > 1;
-                    
-                    // Highlight if it matches search term
-                    const isSearchMatch = searchTerm && part.partName.toLowerCase().includes(searchTerm.toLowerCase());
-                    
-                    row.className = isSearchMatch ? 'highlight' : '';
-                    
-                    row.innerHTML = `
-                        <td>
-                            <strong>${part.partName}</strong>
-                            ${hasDifferentPrices ? '<br><small style="color:#e74c3c;">(Multiple prices for this part)</small>' : ''}
-                        </td>
-                        <td>${part.invoiceNumber}</td>
-                        <td class="price-cell ${hasDifferentPrices ? 'different-price' : ''}">$${part.price.toFixed(2)}</td>
-                        <td>${formatDate(part.date)}</td>
-                        <td>${part.note}</td>
-                    `;
-                    
-                    partsTableBodyEl.appendChild(row);
-                });
-                
-                // Update statistics
-                updatePartsStatistics(companyParts);
-            }
-        }
-        
-        // Update parts statistics
-        function updatePartsStatistics(parts) {
-            if (!parts || parts.length === 0) {
-                totalPartsEl.textContent = '0';
-                avgPriceEl.textContent = '$0';
-                dateRangeEl.textContent = '-';
-                return;
-            }
-            
-            totalPartsEl.textContent = parts.length;
-            
-            // Calculate average price
-            const totalPrice = parts.reduce((sum, part) => sum + part.price, 0);
-            const avgPrice = totalPrice / parts.length;
-            avgPriceEl.textContent = `$${avgPrice.toFixed(2)}`;
-            
-            // Calculate date range
-            const dates = parts.map(part => new Date(part.date));
-            const minDate = new Date(Math.min(...dates));
-            const maxDate = new Date(Math.max(...dates));
-            
-            if (minDate.getFullYear() === maxDate.getFullYear() && 
-                minDate.getMonth() === maxDate.getMonth()) {
-                dateRangeEl.textContent = formatDate(minDate);
-            } else {
-                dateRangeEl.textContent = `${formatDate(minDate)} - ${formatDate(maxDate)}`;
-            }
-        }
-        
-        // Update the entire display
-        function updateDisplay() {
-            if (!currentData) {
-                // Show empty state
-                companyListEl.innerHTML = '<li style="padding: 20px; text-align: center; color: #7f8c8d;">No data loaded. Please load PDF or use demo data.</li>';
-                companyCountEl.textContent = '0';
-                selectedCompanyEl.textContent = 'Select a Company';
-                partsTableEl.style.display = 'none';
-                noPartsMessageEl.style.display = 'block';
-                totalPurchasesEl.textContent = '0';
-                totalSpentEl.textContent = '$0';
-                return;
-            }
-            
-            // Update company list
-            companyListEl.innerHTML = '';
-            currentData.companies.forEach(company => {
-                const companyItem = document.createElement('li');
-                companyItem.className = 'company-item';
-                if (company.id === selectedCompanyId) {
-                    companyItem.classList.add('active');
-                }
-                companyItem.dataset.companyId = company.id;
-                companyItem.innerHTML = `
-                    <div class="company-name">
-                        ${company.name}
-                        <span class="purchase-count">${company.purchaseCount}</span>
-                    </div>
-                    <div style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">
-                        Total: $${company.totalSpent.toFixed(2)}
-                    </div>
-                `;
-                
-                companyItem.addEventListener('click', () => selectCompany(company.id));
-                companyListEl.appendChild(companyItem);
-            });
-            
-            // Update company count
-            companyCountEl.textContent = currentData.companies.length;
-            
-            // Update total purchases and amount
-            const totalPurchases = currentData.parts.length;
-            const totalSpent = currentData.parts.reduce((sum, part) => sum + part.price, 0);
-            totalPurchasesEl.textContent = totalPurchases;
-            totalSpentEl.textContent = `$${totalSpent.toFixed(2)}`;
-            
-            // Show parts for selected company or first company
-            if (selectedCompanyId) {
-                displayPartsForCompany(selectedCompanyId);
-            } else if (currentData.companies.length > 0) {
-                selectCompany(currentData.companies[0].id);
-            }
-        }
-        
-        // Format date for display
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric' 
-            });
-        }
-        
-        // Show notification
-        function showNotification(message, type = "success") {
-            // Remove existing notifications
-            const existingNotifications = document.querySelectorAll('.notification');
-            existingNotifications.forEach(notification => {
-                notification.remove();
-            });
-            
-            // Create new notification
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background-color: ${type === 'error' ? '#e74c3c' : '#2ecc71'};
-                color: white;
-                padding: 15px 25px;
-                border-radius: 8px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-                z-index: 1000;
-                font-weight: 500;
-                animation: fadeIn 0.3s;
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Remove notification after 3 seconds
-            setTimeout(() => {
-                notification.style.animation = 'fadeOut 0.3s';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-            
-            // Add CSS for animations
-            if (!document.querySelector('#notification-styles')) {
-                const styleEl = document.createElement('style');
-                styleEl.id = 'notification-styles';
-                styleEl.textContent = `
-                    @keyframes fadeIn {
-                        from { opacity: 0; transform: translateY(-20px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-                    @keyframes fadeOut {
-                        from { opacity: 1; transform: translateY(0); }
-                        to { opacity: 0; transform: translateY(-20px); }
-                    }
-                `;
-                document.head.appendChild(styleEl);
-            }
-        }
     </script>
 </body>
 </html>
