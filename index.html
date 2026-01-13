@@ -3,743 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spare Parts Inventory Management</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Spare Parts Inventory</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background: linear-gradient(135deg, #2c3e50, #4a6491);
-            color: white;
-            padding: 25px 0;
-            margin-bottom: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-        
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 5px;
-        }
-        
-        .subtitle {
-            font-size: 1rem;
-            opacity: 0.8;
-        }
-        
-        .stats {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .stat-box {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-align: center;
-            min-width: 120px;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
-        
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 25px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .search-box {
-            flex: 1;
-            min-width: 300px;
-            position: relative;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 12px 15px 12px 45px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        .search-box input:focus {
-            border-color: #4a6491;
-            box-shadow: 0 0 0 2px rgba(74, 100, 145, 0.2);
-            outline: none;
-        }
-        
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #777;
-        }
-        
-        .filter-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        select {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: white;
-            font-size: 0.95rem;
-            min-width: 150px;
-        }
-        
-        .btn {
-            padding: 12px 20px;
-            background-color: #4a6491;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn:hover {
-            background-color: #3a5479;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-reset {
-            background-color: #e74c3c;
-        }
-        
-        .btn-reset:hover {
-            background-color: #c0392b;
-        }
-        
-        .table-container {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-            overflow-x: auto;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1000px;
-        }
-        
-        thead {
-            background-color: #2c3e50;
-            color: white;
-        }
-        
-        th {
-            padding: 16px 15px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-        
-        tbody tr {
-            border-bottom: 1px solid #eee;
-            transition: all 0.2s;
-        }
-        
-        tbody tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        td {
-            padding: 14px 15px;
-            font-size: 0.9rem;
-        }
-        
-        .company-name {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .invoice-number {
-            background-color: #f0f7ff;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.85rem;
-        }
-        
-        .spare-part-name {
-            font-weight: 500;
-            color: #2c3e50;
-        }
-        
-        .price {
-            font-weight: 600;
-            color: #27ae60;
-        }
-        
-        .date {
-            color: #7f8c8d;
-            font-size: 0.85rem;
-        }
-        
-        .hsn-code {
-            background-color: #f8f9fa;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.85rem;
-        }
-        
-        .duplicate-warning {
-            color: #e74c3c;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 3px;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            border-top: 1px solid #eee;
-            margin-top: 20px;
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
-            font-size: 1.1rem;
-        }
-        
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .stats {
-                width: 100%;
-                justify-content: space-around;
-            }
-            
-            .controls {
-                flex-direction: column;
-            }
-            
-            .search-box {
-                min-width: 100%;
-            }
-            
-            .filter-group {
-                flex-wrap: wrap;
-            }
-        }
+        body { background-color: #f8f9fa; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .duplicate-row { background-color: #fff3cd !important; } /* Highlight duplicates */
+        h2 { color: #0d6efd; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="header-content">
-                <div>
-                    <h1><i class="fas fa-cogs"></i> Spare Parts Inventory System</h1>
-                    <p class="subtitle">Data extracted from 29 invoices across multiple suppliers</p>
-                </div>
-                <div class="stats">
-                    <div class="stat-box">
-                        <div class="stat-value" id="totalParts">0</div>
-                        <div class="stat-label">Total Parts</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="uniqueParts">0</div>
-                        <div class="stat-label">Unique Parts</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value">29</div>
-                        <div class="stat-label">Invoices</div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        
-        <div class="controls">
-            <div class="search-box">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="searchInput" placeholder="Search spare parts by name, HSN code, or description...">
-            </div>
-            
-            <div class="filter-group">
-                <select id="companyFilter">
-                    <option value="">All Companies</option>
-                    <option value="P. P. ENTERPRISES">P. P. ENTERPRISES</option>
-                    <option value="DE & NEPHEW">DE & NEPHEW</option>
-                    <option value="Seven Tools Trading Co.">Seven Tools Trading Co.</option>
-                    <option value="Shree Engineering">Shree Engineering</option>
-                    <option value="Tech Vision">Tech Vision</option>
-                    <option value="Ingenium Electronics">Ingenium Electronics</option>
-                    <option value="Other">Other</option>
-                </select>
-                
-                <select id="sortFilter">
-                    <option value="name">Sort by Name</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="date">Date: Newest First</option>
-                    <option value="date-old">Date: Oldest First</option>
-                </select>
-                
-                <button class="btn" id="exportBtn">
-                    <i class="fas fa-file-export"></i> Export Data
-                </button>
-                
-                <button class="btn btn-reset" id="resetBtn">
-                    <i class="fas fa-redo"></i> Reset
-                </button>
-            </div>
+
+<div class="container">
+    <h2>⚙️ Spare Parts Inventory Manager</h2>
+    <hr>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label class="form-label">Filter by Company:</label>
+            <select id="companyFilter" class="form-select">
+                <option value="">All Companies</option>
+            </select>
         </div>
-        
-        <div class="table-container">
-            <table id="partsTable">
-                <thead>
-                    <tr>
-                        <th>Spare Part Name</th>
-                        <th>Company</th>
-                        <th>Invoice No.</th>
-                        <th>Price / Unit (₹)</th>
-                        <th>Date</th>
-                        <th>HSN/SAC</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <!-- Data will be populated by JavaScript -->
-                </tbody>
-            </table>
-            <div id="noResults" class="no-results" style="display: none;">
-                <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px;"></i>
-                <p>No spare parts found matching your search criteria.</p>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>Spare Parts Inventory System | Data extracted from 29 invoices | Last updated: July 2025</p>
+        <div class="col-md-8 text-end pt-4">
+            <span class="badge bg-warning text-dark">Yellow Rows = Duplicate Names (Check Prices)</span>
         </div>
     </div>
 
-    <script>
-        // Sample data extracted from the 29 invoices
-        const sparePartsData = [
-            // Invoice 80: P. P. ENTERPRISES
-            {id: 1, name: "SPACER", company: "P. P. ENTERPRISES", invoice: "80", price: 620, date: "07-07-2025", hsn: "8487", quantity: 2},
-            {id: 2, name: "BREAKING PULLEY", company: "P. P. ENTERPRISES", invoice: "80", price: 320, date: "07-07-2025", hsn: "8487", quantity: 2},
-            
-            // Invoice from DE & NEPHEW (No. 100 - Cancelled)
-            {id: 3, name: "420 L × 25 × 10 MM T BELT", company: "DE & NEPHEW", invoice: "100 (Cancelled)", price: 1200, date: "Unknown", hsn: "40103999", quantity: 1},
-            
-            // Invoice 100: P. P. ENTERPRISES
-            {id: 4, name: "PILLER PLATE 250×100×3 MM LH", company: "P. P. ENTERPRISES", invoice: "100", price: 750, date: "05-09-2025", hsn: "8487", quantity: 5},
-            {id: 5, name: "PILLER PLATE 250×100×3 MM RH", company: "P. P. ENTERPRISES", invoice: "100", price: 750, date: "05-09-2025", hsn: "8487", quantity: 5},
-            {id: 6, name: "RUBBER ROLLER 100MM WITH SHAFT", company: "P. P. ENTERPRISES", invoice: "100", price: 1350, date: "05-09-2025", hsn: "8487", quantity: 20},
-            {id: 7, name: "RUBBER ROLLER WITH SHAFT 200MM", company: "P. P. ENTERPRISES", invoice: "100", price: 1805, date: "05-09-2025", hsn: "8487", quantity: 20},
-            {id: 8, name: "RUBBER ROLLER 150MM WITH SHAFT", company: "P. P. ENTERPRISES", invoice: "100", price: 1675, date: "05-09-2025", hsn: "8487", quantity: 20},
-            {id: 9, name: "ALU PLATE 16×16×165", company: "P. P. ENTERPRISES", invoice: "100", price: 105, date: "05-09-2025", hsn: "8487", quantity: 1},
-            {id: 10, name: "ALU PLATE 16×16×155", company: "P. P. ENTERPRISES", invoice: "100", price: 95, date: "05-09-2025", hsn: "8487", quantity: 1},
-            {id: 11, name: "ALU PLATE 16×16×145", company: "P. P. ENTERPRISES", invoice: "100", price: 95, date: "05-09-2025", hsn: "8487", quantity: 1},
-            {id: 12, name: "ALU ROLLER 150", company: "P. P. ENTERPRISES", invoice: "100", price: 750, date: "05-09-2025", hsn: "8487", quantity: 2},
-            {id: 13, name: "PILLER SUPPORTING 150", company: "P. P. ENTERPRISES", invoice: "100", price: 750, date: "05-09-2025", hsn: "8487", quantity: 2},
-            {id: 14, name: "SS CORE LOCK PATTI", company: "P. P. ENTERPRISES", invoice: "100", price: 35, date: "05-09-2025", hsn: "8487", quantity: 12},
-            
-            // Invoice from Seven Tools Trading Co.
-            {id: 15, name: "Al Hand Wheel", company: "Seven Tools Trading Co.", invoice: "0385/25-26", price: 210, date: "21-07-2025", hsn: "6804", quantity: 100},
-            {id: 16, name: "TIMING BELT DOUBLE TEETH DTS 620 12", company: "Seven Tools Trading Co.", invoice: "0385/25-26", price: 550, date: "21-07-2025", hsn: "9320", quantity: 2},
-            {id: 17, name: "SILICON SHEET 1ITX1IT", company: "Seven Tools Trading Co.", invoice: "0385/25-26", price: 450, date: "21-07-2025", hsn: "Unknown", quantity: 2},
-            
-            // Invoice from P. P ENTERPRISES (with Yen symbol, likely meant to be ₹)
-            {id: 18, name: "GREEN 100 LOOSE PART", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 12100, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 19, name: "SPRING FLANGE", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 600, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 20, name: "KNURIAL ASSEMBLY100", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 450, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 21, name: "GREEN 150 LOOSE PART", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 13050, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 22, name: "SPRING FLANGE", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 600, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 23, name: "KNURIAL ASSEMBLY 150", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 475, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 24, name: "GREEN 150 LOOSE PART", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 15500, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 25, name: "SPRING FLANGE", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 600, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 26, name: "KNURIAL ASSEMBLY200", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 625, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 27, name: "GREEN 150 LOOSE PART", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 500, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 28, name: "GREEN 150 LOOSE PART", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 550, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 29, name: "GREEN 150 LOOSE PART", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 520, date: "Unknown", hsn: "8487", quantity: 1},
-            {id: 30, name: "CONVEYOR TIE ROD 114 0.75 HP", company: "P. P. ENTERPRISES", invoice: "Unknown", price: 7900, date: "Unknown", hsn: "8445", quantity: 1},
-            
-            // Invoice from Shree Engineering
-            {id: 31, name: "3-Point Pressing Assembly", company: "Shree Engineering", invoice: "Unknown", price: 10500, date: "Unknown", hsn: "84851000", quantity: 2},
-            {id: 32, name: "3-Point Wraparound Driving Assembly", company: "Shree Engineering", invoice: "Unknown", price: 9500, date: "Unknown", hsn: "84851000", quantity: 2},
-            
-            // Invoice from Tech Vision
-            {id: 33, name: "RUBBER TIMING BELT WITH RED RUBBER COATING (1400H X 10mm WIDTH X 6mm)", company: "Tech Vision", invoice: "TV/128/2025-26", price: 2925, date: "25-09-2025", hsn: "40103999", quantity: 2},
-            {id: 34, name: "RUBBER TIMING BELT WITH RED RUBBER COATING (900H X 20mm WIDTH X 6mm)", company: "Tech Vision", invoice: "TV/128/2025-26", price: 3025, date: "25-09-2025", hsn: "40103999", quantity: 1},
-            
-            // Invoice 84: P. P. ENTERPRISES
-            {id: 35, name: "112 BASE SUPPORT SQUARE ROD", company: "P. P. ENTERPRISES", invoice: "84", price: 120, date: "14-07-2025", hsn: "8487", quantity: 2},
-            {id: 36, name: "113 PEELER PLATE MOUNTING SHAFT", company: "P. P. ENTERPRISES", invoice: "84", price: 280, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 37, name: "PEELER PLATE 150 MM", company: "P. P. ENTERPRISES", invoice: "84", price: 600, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 38, name: "PRODUCT STOPPER", company: "P. P. ENTERPRISES", invoice: "84", price: 500, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 39, name: "REWINDER HSG", company: "P. P. ENTERPRISES", invoice: "84", price: 550, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 40, name: "REWINDER ROLLER 150", company: "P. P. ENTERPRISES", invoice: "84", price: 750, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 41, name: "REWINDER SHAFT", company: "P. P. ENTERPRISES", invoice: "84", price: 250, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 42, name: "REWINDER PULLEY SPACER", company: "P. P. ENTERPRISES", invoice: "84", price: 40, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 43, name: "REWINDER PULLEY", company: "P. P. ENTERPRISES", invoice: "84", price: 160, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 44, name: "DANCING ROLLER HSG", company: "P. P. ENTERPRISES", invoice: "84", price: 450, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 45, name: "SPOOL SUPPORT BOTTOM", company: "P. P. ENTERPRISES", invoice: "84", price: 375, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 46, name: "SPOOL ROLLER ASSEMBLY 150 MM", company: "P. P. ENTERPRISES", invoice: "84", price: 950, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 47, name: "DANCING ARM SHAFT", company: "P. P. ENTERPRISES", invoice: "84", price: 140, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 48, name: "SPOOL SUPPORT TOP", company: "P. P. ENTERPRISES", invoice: "84", price: 375, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 49, name: "REEL CENTRE CORE", company: "P. P. ENTERPRISES", invoice: "84", price: 450, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 50, name: "DANCING ROLLER 150 ASSEMBLY", company: "P. P. ENTERPRISES", invoice: "84", price: 900, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 51, name: "BREAKING PULLEY", company: "P. P. ENTERPRISES", invoice: "84", price: 320, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 52, name: "BREAKING LEVER 1", company: "P. P. ENTERPRISES", invoice: "84", price: 150, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 53, name: "BREAKING LEVER 2", company: "P. P. ENTERPRISES", invoice: "84", price: 180, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 54, name: "BRASS BUSH", company: "P. P. ENTERPRISES", invoice: "84", price: 80, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 55, name: "SS CORE LOCK PATTI", company: "P. P. ENTERPRISES", invoice: "84", price: 35, date: "14-07-2025", hsn: "8487", quantity: 3},
-            {id: 56, name: "SPRING STUD", company: "P. P. ENTERPRISES", invoice: "84", price: 110, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 57, name: "DANCING ARM PIN HSG", company: "P. P. ENTERPRISES", invoice: "84", price: 450, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 58, name: "PRESSING ROLLER BEARING HSG", company: "P. P. ENTERPRISES", invoice: "84", price: 250, date: "14-07-2025", hsn: "8487", quantity: 2},
-            {id: 59, name: "ARM SPACER PIPE", company: "P. P. ENTERPRISES", invoice: "84", price: 230, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 60, name: "PRESSING ARM", company: "P. P. ENTERPRISES", invoice: "84", price: 550, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 61, name: "PRESSING ROLLER SHAFT", company: "P. P. ENTERPRISES", invoice: "84", price: 350, date: "14-07-2025", hsn: "8487", quantity: 1},
-            {id: 62, name: "HAND ROLLER SHAFT 150MM", company: "P. P. ENTERPRISES", invoice: "84", price: 150, date: "14-07-2025", hsn: "8487", quantity: 2},
-            {id: 63, name: "ARM END CAP", company: "P. P. ENTERPRISES", invoice: "84", price: 30, date: "14-07-2025", hsn: "8487", quantity: 1},
-            
-            // Invoice from DE & NEPHEW (DN/00236/25-26)
-            {id: 64, name: "100 L X 150 OD X 10 ID FOAM & SPONGE ROLLER", company: "DE & NEPHEW", invoice: "DN/00236/25-26", price: 1950, date: "22-08-2025", hsn: "40169990", quantity: 2},
-            {id: 65, name: "600 L X 19 X 8 MM T RED RUBBER BELT", company: "DE & NEPHEW", invoice: "DN/00236/25-26", price: 1800, date: "22-08-2025", hsn: "40103999", quantity: 1},
-            
-            // Invoice from DE & NEPHEW (DN/00190/25-26)
-            {id: 66, name: "420 L X 35 X 10 MM T BELT", company: "DE & NEPHEW", invoice: "DN/00190/25-26", price: 2260, date: "29-07-2025", hsn: "40103999", quantity: 2},
-            {id: 67, name: "130 L X 100 OD X 12 ID FOAM ROLLER", company: "DE & NEPHEW", invoice: "DN/00190/25-26", price: 1350, date: "29-07-2025", hsn: "40169990", quantity: 2},
-            
-            // Invoice from Shree Engineering (Bill No. 34)
-            {id: 68, name: "Spacer Assembly Belt Type With Slide - LH", company: "Shree Engineering", invoice: "34", price: 10200, date: "14-07-2025", hsn: "84851000", quantity: 3},
-            {id: 69, name: "Wraparound Assembly With Vertical Slide 420 L X 100W", company: "Shree Engineering", invoice: "34", price: 15000, date: "14-07-2025", hsn: "84851000", quantity: 2},
-            {id: 70, name: "Wraparound Assembly With Vertical Slide 420 L X 125W 20 - LH", company: "Shree Engineering", invoice: "34", price: 15200, date: "14-07-2025", hsn: "84851000", quantity: 2},
-            
-            // Invoice from DE & NEPHEW (DN/00217/25-26)
-            {id: 71, name: "935 X 150/100 X 10 MM T BELT", company: "DE & NEPHEW", invoice: "DN/00217/25-26", price: 4480, date: "12-08-2025", hsn: "40103999", quantity: 1},
-            
-            // Invoice 112: P. P ENTERPRISES
-            {id: 72, name: "BACK PLATE 420 X125X10", company: "P. P. ENTERPRISES", invoice: "112", price: 850, date: "27-09-2025", hsn: "8487", quantity: 2},
-            {id: 73, name: "ALU BACK PLATE 420 X100 X10", company: "P. P. ENTERPRISES", invoice: "112", price: 850, date: "27-09-2025", hsn: "8487", quantity: 2},
-            {id: 74, name: "BACK PLATE 367 X100 X10", company: "P. P. ENTERPRISES", invoice: "112", price: 800, date: "27-09-2025", hsn: "8487", quantity: 5},
-            {id: 75, name: "HANDLE PRESSING ROLLER CORE", company: "P. P. ENTERPRISES", invoice: "112", price: 450, date: "27-09-2025", hsn: "8487", quantity: 1},
-            {id: 76, name: "SUPPORT RUBBER ROLLER CORE", company: "P. P. ENTERPRISES", invoice: "112", price: 1150, date: "27-09-2025", hsn: "8487", quantity: 1},
-            {id: 77, name: "CONVEYOR TIE ROD 05 HP 152MM", company: "P. P. ENTERPRISES", invoice: "112", price: 8500, date: "27-09-2025", hsn: "8487", quantity: 1},
-            {id: 78, name: "TIE ROD 2C152MM", company: "P. P. ENTERPRISES", invoice: "112", price: 95, date: "27-09-2025", hsn: "8487", quantity: 6},
-            
-            // Invoice 94: P. P ENTERPRISES
-            {id: 79, name: "LABELER 150 LOOSE PART", company: "P. P. ENTERPRISES", invoice: "94", price: 13050, date: "11-08-2025", hsn: "8487", quantity: 2},
-            {id: 80, name: "SPRING FLANGE", company: "P. P. ENTERPRISES", invoice: "94", price: 600, date: "11-08-2025", hsn: "8487", quantity: 6},
-            {id: 81, name: "LABELER 100 LOOSE PART", company: "P. P. ENTERPRISES", invoice: "94", price: 12100, date: "11-08-2025", hsn: "8487", quantity: 1},
-            {id: 82, name: "PATH ROLLER ON ARM 100", company: "P. P. ENTERPRISES", invoice: "94", price: 815, date: "11-08-2025", hsn: "8487", quantity: 4},
-            {id: 83, name: "KNURLAL ASSEMBLY 150", company: "P. P. ENTERPRISES", invoice: "94", price: 375, date: "11-08-2025", hsn: "8487", quantity: 2},
-            {id: 84, name: "KNURLAL ASSEMBLY100", company: "P. P. ENTERPRISES", invoice: "94", price: 450, date: "11-08-2025", hsn: "8487", quantity: 1},
-            {id: 85, name: "SS 304 SENSOR ROD 12 X350", company: "P. P. ENTERPRISES", invoice: "94", price: 170, date: "11-08-2025", hsn: "8487", quantity: 30},
-            {id: 86, name: "SS 304 SENSOR ROD 12 X250", company: "P. P. ENTERPRISES", invoice: "94", price: 160, date: "11-08-2025", hsn: "8487", quantity: 15},
-            {id: 87, name: "CONVEYOR FLANGE 75MM", company: "P. P. ENTERPRISES", invoice: "94", price: 1150, date: "11-08-2025", hsn: "8487", quantity: 2},
-            {id: 88, name: "CONVEYOR HSG 2C114", company: "P. P. ENTERPRISES", invoice: "94", price: 600, date: "11-08-2025", hsn: "8487", quantity: 2},
-            
-            // Invoice TV/067/2025-26: Tech Vision
-            {id: 89, name: "Mecvel Make – 0.25 HP, 1:10 Worm Gear Box with Motor B030FB02CO FC B63B5 + EM 0.18 KW", company: "Tech Vision", invoice: "TV/067/2025-26", price: 9500, date: "Unknown", hsn: "84834000", quantity: 6},
-            {id: 90, name: "Mecvel Make – 0.25 HP, 1:20 Worm Gear Box with Motor B030FB04CO FC B63B5 + EM 0.18 KW", company: "Tech Vision", invoice: "TV/067/2025-26", price: 9500, date: "Unknown", hsn: "84834000", quantity: 9},
-            
-            // Invoice 111: P. P. ENTERPRISES
-            {id: 91, name: "IDLER ROLLER NYLON 150MM", company: "P. P. ENTERPRISES", invoice: "111", price: 750, date: "20-09-2025", hsn: "8487", quantity: 1},
-            {id: 92, name: "421 IDLER ROLLER SHAFT 150MM", company: "P. P. ENTERPRISES", invoice: "111", price: 485, date: "20-09-2025", hsn: "8487", quantity: 1},
-            {id: 93, name: "KNURLAL ASSEMBLY 150", company: "P. P. ENTERPRISES", invoice: "111", price: 375, date: "20-09-2025", hsn: "8487", quantity: 1},
-            {id: 94, name: "REWINDER ASSEMBLY 150MM", company: "P. P. ENTERPRISES", invoice: "111", price: 950, date: "20-09-2025", hsn: "8487", quantity: 1},
-            {id: 95, name: "RUBBER ROLLER SHAFT 150MM", company: "P. P. ENTERPRISES", invoice: "111", price: 850, date: "20-09-2025", hsn: "8487", quantity: 1},
-            {id: 96, name: "SPRING FLANGE MAIN SHAFT 150MM", company: "P. P. ENTERPRISES", invoice: "111", price: 320, date: "20-09-2025", hsn: "8487", quantity: 1},
-            {id: 97, name: "416 PRESSING ROLLER SHAFT", company: "P. P. ENTERPRISES", invoice: "111", price: 350, date: "20-09-2025", hsn: "8487", quantity: 2},
-            {id: 98, name: "PATH ROLLER ASSEMBLY 150MM", company: "P. P. ENTERPRISES", invoice: "111", price: 985, date: "20-09-2025", hsn: "8487", quantity: 6},
-            {id: 99, name: "FLANGE", company: "P. P. ENTERPRISES", invoice: "111", price: 225, date: "20-09-2025", hsn: "8487", quantity: 1},
-            {id: 100, name: "PILLER PLATE SHAFT 150MM", company: "P. P. ENTERPRISES", invoice: "111", price: 275, date: "20-09-2025", hsn: "8487", quantity: 1},
-            {id: 101, name: "SS PLATE FLANGE", company: "P. P. ENTERPRISES", invoice: "111", price: 265, date: "20-09-2025", hsn: "8487", quantity: 1},
-            {id: 102, name: "SS SPACER ROD", company: "P. P. ENTERPRISES", invoice: "111", price: 125, date: "20-09-2025", hsn: "8487", quantity: 4},
-            {id: 103, name: "PILLER PLATE SEMI AUTOMATIC", company: "P. P. ENTERPRISES", invoice: "111", price: 600, date: "20-09-2025", hsn: "8487", quantity: 1},
-            
-            // Invoice 77: P. P. ENTERPRISES
-            {id: 104, name: "RUBBER ROLLER WITH SHAFT 200MM", company: "P. P. ENTERPRISES", invoice: "77", price: 1950, date: "02-07-2025", hsn: "8487", quantity: 20},
-            {id: 105, name: "SS 304 5/16 ROD 12 X120", company: "P. P. ENTERPRISES", invoice: "77", price: 85, date: "02-07-2025", hsn: "8487", quantity: 125},
-            
-            // Invoice from Ingenium Electronics
-            {id: 106, name: "Delta PLC Programming cable with USB to Serial Cable", company: "Ingenium Electronics", invoice: "EPL/FY25-26/206", price: 2500, date: "15-07-2025", hsn: "85444220", quantity: 1},
-            
-            // Invoice 109: P. P ENTERPRISES
-            {id: 107, name: "Labeler Loose Parts 200 MM", company: "P. P. ENTERPRISES", invoice: "109", price: 14900, date: "16-09-2025", hsn: "8487", quantity: 4},
-            {id: 108, name: "Knurl Assembly 200", company: "P. P. ENTERPRISES", invoice: "109", price: 450, date: "16-09-2025", hsn: "8487", quantity: 4},
-            {id: 109, name: "Spring Flange", company: "P. P. ENTERPRISES", invoice: "109", price: 600, date: "16-09-2025", hsn: "8487", quantity: 8},
-            {id: 110, name: "Rewinder Disk (Sharlog)", company: "P. P. ENTERPRISES", invoice: "109", price: 275, date: "16-09-2025", hsn: "8487", quantity: 8},
-            
-            // Invoice 106: P. P ENTERPRISES
-            {id: 111, name: "Nylon Adler", company: "P. P. ENTERPRISES", invoice: "106", price: 175, date: "09-09-2025", hsn: "8487", quantity: 20},
-            {id: 112, name: "Spring Flange Roller with Shaft 100", company: "P. P. ENTERPRISES", invoice: "106", price: 850, date: "09-09-2025", hsn: "8487", quantity: 4},
-            {id: 113, name: "Piller Knurl Roller 100 MM", company: "P. P. ENTERPRISES", invoice: "106", price: 750, date: "09-09-2025", hsn: "8487", quantity: 4},
-            
-            // Invoice 107: P. P ENTERPRISES
-            {id: 114, name: "INSERT FOR WORAM", company: "P. P. ENTERPRISES", invoice: "107", price: 850, date: "09-09-2025", hsn: "8487", quantity: 10},
-            
-            // Invoice DN/00199/25-26: DE & NEPHEW
-            {id: 115, name: "1028 L X 25 X 13 MM T ORANGE BELT", company: "DE & NEPHEW", invoice: "DN/00199/25-26", price: 4000, date: "08-08-2025", hsn: "40103999", quantity: 2},
-            {id: 116, name: "1028 L X 50 X 13 MM T ORANGE BELT", company: "DE & NEPHEW", invoice: "DN/00199/25-26", price: 8000, date: "08-08-2025", hsn: "40103999", quantity: 1},
-            
-            // Invoice from miscellaneous supplier
-            {id: 117, name: "10X10X300 KEYS SS.", company: "Other", invoice: "Unknown", price: 350, date: "Unknown", hsn: "83011000", quantity: 2},
-            {id: 118, name: "8X6X300 KEYS SS.", company: "Other", invoice: "Unknown", price: 250, date: "Unknown", hsn: "83011000", quantity: 2},
-            {id: 119, name: "S.S CAP M 5X12.", company: "Other", invoice: "Unknown", price: 2.5, date: "Unknown", hsn: "73181500", quantity: 100},
-            {id: 120, name: "S.S CAP M 8X100.", company: "Other", invoice: "Unknown", price: 24, date: "Unknown", hsn: "73181500", quantity: 100},
-            {id: 121, name: "61902 ZZ SKF BEARING.", company: "Other", invoice: "Unknown", price: 230, date: "Unknown", hsn: "84821011", quantity: 4},
-            {id: 122, name: "61802 ZZ SKF BEARING.", company: "Other", invoice: "Unknown", price: 650, date: "Unknown", hsn: "84821011", quantity: 4},
-            {id: 123, name: "61802 ZRS BEARING SKF", company: "Other", invoice: "Unknown", price: 695, date: "Unknown", hsn: "82041110", quantity: 2},
-            {id: 124, name: "PIX PANA SET 6X7 - 20X22 MM", company: "Other", invoice: "Unknown", price: 300, date: "Unknown", hsn: "84021111", quantity: 2},
-            {id: 125, name: "6001 ZZ SKF BEARING", company: "Other", invoice: "Unknown", price: 150, date: "Unknown", hsn: "84822000", quantity: 3},
-            {id: 126, name: "UCF 205 MM BEARING.", company: "Other", invoice: "Unknown", price: 250, date: "Unknown", hsn: "84821011", quantity: 3},
-            {id: 127, name: "6006 ZZ DGBB SKF BEARING.", company: "Other", invoice: "Unknown", price: 330, date: "Unknown", hsn: "84821011", quantity: 6},
-            {id: 128, name: "6204 ZZ DGBB SKF BEARING", company: "Other", invoice: "Unknown", price: 260, date: "Unknown", hsn: "83011000", quantity: 4},
-            {id: 129, name: "5X5X300 KEYS SS.", company: "Other", invoice: "Unknown", price: 150, date: "Unknown", hsn: "83182200", quantity: 3},
-            {id: 130, name: "S.S PLAN WASHER 8MM", company: "Other", invoice: "Unknown", price: 5.45, date: "Unknown", hsn: "73182200", quantity: 500},
-            
-            // Invoice 81: P P ENTERPRISES
-            {id: 131, name: "Labeler 100 Loose Part", company: "P. P. ENTERPRISES", invoice: "81", price: 12100, date: "09-07-2025", hsn: "8487", quantity: 2},
-            {id: 132, name: "Knurl Assembly 100", company: "P. P. ENTERPRISES", invoice: "81", price: 375, date: "09-07-2025", hsn: "8487", quantity: 2},
-            {id: 133, name: "Idler", company: "P. P. ENTERPRISES", invoice: "81", price: 590, date: "09-07-2025", hsn: "8487", quantity: 9},
-            {id: 134, name: "Spring Flange", company: "P. P. ENTERPRISES", invoice: "81", price: 600, date: "09-07-2025", hsn: "8487", quantity: 4},
-            {id: 135, name: "SS 304 Pillar Plate 150 MM", company: "P. P. ENTERPRISES", invoice: "81", price: 570, date: "09-07-2025", hsn: "8487", quantity: 1},
-            
-            // Invoice DN/00224/25-26: DE & NEPHEW
-            {id: 136, name: "45 × 55 OD × 10 ID Orange Sponge Roller", company: "DE & NEPHEW", invoice: "DN/00224/25-26", price: 400, date: "14-08-2025", hsn: "40169990", quantity: 4},
-            
-            // Invoice DN/00234/25-26: DE & NEPHEW
-            {id: 137, name: "420 L × 100 × 10 MM T Belt", company: "DE & NEPHEW", invoice: "DN/00234/25-26", price: 5000, date: "21-08-2025", hsn: "40103999", quantity: 1}
-        ];
+    <table id="partsTable" class="display table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>Spare Part Name</th>
+                <th>Company</th>
+                <th>Price</th>
+                <th>Details/Stock</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
+</div>
 
-        // Function to find duplicate spare parts (same name but different price or company)
-        function findDuplicateParts(parts) {
-            const nameMap = {};
-            const duplicates = [];
-            
-            parts.forEach(part => {
-                const normalizedName = part.name.toLowerCase().trim();
-                if (!nameMap[normalizedName]) {
-                    nameMap[normalizedName] = [];
-                }
-                nameMap[normalizedName].push(part);
-            });
-            
-            // Check for duplicates (same name but different price or company)
-            for (const name in nameMap) {
-                if (nameMap[name].length > 1) {
-                    // Check if there are different prices or companies
-                    const firstPart = nameMap[name][0];
-                    const hasDifferentPrices = nameMap[name].some(part => part.price !== firstPart.price);
-                    const hasDifferentCompanies = nameMap[name].some(part => part.company !== firstPart.company);
-                    
-                    if (hasDifferentPrices || hasDifferentCompanies) {
-                        duplicates.push(...nameMap[name]);
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+<script>
+    const csvUrl = 'https://raw.githubusercontent.com/bimal-bp/Work_plan/main/spare%20parts%20detials.csv';
+
+    $(document).ready(function() {
+        Papa.parse(csvUrl, {
+            download: true,
+            header: true,
+            complete: function(results) {
+                let data = results.data;
+                let tableBody = $('#tableBody');
+                let companyFilter = $('#companyFilter');
+                let companies = new Set();
+                
+                // Track names to find duplicates
+                let nameCounts = {};
+                data.forEach(row => {
+                    if(row['Spare Part Name']) {
+                        let name = row['Spare Part Name'].trim();
+                        nameCounts[name] = (nameCounts[name] || 0) + 1;
                     }
-                }
-            }
-            
-            return duplicates;
-        }
-
-        // Function to render the table
-        function renderTable(parts) {
-            const tableBody = document.getElementById('tableBody');
-            const noResults = document.getElementById('noResults');
-            const totalParts = document.getElementById('totalParts');
-            const uniqueParts = document.getElementById('uniqueParts');
-            
-            if (parts.length === 0) {
-                tableBody.innerHTML = '';
-                noResults.style.display = 'block';
-            } else {
-                noResults.style.display = 'none';
-                
-                // Find duplicate parts for highlighting
-                const duplicateParts = findDuplicateParts(parts);
-                const duplicateIds = duplicateParts.map(p => p.id);
-                
-                // Get unique part names count
-                const uniqueNames = [...new Set(parts.map(p => p.name.toLowerCase().trim()))];
-                
-                // Update stats
-                totalParts.textContent = parts.length;
-                uniqueParts.textContent = uniqueNames.length;
-                
-                let html = '';
-                parts.forEach(part => {
-                    const isDuplicate = duplicateIds.includes(part.id);
-                    
-                    html += `
-                    <tr>
-                        <td>
-                            <div class="spare-part-name">${part.name}</div>
-                            ${isDuplicate ? '<div class="duplicate-warning"><i class="fas fa-exclamation-triangle"></i> Different price/company for same part</div>' : ''}
-                        </td>
-                        <td><div class="company-name">${part.company}</div></td>
-                        <td><div class="invoice-number">${part.invoice}</div></td>
-                        <td><div class="price">₹ ${part.price.toLocaleString()}</div></td>
-                        <td><div class="date">${part.date}</div></td>
-                        <td><div class="hsn-code">${part.hsn}</div></td>
-                        <td>${part.quantity}</td>
-                    </tr>
-                    `;
                 });
-                
-                tableBody.innerHTML = html;
+
+                data.forEach(row => {
+                    if (row['Spare Part Name']) {
+                        let isDuplicate = nameCounts[row['Spare Part Name'].trim()] > 1;
+                        let rowHtml = `<tr class="${isDuplicate ? 'duplicate-row' : ''}">
+                            <td>${row['Spare Part Name']}</td>
+                            <td>${row['Company']}</td>
+                            <td>${row['Price'] || 'N/A'}</td>
+                            <td>${row['Details'] || row['Stock'] || '-'}</td>
+                        </tr>`;
+                        tableBody.append(rowHtml);
+                        if(row['Company']) companies.add(row['Company'].trim());
+                    }
+                });
+
+                // Fill Company Dropdown
+                companies.forEach(c => {
+                    companyFilter.append(`<option value="${c}">${c}</option>`);
+                });
+
+                // Initialize DataTable
+                let table = $('#partsTable').DataTable({
+                    pageLength: 25,
+                    order: [[0, 'asc']]
+                });
+
+                // Company Filter Logic
+                $('#companyFilter').on('change', function() {
+                    table.column(1).search(this.value).draw();
+                });
             }
-        }
+        });
+    });
+</script>
 
-        // Function to filter and sort data
-        function filterAndSortData() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const companyFilter = document.getElementById('companyFilter').value;
-            const sortFilter = document.getElementById('sortFilter').value;
-            
-            let filteredData = sparePartsData.filter(part => {
-                // Search filter
-                const matchesSearch = searchTerm === '' || 
-                    part.name.toLowerCase().includes(searchTerm) ||
-                    part.hsn.toLowerCase().includes(searchTerm) ||
-                    part.company.toLowerCase().includes(searchTerm);
-                
-                // Company filter
-                const matchesCompany = companyFilter === '' || part.company === companyFilter;
-                
-                return matchesSearch && matchesCompany;
-            });
-            
-            // Sorting
-            switch(sortFilter) {
-                case 'name':
-                    filteredData.sort((a, b) => a.name.localeCompare(b.name));
-                    break;
-                case 'price-low':
-                    filteredData.sort((a, b) => a.price - b.price);
-                    break;
-                case 'price-high':
-                    filteredData.sort((a, b) => b.price - a.price);
-                    break;
-                case 'date':
-                    // Sort by date (newest first) - assuming date format is DD-MM-YYYY
-                    filteredData.sort((a, b) => {
-                        if (a.date === "Unknown" && b.date === "Unknown") return 0;
-                        if (a.date === "Unknown") return 1;
-                        if (b.date === "Unknown") return -1;
-                        
-                        const dateA = a.date.split('-').reverse().join('-');
-                        const dateB = b.date.split('-').reverse().join('-');
-                        return new Date(dateB) - new Date(dateA);
-                    });
-                    break;
-                case 'date-old':
-                    // Sort by date (oldest first)
-                    filteredData.sort((a, b) => {
-                        if (a.date === "Unknown" && b.date === "Unknown") return 0;
-                        if (a.date === "Unknown") return 1;
-                        if (b.date === "Unknown") return -1;
-                        
-                        const dateA = a.date.split('-').reverse().join('-');
-                        const dateB = b.date.split('-').reverse().join('-');
-                        return new Date(dateA) - new Date(dateB);
-                    });
-                    break;
-            }
-            
-            renderTable(filteredData);
-        }
-
-        // Function to export data as CSV
-        function exportToCSV() {
-            let csv = 'Spare Part Name,Company,Invoice No.,Price/Unit (₹),Date,HSN/SAC,Quantity\n';
-            
-            sparePartsData.forEach(part => {
-                csv += `"${part.name}","${part.company}","${part.invoice}",${part.price},"${part.date}","${part.hsn}",${part.quantity}\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('hidden', '');
-            a.setAttribute('href', url);
-            a.setAttribute('download', 'spare_parts_inventory.csv');
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        // Function to reset filters
-        function resetFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('companyFilter').value = '';
-            document.getElementById('sortFilter').value = 'name';
-            filterAndSortData();
-        }
-
-        // Event listeners
-        document.getElementById('searchInput').addEventListener('input', filterAndSortData);
-        document.getElementById('companyFilter').addEventListener('change', filterAndSortData);
-        document.getElementById('sortFilter').addEventListener('change', filterAndSortData);
-        document.getElementById('exportBtn').addEventListener('click', exportToCSV);
-        document.getElementById('resetBtn').addEventListener('click', resetFilters);
-
-        // Initial render
-        filterAndSortData();
-    </script>
 </body>
 </html>
