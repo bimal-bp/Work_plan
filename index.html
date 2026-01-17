@@ -3,432 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Data - Company Filter</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f7fa;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-            padding: 25px;
-        }
-        
-        h1 {
-            color: #2c3e50;
-            margin-top: 0;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eaeaea;
-        }
-        
-        .filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 6px;
-        }
-        
-        .filter-group {
-            flex: 1;
-            min-width: 200px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #495057;
-        }
-        
-        select, input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        select:focus, input:focus {
-            outline: none;
-            border-color: #4dabf7;
-            box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
-        }
-        
-        .summary {
-            background-color: #e8f4fd;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        
-        .summary strong {
-            color: #1864ab;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        
-        th {
-            background-color: #2c3e50;
-            color: white;
-            text-align: left;
-            padding: 14px 12px;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-        }
-        
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #eaeaea;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        tr:hover {
-            background-color: #e8f4fd;
-        }
-        
-        .invoice-no {
-            font-family: monospace;
-            color: #1864ab;
-        }
-        
-        .company-name {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .rate {
-            text-align: right;
-            font-weight: 600;
-            color: #2b8a3e;
-        }
-        
-        .quantity {
-            text-align: center;
-        }
-        
-        .no-data {
-            text-align: center;
-            padding: 40px;
-            color: #868e96;
-            font-style: italic;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            th, td {
-                padding: 10px 8px;
-                font-size: 14px;
-            }
-            
-            .filters {
-                flex-direction: column;
-            }
-        }
-    </style>
+    <title>Spare Parts Inventory</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>Invoice Data - Filter by Company</h1>
-        
-        <div class="filters">
-            <div class="filter-group">
-                <label for="companyFilter">Filter by Company:</label>
-                <select id="companyFilter">
+<body class="bg-gray-100 p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Spare Parts List</h1>
+
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8 flex flex-wrap gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Company</label>
+                <select id="companyFilter" class="mt-1 block w-48 p-2 border rounded-md">
                     <option value="all">All Companies</option>
-                    <!-- Company options will be populated by JavaScript -->
                 </select>
             </div>
-            
-            <div class="filter-group">
-                <label for="searchFilter">Search in Description:</label>
-                <input type="text" id="searchFilter" placeholder="Type to search...">
-            </div>
-            
-            <div class="filter-group">
-                <label for="dateFilter">Invoice Date:</label>
-                <select id="dateFilter">
-                    <option value="all">All Dates</option>
-                    <option value="2025-07">July 2025</option>
-                    <option value="2025-08">August 2025</option>
-                    <option value="2025-09">September 2025</option>
-                    <option value="2025-10">October 2025</option>
-                    <option value="2025-11">November 2025</option>
-                    <option value="2025-12">December 2025</option>
-                    <option value="2026-01">January 2026</option>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Month</label>
+                <select id="monthFilter" class="mt-1 block w-48 p-2 border rounded-md">
+                    <option value="all">All Months</option>
                 </select>
             </div>
+            <div class="flex items-end">
+                <button onclick="applyFilters()" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">Apply Filter</button>
+            </div>
         </div>
-        
-        <div class="summary">
-            Showing <strong id="rowCount">0</strong> invoice items from <strong id="companyCount">0</strong> companies
+
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-12">
+            <div class="bg-blue-500 p-4 text-white font-bold">Main Inventory</div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead id="tableHeader" class="bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></thead>
+                    <tbody id="tableBody" class="bg-white divide-y divide-gray-200 text-sm"></tbody>
+                </table>
+            </div>
         </div>
-        
-        <table id="invoiceTable">
-            <thead>
-                <tr>
-                    <th>Invoice Date</th>
-                    <th>Invoice No.</th>
-                    <th>Company Name</th>
-                    <th>Description of Goods</th>
-                    <th>Quantity</th>
-                    <th>Rate (Price)</th>
-                </tr>
-            </thead>
-            <tbody id="invoiceTableBody">
-                <!-- Data will be populated by JavaScript -->
-            </tbody>
-        </table>
-        
-        <div id="noDataMessage" class="no-data" style="display: none;">
-            No invoice items match your filters. Try adjusting your selection.
+
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="bg-red-500 p-4 text-white font-bold">Duplicate Records Found</div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead id="dupHeader" class="bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></thead>
+                    <tbody id="dupBody" class="bg-white divide-y divide-gray-200 text-sm italic text-red-600"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        // Invoice data from your provided list
-        const invoiceData = [
-            { date: "03-10-2025", invoiceNo: "6692/25-26", company: "Meritt T.R.A.N.S.M.I.S.S.I.O.N.S", description: "SS CHAIN 6\" WIDTH, 700100", quantity: "18.29 MTR", rate: "2,550.00" },
-            { date: "29-08-2025", invoiceNo: "083/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Wraparound Assembly With Vertical Slide: 420L x 100W-LH", quantity: "1.00 NOS", rate: "15,000.00" },
-            { date: "29-08-2025", invoiceNo: "083/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Wraparound Assembly With Vertical & Horizontal (X-Y) Slide: 420L x 125W-LH", quantity: "1.00 NOS", rate: "16,700.00" },
-            { date: "29-08-2025", invoiceNo: "083/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "2-Point Pressing Assembly", quantity: "2.00 NOS", rate: "8,640.00" },
-            { date: "29-08-2025", invoiceNo: "083/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "SS 304 Idler Shaft For Pressing Assembly Roller: 32 H x 45 OD", quantity: "4.00 NOS", rate: "598" },
-            { date: "29-08-2025", invoiceNo: "083/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "SS 304 Idler Shaft For Pressing Assembly Roller: 50 H x 45 OD", quantity: "4.00 NOS", rate: "598" },
-            { date: "29-08-2025", invoiceNo: "083/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "SS 304 Idler Shaft For Pressing Assembly Roller: 90 H x 45 OD", quantity: "4.00 NOS", rate: "598" },
-            { date: "29-08-2025", invoiceNo: "083/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "SS 304 Idler Shaft For Pressing Assembly Roller: 120 H x 45 OD", quantity: "4.00 NOS", rate: "598" },
-            { date: "29-08-2025", invoiceNo: "083/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "SS 304 Idler Shaft For Pressing Assembly Roller: 150 H x 45 OD", quantity: "2.00 NOS", rate: "598" },
-            { date: "N/A", invoiceNo: "0108/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "SS 304 Sponge Shaft For Splider Mechanism: 12.7 x 103", quantity: "8.00 NOS", rate: "Not Visible" },
-            { date: "N/A", invoiceNo: "0108/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "SS 304 Sponge Shaft For Splider Mechanism: 12.7 x 153", quantity: "8.00 NOS", rate: "Not Visible" },
-            { date: "30-09-2025", invoiceNo: "0101/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Wraparound Mounting Vertical & Horizontal (X-Y) Slide", quantity: "2.00 NOS", rate: "7,900.00" },
-            { date: "30-09-2025", invoiceNo: "0101/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "2 Point Pressing Assembly (Handwritten note: Tristan)", quantity: "1.00 NOS", rate: "8,640.00" },
-            { date: "15-09-2025", invoiceNo: "DE/25-26/143", company: "DORIN ENTERPRISES", description: "WP-0.25HP-001 0.25 GEARBOX+SERVO MOTOR FLANGE 2", quantity: "2 Nos.", rate: "1,350.00" },
-            { date: "15-09-2025", invoiceNo: "DE/25-26/143", company: "DORIN ENTERPRISES", description: "WP-0.25HP-002 0.25 GEARBOX+SERVO MOTOR FLANGE 2", quantity: "2 Nos.", rate: "2,450.00" },
-            { date: "15-09-2025", invoiceNo: "DE/25-26/143", company: "DORIN ENTERPRISES", description: "WP-0.25HP-003 0.25 GEARBOX+SERVO MOTOR FLANGE 2", quantity: "2 Nos.", rate: "1,975.00" },
-            { date: "15-09-2025", invoiceNo: "DE/25-26/143", company: "DORIN ENTERPRISES", description: "WP-CAMSLIDE-002 CLAMPING PALTE 40x40", quantity: "2 Nos.", rate: "1,275.00" },
-            { date: "15-09-2025", invoiceNo: "DE/25-26/143", company: "DORIN ENTERPRISES", description: "WP-CAMSLIDE-003 SLIDE MTG BASE PLATE", quantity: "2 Nos.", rate: "1,550.00" },
-            { date: "20-08-2025", invoiceNo: "WAL-0160/25-26", company: "DE & NEPHEW", description: "120 L X 100 OD X 10 ID FOAM ROLLER", quantity: "1 PCS", rate: "1,320.00" },
-            { date: "20-08-2025", invoiceNo: "WAL-0160/25-26", company: "DE & NEPHEW", description: "30 L X 100 OD X 10 ID FOAM ROLLER", quantity: "1 PCS", rate: "330" },
-            { date: "20-08-2025", invoiceNo: "WAL-0160/25-26", company: "DE & NEPHEW", description: "150 L X 120 OD X 16 ID FOAM ROLLER", quantity: "4 PCS", rate: "1,800.00" },
-            { date: "06-11-2025", invoiceNo: "0102/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Belt Type Spacer Assembly With Slide-LH", quantity: "3.00 NOS", rate: "Not Visible" },
-            { date: "06-11-2025", invoiceNo: "0102/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Belt Type Spacer Assembly With Slide-RH", quantity: "3.00 NOS", rate: "Not Visible" },
-            { date: "06-11-2025", invoiceNo: "0102/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Chain Type Orientation Assembly With Slide-LH", quantity: "3.00 NOS", rate: "Not Visible" },
-            { date: "06-11-2025", invoiceNo: "0102/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Chain Type Orientation Assembly With Slide-RH", quantity: "3.00 NOS", rate: "Not Visible" },
-            { date: "06-11-2025", invoiceNo: "0102/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Transfer Unit Mounting Vertical & Horizontal (X-Y) Slide", quantity: "1.00 NOS", rate: "Not Visible" },
-            { date: "08-09-2025", invoiceNo: "25-26/1784", company: "BINDAL BELTING PVT. LTD.", description: "15 T21 R35 Sprocket 50803", quantity: "10", rate: "1,000.00" },
-            { date: "31-12-2025", invoiceNo: "DE/25-26/453", company: "DORIN ENTERPRISES", description: "Core for Rubber Roller (OD32 x 100mm Long)", quantity: "4 Nos.", rate: "Not Visible" },
-            { date: "31-12-2025", invoiceNo: "DE/25-26/453", company: "DORIN ENTERPRISES", description: "Core for Rubber Roller (Mixed Sizes)", quantity: "17 Nos.", rate: "Not Visible" },
-            { date: "31-12-2025", invoiceNo: "DE/25-26/453", company: "DORIN ENTERPRISES", description: "Web Support Guide", quantity: "2 Nos.", rate: "Not Visible" },
-            { date: "31-12-2025", invoiceNo: "DE/25-26/453", company: "DORIN ENTERPRISES", description: "WP-A000-SETION FRAME-02", quantity: "4 Nos.", rate: "Not Visible" },
-            { date: "04-09-2025", invoiceNo: "WAL-0125/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Spacer Assembly With Slide LH & RH", quantity: "12 Nos", rate: "9,500.00" },
-            { date: "04-09-2025", invoiceNo: "WAL-0125/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Wraparound Assembly Timing Pulley: 420L x 125W", quantity: "1 Nos", rate: "3,734.00" },
-            { date: "04-09-2025", invoiceNo: "WAL-0125/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Wraparound Assembly Drive (Motor) Shaft: 420L x 125W", quantity: "2 Nos", rate: "920" },
-            { date: "04-09-2025", invoiceNo: "WAL-0125/25-26", company: "PACKORA AUTOMATION SYSTEMS", description: "Aluminium Block: 160L x 60W x 20T", quantity: "1 Nos", rate: "450" },
-            { date: "02-09-2025", invoiceNo: "DN/00254/25-26", company: "DE & NEPHEW", description: "T5 400 X 12 MM PU TIMING BELT", quantity: "100 NOS", rate: "200" },
-            { date: "02-09-2025", invoiceNo: "DN/00254/25-26", company: "DE & NEPHEW", description: "150 L X 140 OD X 16 ID FS ROLLER", quantity: "2 NOS", rate: "2,730.00" },
-            { date: "02-09-2025", invoiceNo: "DN/00254/25-26", company: "DE & NEPHEW", description: "60 L X 60 OD X 10 ID ORANGE ROLLER", quantity: "2 NOS", rate: "575" },
-            { date: "27-08-2025", invoiceNo: "081/25-26", company: "Packora Automation Systems", description: "Orientation Helm Set-LH", quantity: "1", rate: "2,400.00" },
-            { date: "27-08-2025", invoiceNo: "081/25-26", company: "Packora Automation Systems", description: "Orientation Helm Set-RH", quantity: "1", rate: "2,400.00" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "MOTOR MTG HORIZONTAL PLATE", quantity: "1", rate: "1,200.00" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "MOTOR MTG VERTICAL PLATE", quantity: "1", rate: "1,450.00" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "ALUMINIUM RIB-2", quantity: "3", rate: "450" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "ALUMINIUM RIB-1", quantity: "2", rate: "250" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "ALUMINIUM DISC-1", quantity: "1", rate: "475" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "ALUMINIUM DISC-2", quantity: "1", rate: "475" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "MOTOR COUPLING SHAFT", quantity: "1", rate: "1,250.00" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "TUBE ROLLER SHAFT", quantity: "1", rate: "875" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "KNOB", quantity: "1", rate: "250" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "PATH ROLLER", quantity: "3", rate: "570" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "PATH ROLLER SHAFT", quantity: "3", rate: "975" },
-            { date: "09-07-2025", invoiceNo: "DE/25-26/246", company: "Dorin Enterprises", description: "PAPER GUIDE RING", quantity: "3", rate: "60" },
-            { date: "19-09-2025", invoiceNo: "0105/25-26", company: "Packora Automation Systems", description: "Belt Type Spacer Assembly With Slide-LH", quantity: "1", rate: "10,200.00" },
-            { date: "19-09-2025", invoiceNo: "0105/25-26", company: "Packora Automation Systems", description: "Belt Type Spacer Assembly With Slide-RH", quantity: "1", rate: "10,200.00" },
-            { date: "19-09-2025", invoiceNo: "0105/25-26", company: "Packora Automation Systems", description: "Chain Type Orientation Assembly With Slide-LH", quantity: "1", rate: "13,700.00" },
-            { date: "19-09-2025", invoiceNo: "0105/25-26", company: "Packora Automation Systems", description: "Chain Type Orientation Assembly With Slide-RH", quantity: "1", rate: "13,700.00" },
-            { date: "19-09-2025", invoiceNo: "0105/25-26", company: "Packora Automation Systems", description: "Aluminium Extention Block: 130L x 91W x 35T", quantity: "4", rate: "1,100.00" },
-            { date: "11-09-2025", invoiceNo: "WAL-0146/25-26", company: "Ingenium Electronics Pvt Ltd", description: "2 Axis Allen Bradley PLC With Delta Servo & WL HMI", quantity: "1", rate: "1,17,000.00" },
-            { date: "25-08-2025", invoiceNo: "1125... (QR Code)", company: "Leuze Electronic Pvt. Ltd.", description: "TKS 40X60", quantity: "5", rate: "160" },
-            { date: "25-08-2025", invoiceNo: "1125... (QR Code)", company: "Leuze Electronic Pvt. Ltd.", description: "KD U-M8-4A-V1-020", quantity: "25", rate: "250" },
-            { date: "Not Listed", invoiceNo: "DN/00263/25-26", company: "De & Nephew", description: "60 L X 60 OD X 10 ID ORANGE ROLLER", quantity: "2", rate: "575" },
-            { date: "Not Listed", invoiceNo: "DN/00263/25-26", company: "De & Nephew", description: "100 L X 140 OD X 16 ID FS ROLLER", quantity: "2", rate: "1,820.00" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Allen Cap Bolt: M6 x 20", quantity: "400", rate: "2.7" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Allen Cap Bolt: M6 x 70", quantity: "125", rate: "7" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Allen Cap Bolt: M6 x 80", quantity: "100", rate: "9" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Allen Cap Bolt: M8 x 25", quantity: "175", rate: "5.52" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Allen Cap Bolt: M10 x 50", quantity: "60", rate: "14.3" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Allen Cap Bolt: M10 x 100", quantity: "30", rate: "27.61" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Plain Washer: M4 x 1.2mm", quantity: "1,000.00", rate: "0.42" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Plain Washer: M5 x 1.2mm", quantity: "1,000.00", rate: "0.6" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Plain Washer: M6 x 1.6mm", quantity: "500", rate: "1.01" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Plain Washer: M6 x 20 x 2mm", quantity: "500", rate: "2.73" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Plain Washer: M8 x 1.2mm", quantity: "500", rate: "1.1" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Spring Washer Suare: M8", quantity: "500", rate: "0.95" },
-            { date: "07-01-2026", invoiceNo: "0116/25-26", company: "Packora Automation Systems", description: "SS 304 Hex Nut: 5/16\"", quantity: "100", rate: "1.91" },
-            { date: "09-Oct-25", invoiceNo: "DE/25-26/449", company: "Dorin Enterprises", description: "Labeler Base Plate LH Stepper", quantity: "7", rate: "4,500.00" },
-            { date: "09-Oct-25", invoiceNo: "DE/25-26/449", company: "Dorin Enterprises", description: "Labeler Base Plate RH Stepper", quantity: "7", rate: "4,500.00" },
-            { date: "09-Oct-25", invoiceNo: "DE/25-26/449", company: "Dorin Enterprises", description: "Overhead Assembly 1028 Long", quantity: "1", rate: "13,800.00" },
-            { date: "09-Oct-25", invoiceNo: "DE/25-26/449", company: "Dorin Enterprises", description: "Overhead Slide 80 x 80", quantity: "3", rate: "9,000.00" },
-            { date: "09-Oct-25", invoiceNo: "DE/25-26/449", company: "Dorin Enterprises", description: "Overhead Assembly 731 x 0.25", quantity: "2", rate: "11,000.00" },
-            { date: "09-Oct-25", invoiceNo: "DE/25-26/449", company: "Dorin Enterprises", description: "Overhead Spring", quantity: "24", rate: "24" },
-            { date: "09-Oct-25", invoiceNo: "DE/25-26/449", company: "Dorin Enterprises", description: "A-1180-OHS-013-00 Extended Block", quantity: "1", rate: "2,250.00" },
-            { date: "05-Aug-25", invoiceNo: "56", company: "Shree Engineering", description: "3-Point Pressing Assembly", quantity: "2", rate: "10,500.00" },
-            { date: "05-Aug-25", invoiceNo: "56", company: "Shree Engineering", description: "3-Point Wraparound Driving Assembly", quantity: "2", rate: "9,500.00" },
-            { date: "11-Aug-25", invoiceNo: "IEPL/FY25-26/267", company: "Ingenium Electronics", description: "WL 2A AB PLC WL-HMI Control System", quantity: "1", rate: "88,000.00" },
-            { date: "01-Aug-25", invoiceNo: "MSB/252608009345", company: "Mangal Singh Brothers", description: "Timing Pulley - 42 Teeth", quantity: "20", rate: "689" },
-            { date: "13-Oct-25", invoiceNo: "6735/25-26", company: "Merritt Transmissions", description: "SS Chain 3/4\" Width", quantity: "12.19", rate: "1,265.00" },
-            { date: "13-Oct-25", invoiceNo: "6735/25-26", company: "Merritt Transmissions", description: "SS Chain 7.5\" Width", quantity: "30.48", rate: "3,150.00" },
-            { date: "16-Sep-25", invoiceNo: "DN/00275/25-26", company: "Nephew (Shubhlaxmi)", description: "367 L x 100 x 13 MM T Belt", quantity: "2", rate: "4,750.00" },
-            { date: "16-Sep-25", invoiceNo: "DN/00275/25-26", company: "Nephew (Shubhlaxmi)", description: "2420 L x 60 x 10 MM T Belt", quantity: "2", rate: "3,080.00" },
-            { date: "16-Sep-25", invoiceNo: "DN/00275/25-26", company: "Nephew (Shubhlaxmi)", description: "3420 L x 60/50 x 8 MM T Red", quantity: "1", rate: "4,100.00" },
-            { date: "16-Sep-25", invoiceNo: "DN/00275/25-26", company: "Nephew (Shubhlaxmi)", description: "367 L x 180 x 20 MM Orange Belt", quantity: "2", rate: "10,500.00" },
-            { date: "10-Jan-26", invoiceNo: "0103/25-26", company: "Packora Automation", description: "Spacer Assembly Slide LH & RH", quantity: "12", rate: "(Unstated)" },
-            { date: "10-Jan-26", invoiceNo: "0103/25-26", company: "Packora Automation", description: "Wraparound Assembly Timing Pulley", quantity: "1", rate: "(Unstated)" },
-            { date: "10-Jan-26", invoiceNo: "0103/25-26", company: "Packora Automation", description: "Wraparound Assembly Drive Motor Shaft", quantity: "2", rate: "(Unstated)" },
-            { date: "10-Jan-26", invoiceNo: "0103/25-26", company: "Packora Automation", description: "Aluminium Block 160L x 60W x 20T", quantity: "1", rate: "(Unstated)" },
-            { date: "27-08-2025", invoiceNo: "079/25-26", company: "Packora Automation Systems", description: "Aluminium 3-Point Idler Roller 32 H x 45 OD", quantity: "4", rate: "350" },
-            { date: "27-08-2025", invoiceNo: "079/25-26", company: "Packora Automation Systems", description: "Aluminium 3-Point Idler Roller 50 H x 45 OD", quantity: "4", rate: "380" },
-            { date: "27-08-2025", invoiceNo: "079/25-26", company: "Packora Automation Systems", description: "Aluminium 3-Point Idler Roller 90 H x 45 OD", quantity: "4", rate: "540" },
-            { date: "27-08-2025", invoiceNo: "079/25-26", company: "Packora Automation Systems", description: "Aluminium 3-Point Idler Roller 120 H x 45 OD", quantity: "4", rate: "580" },
-            { date: "27-08-2025", invoiceNo: "079/25-26", company: "Packora Automation Systems", description: "Aluminium 3-Point Idler Roller 150 H x 45 OD", quantity: "2", rate: "730" },
-            { date: "27-08-2025", invoiceNo: "079/25-26", company: "Packora Automation Systems", description: "Aluminium 3-Point Drive Roller 32 H x 80 OD", quantity: "2", rate: "720" },
-            { date: "27-08-2025", invoiceNo: "079/25-26", company: "Packora Automation Systems", description: "Aluminium 3-Point Drive Roller 50 H x 80 OD", quantity: "2", rate: "890" },
-            { date: "27-08-2025", invoiceNo: "079/25-26", company: "Packora Automation Systems", description: "Aluminium 3-Point Drive Roller 90 H x 80 OD", quantity: "2", rate: "1,490.00" },
-            { date: "27-08-2025", invoiceNo: "079/25-26", company: "Packora Automation Systems", description: "Aluminium 3-Point Drive Roller 120 H x 80 OD", quantity: "2", rate: "1,880.00" }
-        ];
-        
-        // Get unique companies for the filter dropdown
-        function getUniqueCompanies() {
-            const companies = [...new Set(invoiceData.map(item => item.company))];
-            companies.sort();
-            return companies;
-        }
-        
-        // Populate company filter dropdown
-        function populateCompanyFilter() {
-            const companyFilter = document.getElementById('companyFilter');
-            const companies = getUniqueCompanies();
-            
-            companies.forEach(company => {
-                const option = document.createElement('option');
-                option.value = company;
-                option.textContent = company;
-                companyFilter.appendChild(option);
+        // Use the RAW link for Github CSVs
+        const CSV_URL = 'https://raw.githubusercontent.com/bimal-bp/Work_plan/main/spare%20parta%20list-111.csv';
+        let fullData = [];
+
+        async function fetchData() {
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    fullData = results.data;
+                    populateFilters(fullData);
+                    renderTable(fullData);
+                }
             });
         }
-        
-        // Render invoice data to the table
-        function renderInvoiceData(data) {
-            const tableBody = document.getElementById('invoiceTableBody');
-            tableBody.innerHTML = '';
-            
-            if (data.length === 0) {
-                document.getElementById('noDataMessage').style.display = 'block';
-                return;
-            }
-            
-            document.getElementById('noDataMessage').style.display = 'none';
-            
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${item.date}</td>
-                    <td class="invoice-no">${item.invoiceNo}</td>
-                    <td class="company-name">${item.company}</td>
-                    <td>${item.description}</td>
-                    <td class="quantity">${item.quantity}</td>
-                    <td class="rate">${item.rate}</td>
-                `;
-                
-                tableBody.appendChild(row);
+
+        function populateFilters(data) {
+            const companies = [...new Set(data.map(item => item.Company).filter(Boolean))];
+            const months = [...new Set(data.map(item => item.Month).filter(Boolean))];
+
+            const compSelect = document.getElementById('companyFilter');
+            const monthSelect = document.getElementById('monthFilter');
+
+            companies.forEach(c => compSelect.innerHTML += `<option value="${c}">${c}</option>`);
+            months.forEach(m => monthSelect.innerHTML += `<option value="${m}">${m}</option>`);
+        }
+
+        function renderTable(data) {
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+            const dupHeader = document.getElementById('dupHeader');
+            const dupBody = document.getElementById('dupBody');
+
+            // Reset
+            tableHeader.innerHTML = ''; tableBody.innerHTML = '';
+            dupHeader.innerHTML = ''; dupBody.innerHTML = '';
+
+            if (data.length === 0) return;
+
+            const headers = Object.keys(data[0]);
+            const headerRow = `<tr>${headers.map(h => `<th class="p-4">${h}</th>`).join('')}</tr>`;
+            tableHeader.innerHTML = headerRow;
+            dupHeader.innerHTML = headerRow;
+
+            // Duplicate Detection Logic (e.g., checking if Part Name + Company + Month already exists)
+            const seen = new Set();
+            const duplicates = [];
+            const uniqueEntries = [];
+
+            data.forEach(row => {
+                // Define what makes a row a "duplicate" (here we use Part name + Company)
+                const key = `${row['Part Name']}-${row['Company']}-${row['Month']}`;
+                if (seen.has(key)) {
+                    duplicates.push(row);
+                } else {
+                    seen.add(key);
+                    uniqueEntries.push(row);
+                }
             });
-            
-            // Update summary
-            const uniqueCompanies = [...new Set(data.map(item => item.company))];
-            document.getElementById('rowCount').textContent = data.length;
-            document.getElementById('companyCount').textContent = uniqueCompanies.length;
+
+            // Fill Main Table
+            uniqueEntries.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = headers.map(h => `<td class="p-4 border-t">${row[h] || ''}</td>`).join('');
+                tableBody.appendChild(tr);
+            });
+
+            // Fill Duplicate Table
+            duplicates.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = headers.map(h => `<td class="p-4 border-t">${row[h] || ''}</td>`).join('');
+                dupBody.appendChild(tr);
+            });
         }
-        
-        // Filter data based on selected filters
-        function filterData() {
-            const companyFilter = document.getElementById('companyFilter').value;
-            const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
-            const dateFilter = document.getElementById('dateFilter').value;
-            
-            let filteredData = invoiceData;
-            
-            // Filter by company
-            if (companyFilter !== 'all') {
-                filteredData = filteredData.filter(item => item.company === companyFilter);
-            }
-            
-            // Filter by search term in description
-            if (searchFilter) {
-                filteredData = filteredData.filter(item => 
-                    item.description.toLowerCase().includes(searchFilter)
-                );
-            }
-            
-            // Filter by date
-            if (dateFilter !== 'all') {
-                filteredData = filteredData.filter(item => {
-                    // Handle different date formats
-                    if (item.date === 'N/A' || item.date === 'Not Listed' || item.date === 'Not Visible') {
-                        return false;
-                    }
-                    
-                    const itemDate = new Date(item.date);
-                    if (isNaN(itemDate.getTime())) {
-                        // Try alternative date formats
-                        const altDate = new Date(item.date.replace(/-/g, '/'));
-                        if (isNaN(altDate.getTime())) {
-                            return false;
-                        }
-                        return altDate.toISOString().substring(0, 7) === dateFilter;
-                    }
-                    
-                    return itemDate.toISOString().substring(0, 7) === dateFilter;
-                });
-            }
-            
-            renderInvoiceData(filteredData);
+
+        function applyFilters() {
+            const comp = document.getElementById('companyFilter').value;
+            const month = document.getElementById('monthFilter').value;
+
+            const filtered = fullData.filter(item => {
+                const matchComp = (comp === 'all' || item.Company === comp);
+                const matchMonth = (month === 'all' || item.Month === month);
+                return matchComp && matchMonth;
+            });
+
+            renderTable(filtered);
         }
-        
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            populateCompanyFilter();
-            renderInvoiceData(invoiceData);
-            
-            // Add event listeners to filters
-            document.getElementById('companyFilter').addEventListener('change', filterData);
-            document.getElementById('searchFilter').addEventListener('input', filterData);
-            document.getElementById('dateFilter').addEventListener('change', filterData);
-        });
+
+        fetchData();
     </script>
 </body>
 </html>
