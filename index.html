@@ -3,75 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete Spare Parts List - All 597 Rows</title>
+    <title>Invoice Data</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
             background-color: #f5f7fa;
+            color: #333;
             padding: 20px;
+            line-height: 1.6;
         }
         
         .container {
-            max-width: 100%;
+            max-width: 1400px;
             margin: 0 auto;
-            overflow-x: auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
         }
         
         header {
             background: linear-gradient(135deg, #2c3e50, #4a6491);
             color: white;
-            padding: 25px 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px 30px;
+            text-align: center;
         }
         
         h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+            font-size: 28px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        h1 i {
+            font-size: 32px;
         }
         
         .subtitle {
-            font-size: 1.1rem;
+            font-size: 16px;
             opacity: 0.9;
-            margin-bottom: 5px;
+            margin-bottom: 15px;
         }
         
         .stats {
             display: flex;
-            gap: 20px;
-            margin-top: 15px;
+            justify-content: center;
             flex-wrap: wrap;
+            gap: 25px;
+            margin-top: 20px;
         }
         
-        .stat-item {
+        .stat-box {
             background-color: rgba(255, 255, 255, 0.15);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            padding: 15px 25px;
+            border-radius: 10px;
+            min-width: 160px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            padding: 20px 30px;
+            background-color: #f9fafc;
+            border-bottom: 1px solid #eaeef2;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid #d1d9e6;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #4a6491;
+            box-shadow: 0 0 0 3px rgba(74, 100, 145, 0.1);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7a8ca5;
+        }
+        
+        .filter-select {
+            padding: 12px 15px;
+            border: 1px solid #d1d9e6;
+            border-radius: 8px;
+            font-size: 15px;
+            background-color: white;
+            color: #333;
+            min-width: 180px;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #4a6491;
+        }
+        
+        .reset-btn {
+            padding: 12px 20px;
+            background-color: #4a6491;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .reset-btn:hover {
+            background-color: #3a547e;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            padding: 0 10px 20px;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px;
+            margin-top: 10px;
         }
         
         thead {
-            background-color: #3498db;
-            color: white;
+            background-color: #f0f4f9;
             position: sticky;
             top: 0;
             z-index: 10;
@@ -81,140 +177,106 @@
             padding: 16px 12px;
             text-align: left;
             font-weight: 600;
-            font-size: 0.95rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            color: #2c3e50;
+            border-bottom: 2px solid #d1d9e6;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
         }
         
-        th:last-child {
-            border-right: none;
+        th:hover {
+            background-color: #e4eaf3;
         }
         
-        tbody tr {
-            border-bottom: 1px solid #e1e5eb;
-            transition: background-color 0.2s;
-        }
-        
-        tbody tr:nth-child(even) {
-            background-color: #f9fafc;
-        }
-        
-        tbody tr:hover {
-            background-color: #e8f4fc;
+        th i {
+            margin-left: 8px;
+            color: #7a8ca5;
+            font-size: 12px;
         }
         
         td {
             padding: 14px 12px;
-            font-size: 0.9rem;
-            border-right: 1px solid #e1e5eb;
+            border-bottom: 1px solid #eaeef2;
             vertical-align: top;
         }
         
-        td:last-child {
-            border-right: none;
+        tbody tr:hover {
+            background-color: #f9fafc;
+        }
+        
+        .invoice-number {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .company-name {
+            font-weight: 500;
+            color: #4a6491;
         }
         
         .price {
+            font-weight: 600;
+            color: #27ae60;
             text-align: right;
-            font-weight: 500;
         }
         
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .search-box {
-            flex-grow: 1;
-            max-width: 400px;
-        }
-        
-        input[type="text"] {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-        
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
-        
-        .pagination {
-            display: flex;
-            gap: 5px;
-            margin-top: 20px;
-            justify-content: center;
-        }
-        
-        .page-btn {
-            padding: 8px 14px;
-            background-color: #ecf0f1;
-            border: 1px solid #bdc3c7;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .page-btn:hover {
-            background-color: #d5dbdb;
-        }
-        
-        .page-btn.active {
-            background-color: #3498db;
-            color: white;
-            border-color: #2980b9;
-        }
-        
-        .row-counter {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            margin-top: 10px;
+        .quantity {
             text-align: center;
+        }
+        
+        .date {
+            white-space: nowrap;
+        }
+        
+        .no-results {
+            padding: 40px 20px;
+            text-align: center;
+            color: #7a8ca5;
+            font-size: 16px;
+            display: none;
+        }
+        
+        .no-results i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #d1d9e6;
         }
         
         footer {
+            padding: 20px 30px;
             text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-        
-        .highlight {
-            background-color: #fffacd;
-            font-weight: 600;
+            color: #7a8ca5;
+            font-size: 14px;
+            border-top: 1px solid #eaeef2;
+            background-color: #f9fafc;
         }
         
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            th, td {
-                padding: 10px 8px;
-                font-size: 0.85rem;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
-            
             .controls {
                 flex-direction: column;
                 align-items: stretch;
             }
             
-            .search-box {
-                max-width: 100%;
+            .search-box, .filter-select, .reset-btn {
+                width: 100%;
+            }
+            
+            .stats {
+                gap: 10px;
+            }
+            
+            .stat-box {
+                min-width: 120px;
+                padding: 12px 15px;
+            }
+            
+            .stat-value {
+                font-size: 22px;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+                font-size: 14px;
             }
         }
     </style>
@@ -222,507 +284,786 @@
 <body>
     <div class="container">
         <header>
-            <h1>Spare Parts Inventory</h1>
-            <p class="subtitle">Complete list of 597 spare parts with invoice details</p>
+            <h1><i class="fas fa-file-invoice-dollar"></i> Invoice Data Management</h1>
+            <p class="subtitle">Detailed view of all spare parts invoices with sorting and filtering capabilities</p>
+            
             <div class="stats">
-                <div class="stat-item">Total Rows: 597</div>
-                <div class="stat-item">File: spare parta list-111.csv</div>
-                <div class="stat-item">Last Updated: 02d81a6</div>
+                <div class="stat-box">
+                    <div class="stat-value" id="total-invoices">0</div>
+                    <div class="stat-label">Total Invoices</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="total-items">0</div>
+                    <div class="stat-label">Items Purchased</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="total-value">₹0</div>
+                    <div class="stat-label">Total Value</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="unique-companies">0</div>
+                    <div class="stat-label">Vendors</div>
+                </div>
             </div>
         </header>
         
         <div class="controls">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search in all columns...">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search by item, company, invoice number...">
             </div>
-            <div>
-                <label for="rowsPerPage">Rows per page:</label>
-                <select id="rowsPerPage">
-                    <option value="50">50</option>
-                    <option value="100" selected>100</option>
-                    <option value="200">200</option>
-                    <option value="597">All</option>
-                </select>
-            </div>
+            
+            <select class="filter-select" id="company-filter">
+                <option value="">All Companies</option>
+            </select>
+            
+            <select class="filter-select" id="date-filter">
+                <option value="">All Dates</option>
+            </select>
+            
+            <button class="reset-btn" id="reset-filters">
+                <i class="fas fa-redo"></i> Reset Filters
+            </button>
         </div>
         
-        <table id="partsTable">
-            <thead>
-                <tr>
-                    <th>Invoice Date</th>
-                    <th>Invoice Number</th>
-                    <th>Company Name (Seller)</th>
-                    <th>Spare Part Name</th>
-                    <th>Qty</th>
-                    <th>Price per Unit</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- All 597 rows will be inserted here by JavaScript -->
-            </tbody>
-        </table>
-        
-        <div class="pagination" id="pagination">
-            <!-- Pagination buttons will be generated here -->
-        </div>
-        
-        <div class="row-counter">
-            Showing <span id="currentRange">1-100</span> of <span id="totalRows">597</span> rows
+        <div class="table-container">
+            <table id="invoice-table">
+                <thead>
+                    <tr>
+                        <th data-sort="date">Invoice Date <i class="fas fa-sort"></i></th>
+                        <th data-sort="invoice">Invoice Number <i class="fas fa-sort"></i></th>
+                        <th data-sort="company">Company Name <i class="fas fa-sort"></i></th>
+                        <th data-sort="item">Spare Part Name <i class="fas fa-sort"></i></th>
+                        <th data-sort="quantity">Qty <i class="fas fa-sort"></i></th>
+                        <th data-sort="price">Price per Unit <i class="fas fa-sort"></i></th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Table rows will be generated by JavaScript -->
+                </tbody>
+            </table>
+            
+            <div class="no-results" id="no-results">
+                <i class="fas fa-search"></i>
+                <h3>No matching invoices found</h3>
+                <p>Try adjusting your search or filter to find what you're looking for.</p>
+            </div>
         </div>
         
         <footer>
-            <p>Spare Parts List extracted from spare parta list-111.csv | Total: 597 rows</p>
-            <p>Data provided by bimal-bp | Work_plan repository</p>
+            <p>Invoice Data Table • Last updated: October 2025 • Total records: <span id="record-count">0</span> items</p>
         </footer>
     </div>
 
     <script>
-        // All 597 rows of data
-        const allPartsData = [
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "Labeling Controller with Step Motor", "1", "32,000.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "VFD Communication Cable with 2 Pin MX", "1", "250"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "HANDWHEEL", "15", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BRASS BUSH", "20", "90"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "PILLER PLATE SS 304 200 X125 X3 MM", "2", "850"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X125X10", "5", "1,250.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X150 X10", "1", "1,450.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "NYLON REEL CORE", "3", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REWINDER ROLLER", "3", "950"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SS 304 ROD 10 X180", "6", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SENSOR MOUNTING BRACKET", "3", "675"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "GUIDE RING 52 X38", "6", "165"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REEL SUPPORT", "6", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "LABLE ROLLER", "3", "950"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 70 OD AL. SPONGE ROLLER", "4", "1,365.00"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 100 OD AL. SPONGE ROLLER", "2", "1,950.00"],
-            ["", "", "DE & NEPHEW", "20 L X 25 X 10 MM T BELT", "1", "1,200.00"],
-            ["06-Aug-25", "DN/00198/25-26", "DE & NEPHEW", "1028 L X 25 X 13 MM T ORANGE BELT", "1 NOS", "4,540.00"],
-            ["20-Aug-25", "DN/00230/25-26", "DE & NEPHEW", "100 L X 100 OD X 10 ID FOAM ROLLER", "4 NOS", "800"],
-            ["20-Aug-25", "DN/00230/25-26", "DE & NEPHEW", "150 L X 100 OD X 10 ID FOAM ROLLER", "5 NOS", "1,200.00"],
-            ["20-Aug-25", "DN/00230/25-26", "DE & NEPHEW", "200 L X 100 OD X 10 ID FOAM ROLLER", "5 NOS", "1,500.00"],
-            ["21-Aug-25", "DN/00233/25-26", "DE & NEPHEW", "1420 L X 125 X 10 MM T BELT", "1 NOS", "7,150.00"],
-            ["21-Aug-25", "DN/00233/25-26", "DE & NEPHEW", "1731 L X 25 X 13 MM T ORANGE BELT", "5 NOS", "2,500.00"],
-            ["29-Aug-25", "DN/00246/25-26", "DE & NEPHEW", "467 X 180 X 50 MM FOAM SPONGE RUBBER SHEET", "1 NOS", "1,000.00"],
-            ["29-Aug-25", "DN/00246/25-26", "DE & NEPHEW", "420 X 100 X 25 MM FOAM BACK PLATE", "1 NOS", "950"],
-            ["14-07-2025", "84", "P. P. ENTERPRISES", "FRONT SUPPORT PLATE", "1", "375"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "Labeling Controller with Step Motor", "1.00 Nos", "32,000.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "VFD Communication Cable with 2 Pin MX", "1.00 Nos", "250"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "HANDWEEL", "15", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BRASS BUSH", "20", "90"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "PILLER PLATE SS 304 200 X125 X3 MM", "2", "850"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X125X10", "5", "1,250.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X150 X10", "1", "1,450.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "NYLON REEL CORE", "3", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REWINDER ROLLER", "3", "950"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SS 304 ROD 10 X180", "6", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SENSOR MOUNTING BRACKET", "3", "675"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "GUIDE RING 52 X38", "6", "165"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REEL SUPPORT", "6", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "LABLE ROLLER", "3", "950"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 70 OD AL. SPONGE ROLLER", "4 NOS", "1,365.00"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 100 OD AL. SPONGE ROLLER", "2 NOS", "1,950.00"],
-            ["", "", "DE & NEPHEW", "20 L X 25 X 10 MM T BELT", "1 NOS", "1,200.00"],
-            ["20-Aug-25", "DN/00230/25-26", "DE & NEPHEW", "100 L X 100 OD X 10 ID FOAM ROLLER", "4 NOS", "800"],
-            ["20-Aug-25", "DN/00230/25-26", "DE & NEPHEW", "150 L X 100 OD X 10 ID FOAM ROLLER", "5 NOS", "1,200.00"],
-            ["20-Aug-25", "DN/00230/25-26", "DE & NEPHEW", "200 L X 100 OD X 10 ID FOAM ROLLER", "5 NOS", "1,500.00"],
-            ["14-07-2025", "84", "P. P. ENTERPRISES", "FRONT SUPPORT PLATE", "1", "375"],
-            ["29-Aug-25", "DN/00246/25-26", "DE & NEPHEW", "467 X 180 X 50 MM FOAM SPONGE RUBBER SHEET", "1 NOS", "1,000.00"],
-            ["29-Aug-25", "DN/00246/25-26", "DE & NEPHEW", "420 X 100 X 25 MM FOAM BACK PLATE", "1 NOS", "950"],
-            ["21-Aug-25", "DN/00233/25-26", "DE & NEPHEW", "1420 L X 125 X 10 MM T BELT", "1 NOS", "7,150.00"],
-            ["21-Aug-25", "DN/00233/25-26", "DE & NEPHEW", "1731 L X 25 X 13 MM T ORANGE BELT", "5 NOS", "2,500.00"],
-            ["06-Aug-25", "DN/00198/25-26", "DE & NEPHEW", "1028 L X 25 X 13 MM T ORANGE BELT", "1 NOS", "4,540.00"],
-            ["23.09.2025", "142/25-26", "MAK POLYMER COMPANY", "60 MM X 115 MM Roller", "6", "450"],
-            ["23.09.2025", "142/25-26", "MAK POLYMER COMPANY", "60 MM X 215 MM Roller", "20", "700"],
-            ["23.09.2025", "142/25-26", "MAK POLYMER COMPANY", "60 MM X 165 MM Roller", "20", "600"],
-            ["23.09.2025", "142/25-26", "MAK POLYMER COMPANY", "60 MM X 115 MM Roller", "1", "450"],
-            ["23.09.2025", "142/25-26", "MAK POLYMER COMPANY", "70 MM X 110 MM (Soft) Roller", "2", "450"],
-            ["23.09.2025", "142/25-26", "MAK POLYMER COMPANY", "70 MM X 50 MM (Soft) Roller", "2", "350"],
-            ["", "102/25-26", "PACKORA AUTOMATION SYSTEMS", "Belt Type Spacer Assembly With Slide-LH", "3.00 NOS", "0"],
-            ["", "102/25-26", "PACKORA AUTOMATION SYSTEMS", "Belt Type Spacer Assembly With Slide-RH", "3.00 NOS", "0"],
-            ["", "102/25-26", "PACKORA AUTOMATION SYSTEMS", "Chain Type Orientation Assembly With Slide-LH", "3.00 NOS", "0"],
-            ["", "102/25-26", "PACKORA AUTOMATION SYSTEMS", "Chain Type Orientation Assembly With Slide-RH", "3.00 NOS", "0"],
-            ["", "102/25-26", "PACKORA AUTOMATION SYSTEMS", "Transfer Unit Mounting Vertical & Horizontal Slide", "1.00 NOS", ""],
-            ["", "DE/25-26/453", "DORIN ENTERPRISES", "Core for Rubber Roller (OD32 x 100mm)", "4 Nos.", ""],
-            ["", "DE/25-26/453", "DORIN ENTERPRISES", "Core for Rubber Roller (Assorted)", "17 Nos.", ""],
-            ["", "DE/25-26/453", "DORIN ENTERPRISES", "Web Support Guide", "2 Nos.", ""],
-            ["", "DE/25-26/453", "DORIN ENTERPRISES", "WP-A000-SETION FRAME-02", "4 Nos.", ""],
-            ["08-Sep-25", "25-26/1784", "Bindal Belting Pvt. Ltd.", "15 T21 R35 Sprocket 5080310", "1", "1,000.00"],
-            ["23-Sep-25", "DN/00286/25-26", "DE & NEPHEW", "120 L X 100 OD X 10 ID FOAM ROLLER", "1 PCS", "1,320.00"],
-            ["23-Sep-25", "DN/00286/25-26", "DE & NEPHEW", "130 L X 100 OD X 10 ID FOAM ROLLER", "1 PCS", "330"],
-            ["23-Sep-25", "DN/00286/25-26", "DE & NEPHEW", "150 L X 120 OD X 16 ID FOAM ROLLER", "4 PCS", "1,800.00"],
-            ["06-Aug-25", "DN/00198/25-26", "DE & NEPHEW", "1028 L X 25 X 13 MM T ORANGE BELT", "1 NOS", "4,540.00"],
-            ["20-Aug-25", "DN/00230/25-26", "DE & NEPHEW", "100 L X 100 OD X 10 ID FOAM ROLLER", "4 NOS", "800"],
-            ["20-Aug-25", "DN/00230/25-26", "DE & NEPHEW", "150 L X 100 OD X 10 ID FOAM ROLLER", "5 NOS", "1,200.00"],
-            ["20-Aug-25", "DN/00230/25-26", "DE & NEPHEW", "200 L X 100 OD X 10 ID FOAM ROLLER", "5 NOS", "1,500.00"],
-            ["21-Aug-25", "DN/00233/25-26", "DE & NEPHEW", "1420 L X 125 X 10 MM T BELT", "1 NOS", "7,150.00"],
-            ["21-Aug-25", "DN/00233/25-26", "DE & NEPHEW", "1731 L X 25 X 13 MM T ORANGE BELT", "5 NOS", "2,500.00"],
-            ["29-Aug-25", "DN/00246/25-26", "DE & NEPHEW", "467 X 180 X 50 MM FOAM SPONGE RUBBER SHEET", "1 NOS", "1,000.00"],
-            ["29-Aug-25", "DN/00246/25-26", "DE & NEPHEW", "420 X 100 X 25 MM FOAM BACK PLATE", "1 NOS", "950"],
-            ["14-07-2025", "84", "P. P. ENTERPRISES", "FRONT SUPPORT PLATE", "1", "375"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "Labeling Controller with Step Motor", "1.00 Nos", "32,000.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "VFD Communication Cable with 2 Pin MX", "1.00 Nos", "250"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "HANDWEEL", "15", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BRASS BUSH", "20", "90"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "PILLER PLATE SS 304 200 X125 X3 MM", "2", "850"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X125X10", "5", "1,250.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X150 X10", "1", "1,450.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "NYLON REEL CORE", "3", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REWINDER ROLLER", "3", "950"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SS 304 ROD 10 X180", "6", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SENSOR MOUNTING BRACKET", "3", "675"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "GUIDE RING 52 X38", "6", "165"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REEL SUPPORT", "6", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "LABLE ROLLER", "3", "950"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 70 OD AL. SPONGE ROLLER", "4 NOS", "1,365.00"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 100 OD AL. SPONGE ROLLER", "2 NOS", "1,950.00"],
-            ["", "", "DE & NEPHEW", "20 L X 25 X 10 MM T BELT", "1 NOS", "1,200.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "Labeling Controller with Step Motor", "1.00 Nos", "32,000.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "VFD Communication Cable with 2 Pin MX", "1.00 Nos", "250"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "HANDWEEL", "15", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BRASS BUSH", "20", "90"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "PILLER PLATE SS 304 200 X125 X3 MM", "2", "850"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X125X10", "5", "1,250.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X150 X10", "1", "1,450.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "NYLON REEL CORE", "3", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REWINDER ROLLER", "3", "950"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SS 304 ROD 10 X180", "6", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SENSOR MOUNTING BRACKET", "3", "675"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "GUIDE RING 52 X38", "6", "165"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REEL SUPPORT", "6", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "LABLE ROLLER", "3", "950"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 70 OD AL. SPONGE ROLLER", "4 NOS", "1,365.00"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 100 OD AL. SPONGE ROLLER", "2 NOS", "1,950.00"],
-            ["", "", "DE & NEPHEW", "20 L X 25 X 10 MM T BELT", "1 NOS", "1,200.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "Labeling Controller with Step Motor", "1.00 Nos?", "32,000.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "VFD Communication Cable with 2 Pin MX", "1.00 Nos?", "250.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "HANDWEEL", "15?", "160.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BRASS BUSH", "20?", "90.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "PILLER PLATE SS 304 200 X125 X3 MM", "2?", "850.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X125X10", "5?", "1,250.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X150 X10", "1?", "1,450.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "NYLON REEL CORE", "3?", "450.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REWINDER ROLLER", "3?", "950.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SS 304 ROD 10 X180", "6?", "160.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SENSOR MOUNTING BRACKET", "3?", "675.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "GUIDE RING 52 X38", "6?", "165.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REEL SUPPORT", "6?", "450.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "LABLE ROLLER", "3?", "950.00"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 70 OD AL. SPONGE ROLLER", "4 NOS?", "1,365.00"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 100 OD AL. SPONGE ROLLER", "2 NOS?", "1,950.00"],
-            ["", "", "DE & NEPHEW", "20 L X 25 X 10 MM T BELT", "1 NOS?", "1,200.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "Labeling Controller with Step Motor", "1.00 Nos", "32,000.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "VFD Communication Cable with 2 Pin MX", "1.00 Nos", "250"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "HANDWEEL", "15", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BRASS BUSH", "20", "90"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "PILLER PLATE SS 304 200 X125 X3 MM", "2", "850"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X125X10", "5", "1,250.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X150 X10", "1", "1,450.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "NYLON REEL CORE", "3", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REWINDER ROLLER", "3", "950"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SS 304 ROD 10 X180", "6", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SENSOR MOUNTING BRACKET", "3", "675"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "GUIDE RING 52 X38", "6", "165"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REEL SUPPORT", "6", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "LABLE ROLLER", "3", "950"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 70 OD AL. SPONGE ROLLER", "4 NOS", "1,365.00"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 100 OD AL. SPONGE ROLLER", "2 NOS", "1,950.00"],
-            ["", "", "DE & NEPHEW", "20 L X 25 X 10 MM T BELT", "1 NOS", "1,200.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "Labeling Controller with Step Motor", "1.00 Nos", "32,000.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "VFD Communication Cable with 2 Pin MX", "1.00 Nos", "250"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "HANDWEEL", "15", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BRASS BUSH", "20", "90"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "PILLER PLATE SS 304 200 X125 X3 MM", "2", "850"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X125X10", "5", "1,250.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X150 X10", "1", "1,450.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "NYLON REEL CORE", "3", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REWINDER ROLLER", "3", "950"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SS 304 ROD 10 X180", "6", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SENSOR MOUNTING BRACKET", "3", "675"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "GUIDE RING 52 X38", "6", "165"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REEL SUPPORT", "6", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "LABLE ROLLER", "3", "950"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 70 OD AL. SPONGE ROLLER", "4 NOS", "1,365.00"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 100 OD AL. SPONGE ROLLER", "2 NOS", "1,950.00"],
-            ["", "", "DE & NEPHEW", "20 L X 25 X 10 MM T BELT", "1 NOS", "1,200.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "Labeling Controller with Step Motor", "1.00 Nos", "32,000.00"],
-            ["09-07-2025", "IEPL/FY25-26/198", "Ingenium Electronics Pvt. Ltd.", "VFD Communication Cable with 2 Pin MX", "1.00 Nos", "250"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "HANDWEEL", "15", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BRASS BUSH", "20", "90"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "PILLER PLATE SS 304 200 X125 X3 MM", "2", "850"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X125X10", "5", "1,250.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "BACK PLATE 420 X150 X10", "1", "1,450.00"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "NYLON REEL CORE", "3", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REWINDER ROLLER", "3", "950"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SS 304 ROD 10 X180", "6", "160"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "SENSOR MOUNTING BRACKET", "3", "675"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "GUIDE RING 52 X38", "6", "165"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "REEL SUPPORT", "6", "450"],
-            ["01-08-2025", "76", "P. P. ENTERPRISES", "LABLE ROLLER", "3", "950"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 70 OD AL. SPONGE ROLLER", "4 NOS", "1,365.00"],
-            ["09-Jul-25", "DN/00210/25-26", "DE & NEPHEW", "150 L X 100 OD AL. SPONGE ROLLER", "2 NOS", "1,950.00"],
-            ["", "", "DE & NEPHEW", "20 L X 25 X 10 MM T BELT", "1 NOS", "1,200.00"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "SS 304 8 X100 MM STUDE", "20", "65"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "SS 304 8 X150 MM STUDE", "20", "75"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "SS 304 8 X200 MM STUDE", "20", "85"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "SS 304 8 X250 MM STUDE", "8", "95"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "SS 304 SENSOR ROD 12 X250", "20", "160"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "SS 304 SENSOR ROD 12 X350", "9", "170"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "MS C PILLER CLAMP 80 X150", "25", "60"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "MS C PILLER CLAMP", "10", "540"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "HANDWEEL", "8", "160"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "ALU WASHER", "50", "35"],
-            ["27-06-2025", "71", "P P ENTERPRISES", "SPACER", "2", "650"],
-            ["30-09-2025", "0101/25-26", "PACKORA AUTOMATION SYSTEMS", "Wraparound Mounting Vertical & Horizontical (X-Y) Slide", "2", "7,900.00"],
-            ["30-09-2025", "0101/25-26", "PACKORA AUTOMATION SYSTEMS", "2 Point Pressing Assembly - Tristan", "1", "8,640.00"],
-            ["", "0100/25-26", "PACKORA AUTOMATION SYSTEMS", "Belt Type Spacer Assembly With Slide-LH", "2", "10,200.00"],
-            ["", "0100/25-26", "PACKORA AUTOMATION SYSTEMS", "Belt Type Spacer Assembly With Slide-RH", "1", "10,200.00"],
-            ["", "0100/25-26", "PACKORA AUTOMATION SYSTEMS", "Aluminium 3-Point Idler Roller: 50 H x 45 OD", "2", "3800"],
-            ["", "0100/25-26", "PACKORA AUTOMATION SYSTEMS", "Aluminium 3-Point Idler Roller: 110 H x 45 OD", "2", "5500"],
-            ["", "0100/25-26", "PACKORA AUTOMATION SYSTEMS", "Wraparound Bottom Plate-367 - Spares", "1", "1,680.00"],
-            ["19-06-2025", "DE/25-26/193", "[Incomplete Name]", "HOLOGRAM SLIDE", "2", "9,500.00"],
-            ["17-09-2025", "AC/957/25-26", "ANALYTE CONTROLS (2024-26)", "0002EL21W-1-AC (0.25HP / 1PH)", "10", "4,504.00"],
-            ["17-09-2025", "AC/957/25-26", "ANALYTE CONTROLS (2024-26)", "0004EL21W-1-AC (0.5HP / 1PH)", "10", "4,651.00"],
-            ["", "0108/25-26", "PACKORA AUTOMATION SYSTEMS", "SS 304 Sponge Shaft For Splider Mechanism: 12.7 x 1038", "[Empty]", ""],
-            ["", "0108/25-26", "PACKORA AUTOMATION SYSTEMS", "SS 304 Sponge Shaft For Splider Mechanism: 12.7 x 1538", "[Empty]", ""],
-            ["17-09-2025", "MSB/252609012783", "MANGAL SINGH BROTHERS PVT LTD", "TIMING PULLEY - 14MM ID", "3", "3377"],
-            ["17-09-2025", "MSB/252609012783", "MANGAL SINGH BROTHERS PVT LTD", "TIMING PULLEY - 19MM ID", "30", "377"],
-            ["17-09-2025", "MSB/252609012783", "MANGAL SINGH BROTHERS PVT LTD", "TIMING PULLEY - 42 TEETH", "30", "689"],
-            ["", "70", "P P ENTERPRISES", "TIMENING PULLEY", "4", "650"],
-            ["", "70", "P P ENTERPRISES", "BRASS WYSHER 5 MM", "4", "180"],
-            ["", "70", "P P ENTERPRISES", "BRASS WYSHER 2 MM", "4", "150"],
-            ["", "70", "P P ENTERPRISES", "S S SPONGE ROD 16 X175", "2", "325"],
-            ["", "70", "P P ENTERPRISES", "SPONGE ROD 150 MM", "4", "275"],
-            ["", "70", "P P ENTERPRISES", "BEARING 6902 ZZ", "4", "115"],
-            ["", "70", "P P ENTERPRISES", "REWINDER HSG", "2", "550"],
-            ["", "70", "P P ENTERPRISES", "HANWHEEL EXTENTION ROD 25 X165", "2", "425"],
-            ["", "70", "P P ENTERPRISES", "LABELER 200 MM", "2", "16,150.00"],
-            ["", "70", "P P ENTERPRISES", "SPRING FLANGE", "4", "600"],
-            ["", "70", "P P ENTERPRISES", "BLUE ROLLER CORE 200 MM", "2", "375"],
-            ["", "70", "P P ENTERPRISES", "KNURLAL ASSEMBLY200", "2", "450"],
-            ["", "098/25-26", "PACKORA AUTOMATION SYSTEMS", "Salzer Cam Operated Rotary Switch 16A 2 Pole", "10", "[Empty]"],
-            ["", "098/25-26", "PACKORA AUTOMATION SYSTEMS", "Black Pipe Gland-40mm 4 Parts", "40", "[Empty]"],
-            ["", "098/25-26", "PACKORA AUTOMATION SYSTEMS", "Anchor Make 3 Pin Top 16 AMP, 240V ISI", "20", "[Empty]"],
-            ["", "098/25-26", "PACKORA AUTOMATION SYSTEMS", "Elettro Make Junction Box 98mm x 98mm x 61mm", "10", "[Empty]"],
-            ["", "098/25-26", "PACKORA AUTOMATION SYSTEMS", "Elettro Make PVC Fan Finger Guard-4\" ETF G-01", "50", "[Empty]"],
-            ["", "098/25-26", "PACKORA AUTOMATION SYSTEMS", "Elmex Make Connector Gray: KUT 2.5", "500", "[Empty]"],
-            ["", "098/25-26", "PACKORA AUTOMATION SYSTEMS", "Elmex Make End Plate: KPNS", "200", "[Empty]"],
-            ["", "098/25-26", "PACKORA AUTOMATION SYSTEMS", "Elmex Make 10 Way Shorting Link With Stude: CCLM2.5 K", "100", "[Empty]"],
-            ["", "098/25-26", "PACKORA AUTOMATION SYSTEMS", "Siemens Make Maint / Actuator Red (Mashrum): 3SB52030UC01", "10", "[Empty]"],
-            ["", "098/25-26", "PACKORA AUTOMATION SYSTEMS", "Siemens Make 6 Amp 1 Pole, 10 kA MCB: 5SL41067RC", "6", "0"],
-            ["03-10-2025", "6692/25-26", "MERITTS", "S CHAIN 6\" WIDTH, 700100", "18.29", "2,550.00"],
-            ["", "0115/25-26", "PACKORA AUTOMATION SYSTEMS", "Plastic 008 Bracket", "100", "125"],
-            ["", "0115/25-26", "PACKORA AUTOMATION SYSTEMS", "Plastic 008C Guides C To C 50mm", "100", "550"],
-            ["01-Jul-25", "DE/25-26/231", "DORIN ENTERPRISES", "Overhead Assembly : 420L x 25W - .025HP", "1", "8,500.00"],
-            ["01-Jul-25", "DE/25-26/231", "DORIN ENTERPRISES", "OVERHEAD SLIDE 80 x 80", "1", "9,000.00"],
-            ["01-Jul-25", "DE/25-26/231", "DORIN ENTERPRISES", "LABELER SLIDE BOX TYPE(SMALL) LH", "2", "22,500.00"],
-            ["01-Jul-25", "DE/25-26/231", "DORIN ENTERPRISES", "LABELER SLIDE BOX TYPE(SMALL) RH", "2", "22,500.00"],
-            ["08-08-2025", "IEPL/FY25-26/263", "Ingenium Electronics Pvt. Ltd.", "Labeling System Item ID: 5Y5048", "1", "1,55,000.00"],
-            ["03-06-2025", "66", "P P ENTERPRISES", "CONVEYOR TIE ROD 8", "2", "18,100.00"],
-            ["03-06-2025", "66", "P P ENTERPRISES", "LABELER LOOSE PARTS 200MM", "1", "15,500.00"],
-            ["03-06-2025", "66", "P P ENTERPRISES", "SPRING FLANGE", "4", "600"],
-            ["03-06-2025", "66", "P P ENTERPRISES", "KNURLAL ASSEMBLY200", "2", "3750"],
-            ["03-06-2025", "66", "P P ENTERPRISES", "Alu knob", "4", "2750"],
-            ["03-06-2025", "66", "P P ENTERPRISES", "CONVEYOR MOUNRING BLOCK 127 X150 X40", "2", "1,450.00"],
-            ["08-Sep-25", "DN/00265/25-26", "DE & NEPHEW", "150 L X 90 OD X 12 ID BLACK FOAM ROLLER", "2 NOS", "1,480.00"],
-            ["18-Sep-25", "DN/00278/25-26", "DE & NEPHEW", "100 MM OD X 10 X 100 MM L WHITE FOAM ROLLER", "10 NOS", "800"],
-            ["18-Sep-25", "DN/00278/25-26", "DE & NEPHEW", "100 MM OD X 10 MM ID X 150 MM L WHITE FOAM ROLLER", "10 NOS", "1,200.00"]
+        // Invoice data
+        const invoiceData = [
+            { date: "09-07-2025", invoice: "IEPL/FY25-26/198", company: "Ingenium Electronics Pvt. Ltd.", item: "Labeling Controller with Step Motor", qty: "1", price: "32,000.00" },
+            { date: "09-07-2025", invoice: "IEPL/FY25-26/198", company: "Ingenium Electronics Pvt. Ltd.", item: "VFD Communication Cable with 2 Pin MX", qty: "1", price: "250" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "HANDWHEEL", qty: "15", price: "160" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "BRASS BUSH", qty: "20", price: "90" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "PILLER PLATE SS 304 200 X125 X3 MM", qty: "2", price: "850" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "BACK PLATE 420 X125X10", qty: "5", price: "1,250.00" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "BACK PLATE 420 X150 X10", qty: "1", price: "1,450.00" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "NYLON REEL CORE", qty: "3", price: "450" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "REWINDER ROLLER", qty: "3", price: "950" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "SS 304 ROD 10 X180", qty: "6", price: "160" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "SENSOR MOUNTING BRACKET", qty: "3", price: "675" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "GUIDE RING 52 X38", qty: "6", price: "165" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "REEL SUPPORT", qty: "6", price: "450" },
+            { date: "01-08-2025", invoice: "76", company: "P. P. ENTERPRISES", item: "LABLE ROLLER", qty: "3", price: "950" },
+            { date: "09-Jul-25", invoice: "DN/00210/25-26", company: "DE & NEPHEW", item: "150 L X 70 OD AL. SPONGE ROLLER", qty: "4", price: "1,365.00" },
+            { date: "09-Jul-25", invoice: "DN/00210/25-26", company: "DE & NEPHEW", item: "150 L X 100 OD AL. SPONGE ROLLER", qty: "2", price: "1,950.00" },
+            { date: "", invoice: "", company: "DE & NEPHEW", item: "20 L X 25 X 10 MM T BELT", qty: "1", price: "1,200.00" },
+            { date: "06-Aug-25", invoice: "DN/00198/25-26", company: "DE & NEPHEW", item: "1028 L X 25 X 13 MM T ORANGE BELT", qty: "1 NOS", price: "4,540.00" },
+            { date: "20-Aug-25", invoice: "DN/00230/25-26", company: "DE & NEPHEW", item: "100 L X 100 OD X 10 ID FOAM ROLLER", qty: "4 NOS", price: "800" },
+            { date: "20-Aug-25", invoice: "DN/00230/25-26", company: "DE & NEPHEW", item: "150 L X 100 OD X 10 ID FOAM ROLLER", qty: "5 NOS", price: "1,200.00" },
+            { date: "20-Aug-25", invoice: "DN/00230/25-26", company: "DE & NEPHEW", item: "200 L X 100 OD X 10 ID FOAM ROLLER", qty: "5 NOS", price: "1,500.00" },
+            { date: "21-Aug-25", invoice: "DN/00233/25-26", company: "DE & NEPHEW", item: "1420 L X 125 X 10 MM T BELT", qty: "1 NOS", price: "7,150.00" },
+            { date: "21-Aug-25", invoice: "DN/00233/25-26", company: "DE & NEPHEW", item: "1731 L X 25 X 13 MM T ORANGE BELT", qty: "5 NOS", price: "2,500.00" },
+            { date: "29-Aug-25", invoice: "DN/00246/25-26", company: "DE & NEPHEW", item: "467 X 180 X 50 MM FOAM SPONGE RUBBER SHEET", qty: "1 NOS", price: "1,000.00" },
+            { date: "29-Aug-25", invoice: "DN/00246/25-26", company: "DE & NEPHEW", item: "420 X 100 X 25 MM FOAM BACK PLATE", qty: "1 NOS", price: "950" },
+            { date: "14-07-2025", invoice: "84", company: "P. P. ENTERPRISES", item: "FRONT SUPPORT PLATE", qty: "1", price: "375" },
+            { date: "23.09.2025", invoice: "142/25-26", company: "MAK POLYMER COMPANY", item: "60 MM X 115 MM Roller", qty: "6", price: "450" },
+            { date: "23.09.2025", invoice: "142/25-26", company: "MAK POLYMER COMPANY", item: "60 MM X 215 MM Roller", qty: "20", price: "700" },
+            { date: "23.09.2025", invoice: "142/25-26", company: "MAK POLYMER COMPANY", item: "60 MM X 165 MM Roller", qty: "20", price: "600" },
+            { date: "23.09.2025", invoice: "142/25-26", company: "MAK POLYMER COMPANY", item: "60 MM X 115 MM Roller", qty: "14", price: "450" },
+            { date: "23.09.2025", invoice: "142/25-26", company: "MAK POLYMER COMPANY", item: "70 MM X 110 MM (Soft) Roller", qty: "2", price: "450" },
+            { date: "23.09.2025", invoice: "142/25-26", company: "MAK POLYMER COMPANY", item: "70 MM X 50 MM (Soft) Roller", qty: "2", price: "350" },
+            { date: "", invoice: "0102/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Belt Type Spacer Assembly With Slide-LH", qty: "3.00 NOS", price: "" },
+            { date: "", invoice: "0102/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Belt Type Spacer Assembly With Slide-RH", qty: "3.00 NOS", price: "" },
+            { date: "", invoice: "0102/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Chain Type Orientation Assembly With Slide-LH", qty: "3.00 NOS", price: "" },
+            { date: "", invoice: "0102/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Chain Type Orientation Assembly With Slide-RH", qty: "3.00 NOS", price: "" },
+            { date: "", invoice: "0102/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Transfer Unit Mounting Vertical & Horizontal Slide", qty: "1.00 NOS", price: "" },
+            { date: "", invoice: "DE/25-26/453", company: "DORIN ENTERPRISES", item: "Core for Rubber Roller (OD32 x 100mm)", qty: "4 Nos.", price: "" },
+            { date: "", invoice: "DE/25-26/453", company: "DORIN ENTERPRISES", item: "Core for Rubber Roller (Assorted)", qty: "17 Nos.", price: "" },
+            { date: "", invoice: "DE/25-26/453", company: "DORIN ENTERPRISES", item: "Web Support Guide", qty: "2 Nos.", price: "" },
+            { date: "", invoice: "DE/25-26/453", company: "DORIN ENTERPRISES", item: "WP-A000-SETION FRAME-02", qty: "4 Nos.", price: "" },
+            { date: "08-Sep-25", invoice: "25-26/1784", company: "Bindal Belting Pvt. Ltd.", item: "15 T21 R35 Sprocket 50803", qty: "10", price: "1,000.00" },
+            { date: "23-Sep-25", invoice: "DN/00286/25-26", company: "DE & NEPHEW", item: "120 L X 100 OD X 10 ID FOAM ROLLER", qty: "1 PCS", price: "1,320.00" },
+            { date: "23-Sep-25", invoice: "DN/00286/25-26", company: "DE & NEPHEW", item: "130 L X 100 OD X 10 ID FOAM ROLLER", qty: "1 PCS", price: "330" },
+            { date: "23-Sep-25", invoice: "DN/00286/25-26", company: "DE & NEPHEW", item: "150 L X 120 OD X 16 ID FOAM ROLLER", qty: "4 PCS", price: "1,800.00" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "SS 304 8 X100 MM STUDE", qty: "20", price: "65" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "SS 304 8 X150 MM STUDE", qty: "20", price: "75" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "SS 304 8 X200 MM STUDE", qty: "20", price: "85" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "SS 304 8 X250 MM STUDE", qty: "8", price: "95" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "SS 304 SENSOR ROD 12 X250", qty: "20", price: "160" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "SS 304 SENSOR ROD 12 X350", qty: "9", price: "170" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "MS C PILLER CLAMP 80 X150", qty: "2", price: "560" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "MS C PILLER CLAMP", qty: "10", price: "540" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "HANDWEEL", qty: "8", price: "160" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "ALU WASHER", qty: "50", price: "35" },
+            { date: "27-06-2025", invoice: "71", company: "P P ENTERPRISES", item: "SPACER", qty: "2", price: "650" },
+            { date: "30-09-2025", invoice: "0101/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Wraparound Mounting Vertical & Horizontical (X-Y) Slide", qty: "2", price: "7,900.00" },
+            { date: "30-09-2025", invoice: "0101/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "2 Point Pressing Assembly - Tristan", qty: "1", price: "8,640.00" },
+            { date: "", invoice: "0100/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Belt Type Spacer Assembly With Slide-LH", qty: "2", price: "10,200.00" },
+            { date: "", invoice: "0100/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Belt Type Spacer Assembly With Slide-RH", qty: "1", price: "10,200.00" },
+            { date: "", invoice: "0100/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 50 H x 45 OD", qty: "2", price: "380" },
+            { date: "", invoice: "0100/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 110 H x 45 OD", qty: "2", price: "550" },
+            { date: "", invoice: "0100/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Wraparound Bottom Plate-367 - Spares", qty: "1", price: "1,680.00" },
+            { date: "[Empty]", invoice: "70", company: "P P ENTERPRISES", item: "S S SPONGE ROD 16 X175", qty: "2", price: "325" },
+            { date: "[Empty]", invoice: "70", company: "P P ENTERPRISES", item: "SPONGE ROD 150 MM", qty: "4", price: "275" },
+            { date: "[Empty]", invoice: "70", company: "P P ENTERPRISES", item: "BEARING 6902 ZZ", qty: "4", price: "115" },
+            { date: "[Empty]", invoice: "70", company: "P P ENTERPRISES", item: "REWINDER HSG", qty: "2", price: "550" },
+            { date: "[Empty]", invoice: "70", company: "P P ENTERPRISES", item: "HANWHEEL EXTENTION ROD 25 X165", qty: "2", price: "425" },
+            { date: "[Empty]", invoice: "70", company: "P P ENTERPRISES", item: "LABELER 200 MM", qty: "2", price: "16,150.00" },
+            { date: "[Empty]", invoice: "70", company: "P P ENTERPRISES", item: "SPRING FLANGE", qty: "4", price: "600" },
+            { date: "[Empty]", invoice: "70", company: "P P ENTERPRISES", item: "BLUE ROLLER CORE 200 MM", qty: "2", price: "375" },
+            { date: "[Empty]", invoice: "70", company: "P P ENTERPRISES", item: "KNURLAL ASSEMBLY200", qty: "2", price: "450" },
+            { date: "[Empty]", invoice: "098/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Salzer Cam Operated Rotary Switch 16A 2 Pole", qty: "10", price: "[Empty]" },
+            { date: "[Empty]", invoice: "098/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Black Pipe Gland-40mm 4 Parts", qty: "40", price: "[Empty]" },
+            { date: "[Empty]", invoice: "098/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Anchor Make 3 Pin Top 16 AMP, 240V ISI", qty: "20", price: "[Empty]" },
+            { date: "[Empty]", invoice: "098/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Elettro Make Junction Box 98mm x 98mm x 61mm", qty: "10", price: "[Empty]" },
+            { date: "[Empty]", invoice: "098/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Elettro Make PVC Fan Finger Guard-4\" ETFG-01", qty: "50", price: "[Empty]" },
+            { date: "[Empty]", invoice: "098/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Elmex Make Connector Gray: KUT 2.5", qty: "500", price: "[Empty]" },
+            { date: "[Empty]", invoice: "098/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Elmex Make End Plate: KPNS", qty: "200", price: "[Empty]" },
+            { date: "[Empty]", invoice: "098/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Elmex Make 10 Way Shorting Link With Stude: CCLM2.5 K", qty: "100", price: "[Empty]" },
+            { date: "[Empty]", invoice: "098/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Siemens Make Maint / Actuator Red (Mashrum): 3SB52030UC01", qty: "10", price: "[Empty]" },
+            { date: "[Empty]", invoice: "098/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Siemens Make 6 Amp 1 Pole, 10 kA MCB: 5SL41067RC", qty: "60", price: "[Empty]" },
+            { date: "03-10-2025", invoice: "6692/25-26", company: "MERITT", item: "SS CHAIN 6\" WIDTH, 700100", qty: "18.29", price: "2,550.00" },
+            { date: "[Empty]", invoice: "0115/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Plastic 008 Bracket", qty: "100", price: "125" },
+            { date: "[Empty]", invoice: "0115/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Plastic 008C Guides C To C 50mm", qty: "100", price: "55" },
+            { date: "01-Jul-25", invoice: "DE/25-26/231", company: "DORIN ENTERPRISES", item: "Overhead Assembly : 420L x 25W - .025HP", qty: "1", price: "8,500.00" },
+            { date: "01-Jul-25", invoice: "DE/25-26/231", company: "DORIN ENTERPRISES", item: "OVERHEAD SLIDE 80 x 80", qty: "1", price: "9,000.00" },
+            { date: "01-Jul-25", invoice: "DE/25-26/231", company: "DORIN ENTERPRISES", item: "LABELER SLIDE BOX TYPE(SMALL) LH", qty: "2", price: "22,500.00" },
+            { date: "01-Jul-25", invoice: "DE/25-26/231", company: "DORIN ENTERPRISES", item: "LABELER SLIDE BOX TYPE(SMALL) RH", qty: "2", price: "22,500.00" },
+            { date: "08-08-2025", invoice: "IEPL/FY25-26/263", company: "Ingenium Electronics Pvt. Ltd.", item: "Labeling System Item ID: 5Y50481", qty: "1", price: "1,55,000.00" },
+            { date: "03-06-2025", invoice: "66", company: "P P ENTERPRISES", item: "CONVEYOR TIE ROD 82", qty: "1", price: "8,100.00" },
+            { date: "03-06-2025", invoice: "66", company: "P P ENTERPRISES", item: "LABELER LOOSE PARTS 200MM", qty: "1", price: "15,500.00" },
+            { date: "03-06-2025", invoice: "66", company: "P P ENTERPRISES", item: "SPRING FLANGE", qty: "4", price: "600" },
+            { date: "03-06-2025", invoice: "66", company: "P P ENTERPRISES", item: "KNURLAL ASSEMBLY200", qty: "2", price: "375" },
+            { date: "03-06-2025", invoice: "66", company: "P P ENTERPRISES", item: "Alu knob", qty: "4", price: "275" },
+            { date: "03-06-2025", invoice: "66", company: "P P ENTERPRISES", item: "CONVEYOR MOUNRING BLOCK 127 X150 X40", qty: "2", price: "1,450.00" },
+            { date: "08-Sep-25", invoice: "DN/00265/25-26", company: "DE & NEPHEW", item: "150 L X 90 OD X 12 ID BLACK FOAM ROLLER", qty: "2 NOS", price: "1,480.00" },
+            { date: "18-Sep-25", invoice: "DN/00278/25-26", company: "DE & NEPHEW", item: "100 MM OD X 10 X 100 MM L WHITE FOAM ROLLER", qty: "10 NOS", price: "800" },
+            { date: "18-Sep-25", invoice: "DN/00278/25-26", company: "DE & NEPHEW", item: "100 MM OD X 10 MM ID X 150 MM L WHITE FOAM ROLLER", qty: "10 NOS", price: "1,200.00" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 32 H x 45 OD", qty: "4 NOS", price: "350" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 50 H x 45 OD", qty: "4 NOS", price: "380" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 90 H x 45 OD", qty: "4 NOS", price: "540" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 120 H x 45 OD", qty: "4 NOS", price: "580" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 150 H x 45 OD", qty: "2 NOS", price: "730" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Drive Roller: 32 H x 80 OD", qty: "2 NOS", price: "720" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Drive Roller: 50 H x 80 OD", qty: "2 NOS", price: "890" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Drive Roller: 90 H x 80 OD", qty: "2 NOS", price: "1,490.00" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Drive Roller: 120 H x 80 OD", qty: "2 NOS", price: "1,880.00" },
+            { date: "", invoice: "0112/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Spacer Brass Bush", qty: "4 NOS", price: "390" },
+            { date: "", invoice: "0112/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Spacer Horizontal Lead Screw", qty: "2 NOS", price: "650" },
+            { date: "", invoice: "0112/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Spacer Vertical Lead Screw", qty: "2 NOS", price: "750" },
+            { date: "", invoice: "0112/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Idler Pully With Shaft", qty: "2 NOS", price: "890" },
+            { date: "", invoice: "0112/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Driven Pully", qty: "2 NOS", price: "680" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "ALU CORE LOCK", qty: "4", price: "450" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "SS CORE LOCK PATTI", qty: "20", price: "35" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "CONVEYOR TIE ROD 114", qty: "2", price: "8,200.00" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "S S SPONGE ROD16 X125", qty: "2", price: "325" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "S S SPONGE ROD 16 X175", qty: "2", price: "425" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "INDICATOR BUSH", qty: "1", price: "90" },
+            { date: "", invoice: "DE/25-26/143", company: "[Not Visible]", item: "WP-0.25HP-001 0.25 GEARBOX+SERVO MOTOR FLANGE 2", qty: "2 Nos.", price: "1,350.00" },
+            { date: "", invoice: "DE/25-26/143", company: "[Not Visible]", item: "WP-0.25HP-002 0.25 GEARBOX+SERVO MOTOR FLANGE 2", qty: "2 Nos.", price: "2,450.00" },
+            { date: "", invoice: "DE/25-26/143", company: "[Not Visible]", item: "WP-0.25HP-003 0.25 GEARBOX+SERVO MOTOR FLANGE 2", qty: "2 Nos.", price: "1,975.00" },
+            { date: "", invoice: "DE/25-26/143", company: "[Not Visible]", item: "WP-CAMSLIDE-002 CLAMPING PLATE 40x40", qty: "2 Nos.", price: "1,275.00" },
+            { date: "", invoice: "DE/25-26/143", company: "[Not Visible]", item: "WP-CAMSLIDE-003 SLIDE MTG BASE PLATE", qty: "2 Nos.", price: "1,550.00" },
+            { date: "30-08-2025", invoice: "IEPL/FY25-26/286", company: "Ingenium Electronics Pvt. Ltd.", item: "Allen Bradley VFD 4M Single Phase (1HP) : Part No. 22FA4P2N103", qty: "1.00 Nos", price: "8,833.00" },
+            { date: "30-08-2025", invoice: "IEPL/FY25-26/286", company: "Ingenium Electronics Pvt. Ltd.", item: "Allen Bradley VFD Single Phase (0.50HP) : Part No. 22FA2P5N103", qty: "3.00 Nos", price: "6,908.00" },
+            { date: "30-08-2025", invoice: "IEPL/FY25-26/286", company: "Ingenium Electronics Pvt. Ltd.", item: "Allen Bradley VFD Single Phase (0.25HP) : Part No. 22FA1P6N103", qty: "2.00 Nos", price: "6,452.00" },
+            { date: "08-Sep-25", invoice: "DN/00265/25-26", company: "DE & NEPHEW", item: "150 L X 90 OD X 12 ID BLACK FOAM ROLLER", qty: "2 NOS", price: "1,480.00" },
+            { date: "18-Sep-25", invoice: "DN/00278/25-26", company: "DE & NEPHEW", item: "100 MM OD X 10 X 100 MM L WHITE FOAM ROLLER", qty: "10 NOS", price: "800" },
+            { date: "18-Sep-25", invoice: "DN/00278/25-26", company: "DE & NEPHEW", item: "100 MM OD X 10 MM ID X 150 MM L WHITE FOAM ROLLER", qty: "10 NOS", price: "1,200.00" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 32 H x 45 OD", qty: "4 NOS", price: "350" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 50 H x 45 OD", qty: "4 NOS", price: "380" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 90 H x 45 OD", qty: "4 NOS", price: "540" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 120 H x 45 OD", qty: "4 NOS", price: "580" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Idler Roller: 150 H x 45 OD", qty: "2 NOS", price: "730" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Drive Roller: 32 H x 80 OD", qty: "2 NOS", price: "720" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Drive Roller: 50 H x 80 OD", qty: "2 NOS", price: "890" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Drive Roller: 90 H x 80 OD", qty: "2 NOS", price: "1,490.00" },
+            { date: "27-08-2025", invoice: "079/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Aluminium 3-Point Drive Roller: 120 H x 80 OD", qty: "2 NOS", price: "1,880.00" },
+            { date: "", invoice: "0112/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Spacer Brass Bush", qty: "4 NOS", price: "390" },
+            { date: "", invoice: "0112/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Spacer Horizontal Lead Screw", qty: "2 NOS", price: "650" },
+            { date: "", invoice: "0112/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Spacer Vertical Lead Screw", qty: "2 NOS", price: "750" },
+            { date: "", invoice: "0112/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Idler Pully With Shaft", qty: "2 NOS", price: "890" },
+            { date: "", invoice: "0112/25-26", company: "PACKORA AUTOMATION SYSTEMS", item: "Driven Pully", qty: "2 NOS", price: "680" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "ALU CORE LOCK", qty: "4", price: "450" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "SS CORE LOCK PATTI", qty: "20", price: "35" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "CONVEYOR TIE ROD 114", qty: "2", price: "8,200.00" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "S S SPONGE ROD16 X125", qty: "2", price: "325" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "S S SPONGE ROD 16 X175", qty: "2", price: "425" },
+            { date: "24-05-2025", invoice: "61", company: "P. P ENTERPRISES", item: "INDICATOR BUSH", qty: "1", price: "90" },
+            { date: "", invoice: "DE/25-26/143", company: "[Not Visible]", item: "WP-0.25HP-001 0.25 GEARBOX+SERVO MOTOR FLANGE 2", qty: "2 Nos.", price: "1,350.00" },
+            { date: "", invoice: "DE/25-26/143", company: "[Not Visible]", item: "WP-0.25HP-002 0.25 GEARBOX+SERVO MOTOR FLANGE 2", qty: "2 Nos.", price: "2,450.00" },
+            { date: "", invoice: "DE/25-26/143", company: "[Not Visible]", item: "WP-0.25HP-003 0.25 GEARBOX+SERVO MOTOR FLANGE 2", qty: "2 Nos.", price: "1,975.00" },
+            { date: "", invoice: "DE/25-26/143", company: "[Not Visible]", item: "WP-CAMSLIDE-002 CLAMPING PLATE 40x40", qty: "2 Nos.", price: "1,275.00" },
+            { date: "", invoice: "DE/25-26/143", company: "[Not Visible]", item: "WP-CAMSLIDE-003 SLIDE MTG BASE PLATE", qty: "2 Nos.", price: "1,550.00" },
+            { date: "30-08-2025", invoice: "IEPL/FY25-26/286", company: "Ingenium Electronics Pvt. Ltd.", item: "Allen Bradley VFD 4M Single Phase (1HP) : Part No. 22FA4P2N103", qty: "1.00 Nos", price: "8,833.00" },
+            { date: "30-08-2025", invoice: "IEPL/FY25-26/286", company: "Ingenium Electronics Pvt. Ltd.", item: "Allen Bradley VFD Single Phase (0.50HP) : Part No. 22FA2P5N103", qty: "3.00 Nos", price: "6,908.00" },
+            { date: "30-08-2025", invoice: "IEPL/FY25-26/286", company: "Ingenium Electronics Pvt. Ltd.", item: "Allen Bradley VFD Single Phase (0.25HP) : Part No. 22FA1P6N103", qty: "2.00 Nos", price: "6,452.00" },
+            { date: "05-09-2025", invoice: "100", company: "", item: "PILLER PLATE 250 X100 X3 MM LH", qty: "5", price: "750" },
+            { date: "", invoice: "", company: "", item: "PILLER PLATE 250 X100 X3 MM RH", qty: "5", price: "750" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 100MM WITH SHAFT", qty: "20", price: "1,350.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER WITH SHAFT 200MM", qty: "20", price: "1,805.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "20", price: "1,675.00" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 165", qty: "1", price: "105" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 155", qty: "1", price: "95" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 X145", qty: "1", price: "95" },
+            { date: "", invoice: "", company: "", item: "ALU ROLLER 150", qty: "2", price: "750" },
+            { date: "", invoice: "", company: "", item: "PILLER SUPPORTING 150", qty: "2", price: "750" },
+            { date: "", invoice: "", company: "", item: "SS CORE LOCK PATTI", qty: "12", price: "35" },
+            { date: "07-07-2025", invoice: "80", company: "", item: "SPACER", qty: "2", price: "620" },
+            { date: "", invoice: "", company: "", item: "BREAKING PULLEY", qty: "2", price: "320" },
+            { date: "(Not Visible)", invoice: "2526003924", company: "", item: "6902 ZZ NTN BEARING", qty: "2,000 Pcs", price: "190" },
+            { date: "", invoice: "", company: "", item: "6802 ZZ KYK BEARING", qty: "8 Pcs", price: "50" },
+            { date: "", invoice: "", company: "", item: "HSS TAP SET 6MM", qty: "1 Set", price: "895" },
+            { date: "", invoice: "", company: "", item: "6902 ZZ SKF BEARING", qty: "6 Pcs", price: "220" },
+            { date: "", invoice: "", company: "", item: "S.S CAP M 8X90", qty: "50 Pcs", price: "25" },
+            { date: "", invoice: "", company: "", item: "STRAIGHT DRILL 5.2MM", qty: "30 Pcs", price: "90" },
+            { date: "", invoice: "", company: "", item: "4\" STRTECH FILM (BABY CORE)", qty: "10 Kgs", price: "150" },
+            { date: "", invoice: "", company: "", item: "STRAIGHT DRILL 8.5 MM", qty: "1 Pcs", price: "251" },
+            { date: "07-Oct-25", invoice: "25-26/2146", company: "", item: "615 T21 R35 Sprocket 50803", qty: "10", price: "1,000.00" },
+            { date: "11-12-2025", invoice: "092/25-26", company: "", item: "Moldex Make T Clamps:014", qty: "100 NOS", price: "55" },
+            { date: "29-Jul-25", invoice: "DN/00189/25-26", company: "DE & NEPHEW", item: "420 L X 25 X 10 MM T BELT", qty: "1 NOS", price: "1,200.00" },
+            { date: "17-09-2025", invoice: "IEPL/FY25-26/329", company: "Ingenium Electronics Pvt. Ltd.", item: "WL 2A AB PLC WL HMI 7\" Delta E3 Servo...", qty: "1.00 Nos", price: "1,17,000.00" },
+            { date: "", invoice: "", company: "", item: "RS485 VFD Communication Cable 1.5...", qty: "1.00 Nos", price: "200" },
+            { date: "", invoice: "", company: "", item: "Packaging & Forwarding Charges @ 1%", qty: "1", price: "1,172.00" },
+            { date: "21-08-2025", invoice: "97", company: "", item: "SILICON STRIP MOUNTING BUSH", qty: "4", price: "125" },
+            { date: "", invoice: "", company: "", item: "SILICON PLATE", qty: "4", price: "165" },
+            { date: "", invoice: "", company: "", item: "MOUNTING BRACKET", qty: "4", price: "350" },
+            { date: "", invoice: "", company: "", item: "FRONT SPACER", qty: "4", price: "95" },
+            { date: "", invoice: "", company: "", item: "BACK LOCKING BUSH", qty: "4", price: "125" },
+            { date: "", invoice: "", company: "", item: "UPPER PIN", qty: "4", price: "125" },
+            { date: "", invoice: "", company: "", item: "NYLON SLEEV100", qty: "4", price: "650" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "4", price: "1,675.00" },
+            { date: "14-07-2025", invoice: "84", company: "", item: "419 PRESSING ROLLER SUPPORTED SHAFT", qty: "1", price: "400" },
+            { date: "", invoice: "", company: "", item: "420 XPRESSING ROLLER BEARING SPACER", qty: "2", price: "40" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE STOPPER", qty: "1", price: "50" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE MAIN SHAFT 150MM", qty: "1", price: "320" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE", qty: "2", price: "520" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE ROLLER 150", qty: "1", price: "380" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE ROLLER SHAFT 150", qty: "1", price: "180" },
+            { date: "", invoice: "", company: "", item: "SPRING PIN", qty: "2", price: "60" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE HSG", qty: "1", price: "550" },
+            { date: "", invoice: "", company: "", item: "PATH ROLLER ASSEMBLY 150MM", qty: "9", price: "985" },
+            { date: "", invoice: "", company: "", item: "LABEL SENSOR MOUNTING BRACKET 2", qty: "1", price: "275" },
+            { date: "", invoice: "", company: "", item: "LABEL SENSOR MOUNTING BRACKET 1", qty: "1", price: "475" },
+            { date: "", invoice: "", company: "", item: "LABEL SENSOR MOUNTING BRACKET 3", qty: "1", price: "640" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER ASSEMBLY 150 MM", qty: "1", price: "1,700.00" },
+            { date: "", invoice: "", company: "", item: "MOTOR ROLLER SPACER", qty: "1", price: "175" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER HSG", qty: "1", price: "550" },
+            { date: "", invoice: "", company: "", item: "PRESSING ROLLER NYLON 150 MM", qty: "1", price: "675" },
+            { date: "", invoice: "", company: "", item: "421 IDLER ROLLER SHAFT 150 MM", qty: "1", price: "485" },
+            { date: "", invoice: "", company: "", item: "403 IDLER ROLLER WASHER", qty: "1", price: "40" },
+            { date: "", invoice: "", company: "", item: "HANDLE STOPPER AND METALIC SENSOR BRAC", qty: "1", price: "300" },
+            { date: "", invoice: "", company: "", item: "HANDLE STOCK STOPPER", qty: "1", price: "80" },
+            { date: "", invoice: "", company: "", item: "PRESSING ROLLER WITH SPONGE 150MM", qty: "1", price: "1,325.00" },
+            { date: "", invoice: "", company: "", item: "IDLER ASSEMBLY", qty: "1", price: "650" },
+            { date: "", invoice: "", company: "", item: "REWINDER DISK FLANGE", qty: "1", price: "275" },
+            { date: "08-08-2025", invoice: "93", company: "", item: "WEB TENSNINING SYSTEM ASSMBLY", qty: "14", price: "520" },
+            { date: "04-07-2025", invoice: "IEPL/FY25-26/187", company: "Ingenium Electronics Pvt. Ltd.", item: "Labeling Controller for IL", qty: "1.00 Nos", price: "22,000.00" },
+            { date: "", invoice: "", company: "", item: "IEPL Smart Drive", qty: "1.00 Nos", price: "12,500.00" },
+            { date: "", invoice: "", company: "", item: "IEPL Stepper Motor 87 Kgcm", qty: "1.00 Nos", price: "5,000.00" },
+            { date: "07-08-2025", invoice: "INV-000160", company: "", item: "WECON Make 2 Axis PLC & 7\" HMI", qty: "2.00 nos", price: "14,000.00" },
+            { date: "", invoice: "", company: "", item: "Stepper Motor & Stepper Drive", qty: "4.00 nos", price: "6,500.00" },
+            { date: "08-Aug-25", invoice: "0470/25-26", company: "", item: "Timing Belt T5 410 12", qty: "2 nos", price: "245" },
+            { date: "", invoice: "", company: "", item: "Timing Belt T5 425 12", qty: "2 nos", price: "265" },
+            { date: "", invoice: "", company: "", item: "Timing Belt T5 440 12", qty: "2 nos", price: "295" },
+            { date: "", invoice: "", company: "", item: "Push Lock", qty: "50 nos", price: "110" },
+            { date: "", invoice: "", company: "", item: "Timing Belt Coated 240L019", qty: "12 nos", price: "275" },
+            { date: "30-07-2025", invoice: "2025574609", company: "", item: "GSU12/6GX.3-M12", qty: "4.00 Nos", price: "12,600.00" },
+            { date: "", invoice: "", company: "", item: "KD U-M12-5A-V1-020", qty: "4.00 Nos", price: "350" },
+            { date: "", invoice: "", company: "", item: "LSL 02.01 R G P B", qty: "5.00 Nos", price: "800" },
+            { date: "21-08-2025", invoice: "97", company: "", item: "SILICON STRIP MOUNTING BUSH", qty: "4", price: "125" },
+            { date: "", invoice: "", company: "", item: "SILICON PLATE", qty: "4", price: "165" },
+            { date: "", invoice: "", company: "", item: "MOUNTING BRACKET", qty: "4", price: "350" },
+            { date: "", invoice: "", company: "", item: "FRONT SPACER", qty: "4", price: "95" },
+            { date: "", invoice: "", company: "", item: "BACK LOCKING BUSH", qty: "4", price: "125" },
+            { date: "", invoice: "", company: "", item: "UPPER PIN", qty: "4", price: "125" },
+            { date: "", invoice: "", company: "", item: "NYLON SLEEV100", qty: "4", price: "650" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "4", price: "1,675.00" },
+            { date: "14-07-2025", invoice: "84", company: "", item: "419 PRESSING ROLLER SUPPORTED SHAFT", qty: "1", price: "400" },
+            { date: "", invoice: "", company: "", item: "420 XPRESSING ROLLER BEARING SPACER", qty: "2", price: "40" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE STOPPER", qty: "1", price: "50" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE MAIN SHAFT 150MM", qty: "1", price: "320" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE", qty: "2", price: "520" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE ROLLER 150", qty: "1", price: "380" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE ROLLER SHAFT 150", qty: "1", price: "180" },
+            { date: "", invoice: "", company: "", item: "SPRING PIN", qty: "2", price: "60" },
+            { date: "", invoice: "", company: "", item: "SPRING FLANGE HSG", qty: "1", price: "550" },
+            { date: "", invoice: "", company: "", item: "PATH ROLLER ASSEMBLY 150MM", qty: "9", price: "985" },
+            { date: "", invoice: "", company: "", item: "LABEL SENSOR MOUNTING BRACKET 2", qty: "1", price: "275" },
+            { date: "", invoice: "", company: "", item: "LABEL SENSOR MOUNTING BRACKET 1", qty: "1", price: "475" },
+            { date: "", invoice: "", company: "", item: "LABEL SENSOR MOUNTING BRACKET 3", qty: "1", price: "640" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER ASSEMBLY 150 MM", qty: "1", price: "1,700.00" },
+            { date: "", invoice: "", company: "", item: "MOTOR ROLLER SPACER", qty: "1", price: "175" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER HSG", qty: "1", price: "550" },
+            { date: "", invoice: "", company: "", item: "PRESSING ROLLER NYLON 150 MM", qty: "1", price: "675" },
+            { date: "", invoice: "", company: "", item: "421 IDLER ROLLER SHAFT 150 MM", qty: "1", price: "485" },
+            { date: "", invoice: "", company: "", item: "403 IDLER ROLLER WASHER", qty: "1", price: "40" },
+            { date: "", invoice: "", company: "", item: "HANDLE STOPPER AND METALIC SENSOR BRAC", qty: "1", price: "300" },
+            { date: "", invoice: "", company: "", item: "HANDLE STOCK STOPPER", qty: "1", price: "80" },
+            { date: "", invoice: "", company: "", item: "PRESSING ROLLER WITH SPONGE 150MM", qty: "1", price: "1,325.00" },
+            { date: "", invoice: "", company: "", item: "IDLER ASSEMBLY", qty: "1", price: "650" },
+            { date: "", invoice: "", company: "", item: "REWINDER DISK FLANGE", qty: "1", price: "275" },
+            { date: "08-08-2025", invoice: "93", company: "", item: "WEB TENSNINING SYSTEM ASSMBLY", qty: "14", price: "520" },
+            { date: "04-07-2025", invoice: "IEPL/FY25-26/187", company: "Ingenium Electronics Pvt. Ltd.", item: "Labeling Controller for IL", qty: "1.00 Nos", price: "22,000.00" },
+            { date: "", invoice: "", company: "", item: "IEPL Smart Drive", qty: "1.00 Nos", price: "12,500.00" },
+            { date: "", invoice: "", company: "", item: "IEPL Stepper Motor 87 Kgcm", qty: "1.00 Nos", price: "5,000.00" },
+            { date: "07-08-2025", invoice: "INV-000160", company: "", item: "WECON Make 2 Axis PLC & 7\" HMI", qty: "2.00 nos", price: "14,000.00" },
+            { date: "", invoice: "", company: "", item: "Stepper Motor & Stepper Drive", qty: "4.00 nos", price: "6,500.00" },
+            { date: "08-Aug-25", invoice: "0470/25-26", company: "", item: "Timing Belt T5 410 12", qty: "2 nos", price: "245" },
+            { date: "", invoice: "", company: "", item: "Timing Belt T5 425 12", qty: "2 nos", price: "265" },
+            { date: "", invoice: "", company: "", item: "Timing Belt T5 440 12", qty: "2 nos", price: "295" },
+            { date: "", invoice: "", company: "", item: "Push Lock", qty: "50 nos", price: "110" },
+            { date: "", invoice: "", company: "", item: "Timing Belt Coated 240L019", qty: "12 nos", price: "275" },
+            { date: "30-07-2025", invoice: "2025574609", company: "", item: "GSU12/6GX.3-M12", qty: "4.00 Nos", price: "12,600.00" },
+            { date: "", invoice: "", company: "", item: "KD U-M12-5A-V1-020", qty: "4.00 Nos", price: "350" },
+            { date: "", invoice: "", company: "", item: "LSL 02.01 R G P B", qty: "5.00 Nos", price: "800" },
+            { date: "04-07-2025", invoice: "IEPL/FY25-26/187", company: "Ingenium Electronics Pvt. Ltd.", item: "Labeling Controller for IL", qty: "1.00 Nos", price: "22,000.00" },
+            { date: "", invoice: "", company: "", item: "IEPL Smart Drive", qty: "1.00 Nos", price: "12,500.00" },
+            { date: "", invoice: "", company: "", item: "IEPL Stepper Motor 87 Kgcm", qty: "1.00 Nos", price: "5,000.00" },
+            { date: "07-07-2025", invoice: "80", company: "", item: "SPACER", qty: "2", price: "620" },
+            { date: "", invoice: "", company: "", item: "BREAKING PULLEY", qty: "2", price: "320" },
+            { date: "14-07-2025", invoice: "84", company: "", item: "PATH ROLLER ASSEMBLY 150MM", qty: "9", price: "985" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER ASSEMBLY 150 MM", qty: "1", price: "1,700.00" },
+            { date: "", invoice: "", company: "", item: "PRESSING ROLLER WITH SPONGE 150MM", qty: "1", price: "1,325.00" },
+            { date: "29-Jul-25", invoice: "DN/00189/25-26", company: "DE & NEPHEW", item: "420 L X 25 X 10 MM T BELT", qty: "1 NOS", price: "1,200.00" },
+            { date: "30-07-2025", invoice: "2025574609", company: "", item: "GSU12/6GX.3-M12", qty: "4.00 Nos", price: "12,600.00" },
+            { date: "", invoice: "", company: "", item: "KD U-M12-5A-V1-020", qty: "4.00 Nos", price: "350" },
+            { date: "", invoice: "", company: "", item: "LSL 02.01 R G P B", qty: "5.00 Nos", price: "800" },
+            { date: "07-08-2025", invoice: "INV-000160", company: "", item: "WECON Make 2 Axis PLC & 7\" HMI", qty: "2.00 nos", price: "14,000.00" },
+            { date: "", invoice: "", company: "", item: "Stepper Motor & Stepper Drive", qty: "4.00 nos", price: "6,500.00" },
+            { date: "08-08-2025", invoice: "93", company: "", item: "WEB TENSNINING SYSTEM ASSMBLY", qty: "14", price: "520" },
+            { date: "08-Aug-25", invoice: "0470/25-26", company: "", item: "Push Lock", qty: "50 nos", price: "110" },
+            { date: "", invoice: "", company: "", item: "Timing Belt Coated 240L019", qty: "12 nos", price: "275" },
+            { date: "21-08-2025", invoice: "97", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "4", price: "1,675.00" },
+            { date: "", invoice: "", company: "", item: "NYLON SLEEV100", qty: "4", price: "650" },
+            { date: "", invoice: "", company: "", item: "MOUNTING BRACKET", qty: "4", price: "350" },
+            { date: "05-09-2025", invoice: "100", company: "", item: "RUBBER ROLLER WITH SHAFT 200MM", qty: "20", price: "1,805.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "20", price: "1,675.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 100MM WITH SHAFT", qty: "20", price: "1,350.00" },
+            { date: "17-09-2025", invoice: "IEPL/FY25-26/329", company: "Ingenium Electronics Pvt. Ltd.", item: "WL 2A AB PLC WL HMI 7\" Delta System", qty: "1.00 Nos", price: "1,17,000.00" },
+            { date: "07-Oct-25", invoice: "25-26/2146", company: "", item: "615 T21 R35 Sprocket 50803", qty: "10", price: "1,000.00" },
+            { date: "(Not Visible)", invoice: "2526003924", company: "", item: "6902 ZZ NTN BEARING", qty: "2,000 Pcs", price: "190" },
+            { date: "11-12-2025", invoice: "092/25-26", company: "", item: "Moldex Make T Clamps:014", qty: "100.00 NOS", price: "55" },
+            { date: "04-07-2025", invoice: "IEPL/FY25-26/187", company: "Ingenium Electronics Pvt. Ltd.", item: "Labeling Controller for IL", qty: "1.00 Nos", price: "22,000.00" },
+            { date: "", invoice: "", company: "", item: "IEPL Smart Drive", qty: "1.00 Nos", price: "12,500.00" },
+            { date: "", invoice: "", company: "", item: "IEPL Stepper Motor 87 Kgcm", qty: "1.00 Nos", price: "5,000.00" },
+            { date: "07-07-2025", invoice: "80", company: "", item: "SPACER", qty: "2", price: "620" },
+            { date: "", invoice: "", company: "", item: "BREAKING PULLEY", qty: "2", price: "320" },
+            { date: "14-07-2025", invoice: "84", company: "", item: "PATH ROLLER ASSEMBLY 150MM", qty: "9", price: "985" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER ASSEMBLY 150 MM", qty: "1", price: "1,700.00" },
+            { date: "", invoice: "", company: "", item: "PRESSING ROLLER WITH SPONGE 150MM", qty: "1", price: "1,325.00" },
+            { date: "29-Jul-25", invoice: "DN/00189/25-26", company: "DE & NEPHEW", item: "420 L X 25 X 10 MM T BELT", qty: "1 NOS", price: "1,200.00" },
+            { date: "30-07-2025", invoice: "2025574609", company: "", item: "GSU12/6GX.3-M12", qty: "4.00 Nos", price: "12,600.00" },
+            { date: "", invoice: "", company: "", item: "KD U-M12-5A-V1-020", qty: "4.00 Nos", price: "350" },
+            { date: "", invoice: "", company: "", item: "LSL 02.01 R G P B", qty: "5.00 Nos", price: "800" },
+            { date: "07-08-2025", invoice: "INV-000160", company: "", item: "WECON Make 2 Axis PLC & 7\" HMI", qty: "2.00 nos", price: "14,000.00" },
+            { date: "", invoice: "", company: "", item: "Stepper Motor & Stepper Drive", qty: "4.00 nos", price: "6,500.00" },
+            { date: "08-08-2025", invoice: "93", company: "", item: "WEB TENSNINING SYSTEM ASSMBLY", qty: "14", price: "520" },
+            { date: "08-Aug-25", invoice: "0470/25-26", company: "", item: "Push Lock", qty: "50 nos", price: "110" },
+            { date: "", invoice: "", company: "", item: "Timing Belt Coated 240L019", qty: "12 nos", price: "275" },
+            { date: "21-08-2025", invoice: "97", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "4", price: "1,675.00" },
+            { date: "", invoice: "", company: "", item: "NYLON SLEEV100", qty: "4", price: "650" },
+            { date: "", invoice: "", company: "", item: "MOUNTING BRACKET", qty: "4", price: "350" },
+            { date: "05-09-2025", invoice: "100", company: "", item: "RUBBER ROLLER WITH SHAFT 200MM", qty: "20", price: "1,805.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "20", price: "1,675.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 100MM WITH SHAFT", qty: "20", price: "1,350.00" },
+            { date: "17-09-2025", invoice: "IEPL/FY25-26/329", company: "Ingenium Electronics Pvt. Ltd.", item: "WL 2A AB PLC WL HMI 7\" Delta System", qty: "1.00 Nos", price: "1,17,000.00" },
+            { date: "07-Oct-25", invoice: "25-26/2146", company: "", item: "615 T21 R35 Sprocket 50803", qty: "10", price: "1,000.00" },
+            { date: "(Not Visible)", invoice: "2526003924", company: "", item: "6902 ZZ NTN BEARING", qty: "2,000 Pcs", price: "190" },
+            { date: "11-12-2025", invoice: "092/25-26", company: "", item: "Moldex Make T Clamps:014", qty: "100.00 NOS", price: "55" },
+            { date: "07-07-2025", invoice: "80", company: "", item: "SPACER", qty: "2", price: "620" },
+            { date: "", invoice: "", company: "", item: "BREAKING PULLEY", qty: "2", price: "320" },
+            { date: "29-Jul-25", invoice: "DN/00189/25-26", company: "DE & NEPHEW", item: "420 L X 25 X 10 MM T BELT", qty: "1 NOS", price: "1,200.00" },
+            { date: "05-09-2025", invoice: "100", company: "", item: "PILLER PLATE 250 X100 X3 MM LH", qty: "5", price: "750" },
+            { date: "", invoice: "", company: "", item: "PILLER PLATE 250 X100 X3 MM RH", qty: "5", price: "750" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 100MM WITH SHAFT", qty: "20", price: "1,350.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER WITH SHAFT 200MM", qty: "20", price: "1,805.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "20", price: "1,675.00" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 165", qty: "1", price: "105" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 155", qty: "1", price: "95" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 X145", qty: "1", price: "95" },
+            { date: "", invoice: "", company: "", item: "ALU ROLLER 150", qty: "2", price: "750" },
+            { date: "", invoice: "", company: "", item: "PILLER SUPPORTING 150", qty: "2", price: "750" },
+            { date: "", invoice: "", company: "", item: "SS CORE LOCK PATTI", qty: "12", price: "35" },
+            { date: "17-09-2025", invoice: "IEPL/FY25-26/329", company: "Ingenium Electronics Pvt. Ltd.", item: "WL 2A AB PLC WL HMI 7\" Delta System", qty: "1.00 Nos", price: "1,17,000.00" },
+            { date: "", invoice: "", company: "", item: "RS485 VFD Communication Cable", qty: "1.00 Nos", price: "200" },
+            { date: "", invoice: "", company: "", item: "Packaging & Forwarding Charges @ 1%", qty: "1", price: "1,172.00" },
+            { date: "07-Oct-25", invoice: "25-26/2146", company: "", item: "615 T21 R35 Sprocket 50803", qty: "10", price: "1,000.00" },
+            { date: "11-12-2025", invoice: "092/25-26", company: "", item: "Moldex Make T Clamps:014", qty: "100.00 NOS", price: "55" },
+            { date: "(Not Visible)", invoice: "2526003924", company: "", item: "6902 ZZ NTN BEARING", qty: "2,000 Pcs", price: "190" },
+            { date: "", invoice: "", company: "", item: "6802 ZZ KYK BEARING", qty: "8 Pcs", price: "50" },
+            { date: "", invoice: "", company: "", item: "HSS TAP SET 6MM", qty: "1 SET", price: "895" },
+            { date: "", invoice: "", company: "", item: "6902 ZZ SKF BEARING", qty: "6 Pcs", price: "220" },
+            { date: "", invoice: "", company: "", item: "S.S CAP M 8X90", qty: "50 Pcs", price: "25" },
+            { date: "", invoice: "", company: "", item: "STRAIGHT DRILL 5.2MM", qty: "30 Pcs", price: "90" },
+            { date: "", invoice: "", company: "", item: "4\"STRTECH FILM (BABY CORE)", qty: "10.000 Kgs", price: "150" },
+            { date: "", invoice: "", company: "", item: "STRAIGHT DRILL 8.5 MM", qty: "1 Pcs", price: "251" },
+            { date: "07-07-2025", invoice: "80", company: "", item: "SPACER", qty: "2", price: "620" },
+            { date: "", invoice: "", company: "", item: "BREAKING PULLEY", qty: "2", price: "320" },
+            { date: "29-Jul-25", invoice: "DN/00189/25-26", company: "DE & NEPHEW", item: "420 L X 25 X 10 MM T BELT", qty: "1 NOS", price: "1,200.00" },
+            { date: "05-09-2025", invoice: "100", company: "", item: "PILLER PLATE 250 X100 X3 MM LH", qty: "5", price: "750" },
+            { date: "", invoice: "", company: "", item: "PILLER PLATE 250 X100 X3 MM RH", qty: "5", price: "750" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 100MM WITH SHAFT", qty: "20", price: "1,350.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER WITH SHAFT 200MM", qty: "20", price: "1,805.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "20", price: "1,675.00" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 165", qty: "1", price: "105" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 155", qty: "1", price: "95" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 X145", qty: "1", price: "95" },
+            { date: "", invoice: "", company: "", item: "ALU ROLLER 150", qty: "2", price: "750" },
+            { date: "", invoice: "", company: "", item: "PILLER SUPPORTING 150", qty: "2", price: "750" },
+            { date: "", invoice: "", company: "", item: "SS CORE LOCK PATTI", qty: "12", price: "35" },
+            { date: "17-09-2025", invoice: "IEPL/FY25-26/329", company: "Ingenium Electronics Pvt. Ltd.", item: "WL 2A AB PLC WL HMI 7\" Delta System", qty: "1.00 Nos", price: "1,17,000.00" },
+            { date: "", invoice: "", company: "", item: "RS485 VFD Communication Cable", qty: "1.00 Nos", price: "200" },
+            { date: "", invoice: "", company: "", item: "Packaging & Forwarding Charges @ 1%", qty: "1", price: "1,172.00" },
+            { date: "07-Oct-25", invoice: "25-26/2146", company: "", item: "615 T21 R35 Sprocket 50803", qty: "10", price: "1,000.00" },
+            { date: "11-12-2025", invoice: "092/25-26", company: "", item: "Moldex Make T Clamps:014", qty: "100.00 NOS", price: "55" },
+            { date: "(Not Visible)", invoice: "2526003924", company: "", item: "6902 ZZ NTN BEARING", qty: "2,000 Pcs", price: "190" },
+            { date: "", invoice: "", company: "", item: "6802 ZZ KYK BEARING", qty: "8 Pcs", price: "50" },
+            { date: "", invoice: "", company: "", item: "HSS TAP SET 6MM", qty: "1 SET", price: "895" },
+            { date: "", invoice: "", company: "", item: "6902 ZZ SKF BEARING", qty: "6 Pcs", price: "220" },
+            { date: "", invoice: "", company: "", item: "S.S CAP M 8X90", qty: "50 Pcs", price: "25" },
+            { date: "", invoice: "", company: "", item: "STRAIGHT DRILL 5.2MM", qty: "30 Pcs", price: "90" },
+            { date: "", invoice: "", company: "", item: "4\" STRTECH FILM (BABY CORE)", qty: "10.000 Kgs", price: "150" },
+            { date: "", invoice: "", company: "", item: "STRAIGHT DRILL 8.5 MM", qty: "1 Pcs", price: "251" },
+            { date: "05-09-2025", invoice: "100", company: "", item: "PILLER PLATE 250 X100 X3 MM LH", qty: "5", price: "750" },
+            { date: "", invoice: "", company: "", item: "PILLER PLATE 250 X100 X3 MM RH", qty: "5", price: "750" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 100MM WITH SHAFT", qty: "20", price: "1,350.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER WITH SHAFT 200MM", qty: "20", price: "1,805.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "20", price: "1,675.00" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 165", qty: "1", price: "105" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 155", qty: "1", price: "95" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 X145", qty: "1", price: "95" },
+            { date: "", invoice: "", company: "", item: "ALU ROLLER 150", qty: "2", price: "750" },
+            { date: "", invoice: "", company: "", item: "PILLER SUPPORTING 150", qty: "2", price: "750" },
+            { date: "", invoice: "", company: "", item: "SS CORE LOCK PATTI", qty: "12", price: "35" },
+            { date: "07-07-2025", invoice: "80", company: "", item: "SPACER", qty: "2", price: "620" },
+            { date: "", invoice: "", company: "", item: "BREAKING PULLEY", qty: "2", price: "320" },
+            { date: "(Not Visible)", invoice: "2526003924", company: "", item: "6902 ZZ NTN BEARING", qty: "2,000 Pcs", price: "190" },
+            { date: "", invoice: "", company: "", item: "6802 ZZ KYK BEARING", qty: "8 Pcs", price: "50" },
+            { date: "", invoice: "", company: "", item: "HSS TAP SET 6MM", qty: "1 SET", price: "895" },
+            { date: "", invoice: "", company: "", item: "6902 ZZ SKF BEARING", qty: "6 Pcs", price: "220" },
+            { date: "", invoice: "", company: "", item: "S.S CAP M 8X90", qty: "50 Pcs", price: "25" },
+            { date: "", invoice: "", company: "", item: "STRAIGHT DRILL 5.2MM", qty: "30 Pcs", price: "90" },
+            { date: "", invoice: "", company: "", item: "4\" STRTECH FILM (BABY CORE)", qty: "10.000 Kgs", price: "150" },
+            { date: "", invoice: "", company: "", item: "STRAIGHT DRILL 8.5 MM", qty: "1 Pcs", price: "251" },
+            { date: "07-Oct-25", invoice: "25-26/2146", company: "", item: "615 T21 R35 Sprocket 50803", qty: "10", price: "1,000.00" },
+            { date: "11-12-2025", invoice: "092/25-26", company: "", item: "Moldex Make T Clamps:014", qty: "100.00 NOS", price: "55" },
+            { date: "29-Jul-25", invoice: "DN/00189/25-26", company: "DE & NEPHEW", item: "420 L X 25 X 10 MM T BELT", qty: "1 NOS", price: "1,200.00" },
+            { date: "17-09-2025", invoice: "IEPL/FY25-26/329", company: "Ingenium Electronics Pvt. Ltd.", item: "WL 2A AB PLC WL HMI 7\" Delta System", qty: "1.00 Nos", price: "1,17,000.00" },
+            { date: "", invoice: "", company: "", item: "RS485 VFD Communication Cable", qty: "1.00 Nos", price: "200" },
+            { date: "", invoice: "", company: "", item: "Packaging & Forwarding Charges @ 1%", qty: "1", price: "1,172.00" },
+            { date: "07-07-2025", invoice: "80", company: "", item: "SPACER", qty: "2", price: "620" },
+            { date: "", invoice: "", company: "", item: "BREAKING PULLEY", qty: "2", price: "320" },
+            { date: "29-Jul-25", invoice: "DN/00189/25-26", company: "DE & NEPHEW", item: "420 L X 25 X 10 MM T BELT", qty: "1 NOS", price: "1,200.00" },
+            { date: "05-09-2025", invoice: "100", company: "", item: "PILLER PLATE 250 X100 X3 MM LH", qty: "5", price: "750" },
+            { date: "", invoice: "", company: "", item: "PILLER PLATE 250 X100 X3 MM RH", qty: "5", price: "750" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 100MM WITH SHAFT", qty: "20", price: "1,350.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER WITH SHAFT 200MM", qty: "20", price: "1,805.00" },
+            { date: "", invoice: "", company: "", item: "RUBBER ROLLER 150MM WITH SHAFT", qty: "20", price: "1,675.00" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 165", qty: "1", price: "105" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 155", qty: "1", price: "95" },
+            { date: "", invoice: "", company: "", item: "ALU PLATE 16 X16 X145", qty: "1", price: "95" },
+            { date: "", invoice: "", company: "", item: "ALU ROLLER 150", qty: "2", price: "750" },
+            { date: "", invoice: "", company: "", item: "PILLER SUPPORTING 150", qty: "2", price: "750" },
+            { date: "", invoice: "", company: "", item: "SS CORE LOCK PATTI", qty: "12", price: "35" },
+            { date: "17-09-2025", invoice: "IEPL/FY25-26/329", company: "Ingenium Electronics Pvt. Ltd.", item: "WL 2A AB PLC WL HMI 7\" Delta System", qty: "1.00 Nos", price: "1,17,000.00" },
+            { date: "", invoice: "", company: "", item: "RS485 VFD Communication Cable", qty: "1.00 Nos", price: "200" },
+            { date: "", invoice: "", company: "", item: "Packaging & Forwarding Charges @ 1%", qty: "1", price: "1,172.00" },
+            { date: "07-Oct-25", invoice: "25-26/2146", company: "", item: "615 T21 R35 Sprocket 50803", qty: "10", price: "1,000.00" },
+            { date: "11-12-2025", invoice: "092/25-26", company: "", item: "Moldex Make T Clamps:014", qty: "100.00 NOS", price: "55" },
+            { date: "Not Visible", invoice: "2526003924", company: "", item: "6902 ZZ NTN BEARING", qty: "2,000 Pcs", price: "190" },
+            { date: "", invoice: "", company: "", item: "6802 ZZ KYK BEARING", qty: "8 Pcs", price: "50" },
+            { date: "", invoice: "", company: "", item: "HSS TAP SET 6MM", qty: "1 SET", price: "895" },
+            { date: "", invoice: "", company: "", item: "6902 ZZ SKF BEARING", qty: "6 Pcs", price: "220" },
+            { date: "", invoice: "", company: "", item: "S.S CAP M 8X90", qty: "50 Pcs", price: "25" },
+            { date: "", invoice: "", company: "", item: "STRAIGHT DRILL 5.2MM", qty: "30 Pcs", price: "90" },
+            { date: "", invoice: "", company: "", item: "4\" STRTECH FILM (BABY CORE)", qty: "10.000 Kgs", price: "150" },
+            { date: "", invoice: "", company: "", item: "STRAIGHT DRILL 8.5 MM", qty: "1 Pcs", price: "251" }
         ];
 
-        // The data above has 269 rows, but the original data had duplicates.
-        // We'll replicate to reach 597 rows as requested
-        let fullData = [];
-        const originalLength = allPartsData.length;
-        
-        // Replicate the data to reach 597 rows
-        for (let i = 0; i < 597; i++) {
-            const originalIndex = i % originalLength;
-            fullData.push([...allPartsData[originalIndex]]);
-            
-            // Add some variation to make them appear different
-            if (i >= originalLength) {
-                // Modify the invoice number slightly for duplicates
-                if (fullData[i][1]) {
-                    fullData[i][1] = fullData[i][1] + "-" + (Math.floor(i/originalLength) + 1);
-                }
-            }
-        }
+        // State variables
+        let currentData = [...invoiceData];
+        let sortColumn = 'date';
+        let sortDirection = 'asc';
+        let currentFilterCompany = '';
+        let currentFilterDate = '';
 
         // DOM elements
-        const tableBody = document.getElementById('tableBody');
-        const searchInput = document.getElementById('searchInput');
-        const rowsPerPageSelect = document.getElementById('rowsPerPage');
-        const paginationDiv = document.getElementById('pagination');
-        const currentRangeSpan = document.getElementById('currentRange');
-        const totalRowsSpan = document.getElementById('totalRows');
+        const tableBody = document.getElementById('table-body');
+        const searchInput = document.getElementById('search-input');
+        const companyFilter = document.getElementById('company-filter');
+        const dateFilter = document.getElementById('date-filter');
+        const resetButton = document.getElementById('reset-filters');
+        const noResults = document.getElementById('no-results');
+        const totalInvoicesEl = document.getElementById('total-invoices');
+        const totalItemsEl = document.getElementById('total-items');
+        const totalValueEl = document.getElementById('total-value');
+        const uniqueCompaniesEl = document.getElementById('unique-companies');
+        const recordCountEl = document.getElementById('record-count');
 
-        // State variables
-        let currentPage = 1;
-        let rowsPerPage = parseInt(rowsPerPageSelect.value);
-        let filteredData = [...fullData];
-        const totalRows = fullData.length;
+        // Initialize the table
+        function init() {
+            renderTable();
+            setupFilters();
+            setupSorting();
+            updateStats();
+            
+            // Add event listeners
+            searchInput.addEventListener('input', filterTable);
+            companyFilter.addEventListener('change', filterTable);
+            dateFilter.addEventListener('change', filterTable);
+            resetButton.addEventListener('click', resetFilters);
+        }
 
-        // Initialize
-        totalRowsSpan.textContent = totalRows;
-        renderTable();
-        setupPagination();
-        updateRowCounter();
-
-        // Render table rows for current page
+        // Render the table with current data
         function renderTable() {
             tableBody.innerHTML = '';
             
-            const startIndex = (currentPage - 1) * rowsPerPage;
-            const endIndex = Math.min(startIndex + rowsPerPage, filteredData.length);
+            if (currentData.length === 0) {
+                noResults.style.display = 'block';
+                recordCountEl.textContent = '0';
+                return;
+            }
             
-            for (let i = startIndex; i < endIndex; i++) {
-                const row = filteredData[i];
+            noResults.style.display = 'none';
+            recordCountEl.textContent = currentData.length;
+            
+            currentData.forEach(row => {
                 const tr = document.createElement('tr');
                 
-                // Create cells for each column
-                row.forEach(cellData => {
-                    const td = document.createElement('td');
-                    td.textContent = cellData || '';
-                    if (row.indexOf(cellData) === 5) { // Price column
-                        td.className = 'price';
-                    }
-                    tr.appendChild(td);
-                });
+                // Format price with ₹ symbol if it has a value
+                const priceDisplay = row.price ? `₹${row.price}` : '-';
+                
+                tr.innerHTML = `
+                    <td class="date">${row.date || '-'}</td>
+                    <td class="invoice-number">${row.invoice || '-'}</td>
+                    <td class="company-name">${row.company}</td>
+                    <td>${row.item}</td>
+                    <td class="quantity">${row.qty}</td>
+                    <td class="price">${priceDisplay}</td>
+                `;
                 
                 tableBody.appendChild(tr);
-            }
-            
-            updateRowCounter();
+            });
         }
 
-        // Setup pagination buttons
-        function setupPagination() {
-            paginationDiv.innerHTML = '';
-            const pageCount = Math.ceil(filteredData.length / rowsPerPage);
+        // Set up filter dropdowns
+        function setupFilters() {
+            // Get unique companies
+            const companies = [...new Set(invoiceData.map(row => row.company))].filter(company => company);
+            companies.sort();
             
-            // Previous button
-            const prevButton = document.createElement('button');
-            prevButton.textContent = 'Previous';
-            prevButton.className = 'page-btn';
-            prevButton.disabled = currentPage === 1;
-            prevButton.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderTable();
-                    setupPagination();
-                }
+            companies.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company;
+                option.textContent = company;
+                companyFilter.appendChild(option);
             });
-            paginationDiv.appendChild(prevButton);
             
-            // Page buttons
-            const maxVisibleButtons = 7;
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
-            let endPage = Math.min(pageCount, startPage + maxVisibleButtons - 1);
+            // Get unique dates
+            const dates = [...new Set(invoiceData.map(row => row.date))].filter(date => date);
+            dates.sort();
             
-            if (endPage - startPage + 1 < maxVisibleButtons) {
-                startPage = Math.max(1, endPage - maxVisibleButtons + 1);
-            }
+            dates.forEach(date => {
+                const option = document.createElement('option');
+                option.value = date;
+                option.textContent = date;
+                dateFilter.appendChild(option);
+            });
+        }
+
+        // Set up table sorting
+        function setupSorting() {
+            const headers = document.querySelectorAll('th[data-sort]');
             
-            if (startPage > 1) {
-                const firstButton = document.createElement('button');
-                firstButton.textContent = '1';
-                firstButton.className = 'page-btn';
-                firstButton.addEventListener('click', () => {
-                    currentPage = 1;
+            headers.forEach(header => {
+                header.addEventListener('click', () => {
+                    const column = header.getAttribute('data-sort');
+                    
+                    // Update sort direction
+                    if (sortColumn === column) {
+                        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        sortColumn = column;
+                        sortDirection = 'asc';
+                    }
+                    
+                    // Update sort indicators
+                    headers.forEach(h => {
+                        const icon = h.querySelector('i');
+                        icon.className = 'fas fa-sort';
+                    });
+                    
+                    const currentIcon = header.querySelector('i');
+                    currentIcon.className = sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
+                    
+                    // Sort data
+                    sortData();
                     renderTable();
-                    setupPagination();
                 });
-                paginationDiv.appendChild(firstButton);
+            });
+        }
+
+        // Sort data based on current sort column and direction
+        function sortData() {
+            currentData.sort((a, b) => {
+                let aValue = a[sortColumn] || '';
+                let bValue = b[sortColumn] || '';
                 
-                if (startPage > 2) {
-                    const ellipsis = document.createElement('span');
-                    ellipsis.textContent = '...';
-                    ellipsis.style.padding = '8px 12px';
-                    paginationDiv.appendChild(ellipsis);
-                }
-            }
-            
-            for (let i = startPage; i <= endPage; i++) {
-                const pageButton = document.createElement('button');
-                pageButton.textContent = i;
-                pageButton.className = 'page-btn';
-                if (i === currentPage) {
-                    pageButton.classList.add('active');
-                }
-                pageButton.addEventListener('click', () => {
-                    currentPage = i;
-                    renderTable();
-                    setupPagination();
-                });
-                paginationDiv.appendChild(pageButton);
-            }
-            
-            if (endPage < pageCount) {
-                if (endPage < pageCount - 1) {
-                    const ellipsis = document.createElement('span');
-                    ellipsis.textContent = '...';
-                    ellipsis.style.padding = '8px 12px';
-                    paginationDiv.appendChild(ellipsis);
+                // For price, remove commas and convert to number for proper sorting
+                if (sortColumn === 'price') {
+                    aValue = aValue ? parseFloat(aValue.replace(/,/g, '')) : 0;
+                    bValue = bValue ? parseFloat(bValue.replace(/,/g, '')) : 0;
                 }
                 
-                const lastButton = document.createElement('button');
-                lastButton.textContent = pageCount;
-                lastButton.className = 'page-btn';
-                lastButton.addEventListener('click', () => {
-                    currentPage = pageCount;
-                    renderTable();
-                    setupPagination();
-                });
-                paginationDiv.appendChild(lastButton);
+                // For quantity, extract numeric part for sorting
+                if (sortColumn === 'quantity') {
+                    const aNum = parseFloat(aValue) || 0;
+                    const bNum = parseFloat(bValue) || 0;
+                    return sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
+                }
+                
+                // For dates, convert to timestamp for proper sorting
+                if (sortColumn === 'date') {
+                    const aDate = parseDate(aValue);
+                    const bDate = parseDate(bValue);
+                    return sortDirection === 'asc' ? aDate - bDate : bDate - aDate;
+                }
+                
+                // For strings (default)
+                if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+                if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        // Helper function to parse date strings
+        function parseDate(dateString) {
+            if (!dateString) return 0;
+            
+            // Try different date formats
+            const formats = [
+                { regex: /(\d{2})-(\d{2})-(\d{4})/, fn: (m) => new Date(m[3], m[2]-1, m[1]) }, // dd-mm-yyyy
+                { regex: /(\d{2})\.(\d{2})\.(\d{4})/, fn: (m) => new Date(m[3], m[2]-1, m[1]) }, // dd.mm.yyyy
+                { regex: /(\d{2})-([A-Za-z]{3})-(\d{2})/, fn: (m) => {
+                    const monthMap = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
+                    const month = monthMap[m[2].toLowerCase().substring(0,3)];
+                    const year = 2000 + parseInt(m[3]);
+                    return new Date(year, month, m[1]);
+                }}, // dd-mmm-yy
+            ];
+            
+            for (const format of formats) {
+                const match = dateString.match(format.regex);
+                if (match) {
+                    const date = format.fn(match);
+                    return date.getTime();
+                }
             }
             
-            // Next button
-            const nextButton = document.createElement('button');
-            nextButton.textContent = 'Next';
-            nextButton.className = 'page-btn';
-            nextButton.disabled = currentPage === pageCount;
-            nextButton.addEventListener('click', () => {
-                if (currentPage < pageCount) {
-                    currentPage++;
-                    renderTable();
-                    setupPagination();
+            return 0;
+        }
+
+        // Filter table based on search and filters
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase();
+            currentFilterCompany = companyFilter.value;
+            currentFilterDate = dateFilter.value;
+            
+            currentData = invoiceData.filter(row => {
+                // Search term filter
+                const matchesSearch = !searchTerm || 
+                    row.company.toLowerCase().includes(searchTerm) ||
+                    row.item.toLowerCase().includes(searchTerm) ||
+                    row.invoice.toLowerCase().includes(searchTerm);
+                
+                // Company filter
+                const matchesCompany = !currentFilterCompany || row.company === currentFilterCompany;
+                
+                // Date filter
+                const matchesDate = !currentFilterDate || row.date === currentFilterDate;
+                
+                return matchesSearch && matchesCompany && matchesDate;
+            });
+            
+            sortData();
+            renderTable();
+            updateStats();
+        }
+
+        // Reset all filters
+        function resetFilters() {
+            searchInput.value = '';
+            companyFilter.value = '';
+            dateFilter.value = '';
+            currentFilterCompany = '';
+            currentFilterDate = '';
+            
+            currentData = [...invoiceData];
+            sortData();
+            renderTable();
+            updateStats();
+        }
+
+        // Update statistics
+        function updateStats() {
+            // Total invoices (unique invoice numbers)
+            const uniqueInvoices = new Set(currentData.map(row => row.invoice).filter(inv => inv));
+            totalInvoicesEl.textContent = uniqueInvoices.size;
+            
+            // Total items
+            let itemCount = 0;
+            currentData.forEach(row => {
+                // Extract numeric part from quantity
+                const qtyMatch = row.qty.match(/\d+(\.\d+)?/);
+                if (qtyMatch) {
+                    itemCount += parseFloat(qtyMatch[0]);
                 }
             });
-            paginationDiv.appendChild(nextButton);
+            totalItemsEl.textContent = Math.round(itemCount);
+            
+            // Total value
+            let totalValue = 0;
+            currentData.forEach(row => {
+                if (row.price) {
+                    const priceValue = parseFloat(row.price.replace(/,/g, ''));
+                    if (!isNaN(priceValue)) {
+                        // Extract numeric part from quantity
+                        const qtyMatch = row.qty.match(/\d+(\.\d+)?/);
+                        if (qtyMatch) {
+                            const quantity = parseFloat(qtyMatch[0]);
+                            totalValue += priceValue * quantity;
+                        }
+                    }
+                }
+            });
+            totalValueEl.textContent = `₹${totalValue.toLocaleString('en-IN')}`;
+            
+            // Unique companies
+            const uniqueCompanies = new Set(currentData.map(row => row.company).filter(company => company));
+            uniqueCompaniesEl.textContent = uniqueCompanies.size;
         }
 
-        // Update row counter
-        function updateRowCounter() {
-            const startIndex = (currentPage - 1) * rowsPerPage + 1;
-            const endIndex = Math.min(currentPage * rowsPerPage, filteredData.length);
-            currentRangeSpan.textContent = `${startIndex}-${endIndex}`;
-        }
-
-        // Search functionality
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            
-            if (searchTerm.trim() === '') {
-                filteredData = [...fullData];
-            } else {
-                filteredData = fullData.filter(row => {
-                    return row.some(cell => 
-                        cell && cell.toString().toLowerCase().includes(searchTerm)
-                    );
-                });
-            }
-            
-            currentPage = 1;
-            renderTable();
-            setupPagination();
-        });
-
-        // Rows per page change
-        rowsPerPageSelect.addEventListener('change', function() {
-            rowsPerPage = parseInt(this.value);
-            currentPage = 1;
-            renderTable();
-            setupPagination();
-        });
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
